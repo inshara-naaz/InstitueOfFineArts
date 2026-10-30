@@ -1,0 +1,1034 @@
+﻿@model IEnumerable<InstituteOfFineArts.Models.Exhibition>
+@using InstituteOfFineArts.Models
+@using System.Text.Encodings.Web
+
+@{
+    ViewData["Title"] = "Manage Exhibitions";
+
+    var exhibitions = Model?.ToList() ?? new List<Exhibition>();
+    var total = ViewBag.TotalExhibitions ?? exhibitions.Count;
+    var ongoing = ViewBag.OngoingExhibitions ?? exhibitions.Count(e => e.Status == ExhibitionStatus.Ongoing);
+    var upcoming = ViewBag.UpcomingExhibitions ?? exhibitions.Count(e => e.Status == ExhibitionStatus.Upcoming);
+    var completed = ViewBag.CompletedExhibitions ?? exhibitions.Count(e => e.Status == ExhibitionStatus.Concluded);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Exhibitions | Staff Panel | ARTISTIC Institute</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body.dark-mode {
+            background: #0A0A0A;
+            color: #FFFFFF;
+            font-family: 'Inter',sans-serif;
+        }
+
+        body.light-mode {
+            background: #F0F2F5;
+            color: #1A1A1A;
+            font-family: 'Inter',sans-serif;
+        }
+
+        .app-wrapper {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 70px;
+            border-radius: 40px;
+            transition: all .3s cubic-bezier(.2,.9,.4,1.1);
+            z-index: 1000;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+            background: rgba(20,20,30,.9);
+            border: 1px solid rgba(197,160,89,.15);
+            box-shadow: 0 20px 40px rgba(0,0,0,.3);
+        }
+
+            .sidebar:hover {
+                width: 260px;
+                border-radius: 28px;
+            }
+
+        .sidebar-inner {
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .sidebar-profile {
+            width: 100%;
+            text-align: center;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .profile-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg,#C5A059,#E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+        }
+
+        .profile-name, .profile-role, .nav-text, .logout-text {
+            font-size: 0;
+            opacity: 0;
+            transition: .3s;
+            white-space: nowrap;
+        }
+
+        .sidebar:hover .profile-name {
+            font-size: .85rem;
+            opacity: 1;
+            margin-top: 12px;
+        }
+
+        .sidebar:hover .profile-role {
+            font-size: .65rem;
+            opacity: .6;
+            margin-top: 4px;
+        }
+
+        .nav-menu {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 0 12px;
+        }
+
+        .nav-item a, .logout-item a {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px;
+            text-decoration: none;
+            border-radius: 30px;
+            color: rgba(255,255,255,.7);
+            transition: .25s;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+            .nav-item a i, .logout-item a i {
+                width: 28px;
+                display: flex;
+                justify-content: center;
+                color: #C5A059;
+            }
+
+        .sidebar:hover .nav-text, .sidebar:hover .logout-text {
+            font-size: .85rem;
+            opacity: 1;
+        }
+
+        .nav-item.active a, .nav-item:hover a {
+            background: rgba(197,160,89,.15);
+            color: #C5A059;
+            transform: translateX(4px);
+        }
+
+        .nav-footer {
+            width: 100%;
+            margin-top: 30px;
+            padding: 20px 12px 0;
+            border-top: 1px solid rgba(255,255,255,.08);
+        }
+
+        .logout-item a i {
+            color: #E53E3E;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 100px;
+            padding: 24px 32px;
+            overflow-x: hidden;
+        }
+
+        .top-header, .stat-card, .chart-card, .exhibitions-table {
+            background: rgba(20,20,20,.7);
+            border: 1px solid rgba(255,255,255,.06);
+            border-radius: 24px;
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 16px 24px;
+            margin-bottom: 28px;
+        }
+
+        .page-title h2 {
+            font-family: 'Playfair Display',serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .page-title p {
+            font-size: .85rem;
+            opacity: .7;
+            margin: 0;
+        }
+
+        .theme-toggle, .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle {
+            background: rgba(255,255,255,.08);
+            color: #FFD700;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            background: linear-gradient(135deg,#C5A059,#E8C87A);
+            color: #000;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            height: 100%;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            color: #C5A059;
+            margin-bottom: .8rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: .85rem;
+            opacity: .7;
+        }
+
+        .chart-card, .exhibitions-table {
+            padding: 1.5rem;
+        }
+
+        .chart-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #C5A059;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: .45rem 1rem;
+            border-radius: 50px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.1);
+        }
+
+            .search-box input {
+                background: transparent;
+                border: none;
+                outline: none;
+                color: inherit;
+                width: 230px;
+            }
+
+        .filter-select {
+            background: rgba(255,255,255,.06);
+            border: 1px solid #C5A059;
+            border-radius: 50px;
+            padding: .45rem 1rem;
+            color: #fff;
+        }
+
+            .filter-select option {
+                background: #1A1A2E;
+                color: #fff;
+            }
+
+        .btn-gold {
+            background: linear-gradient(135deg,#C5A059,#E8C87A);
+            color: #000;
+            border: none;
+            padding: .6rem 1.4rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .25s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .btn-gold:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(197,160,89,.3);
+                color: #000;
+            }
+
+        .btn-secondary-custom {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: .6rem 1.4rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            justify-content: center;
+        }
+
+        .exhibitions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill,minmax(330px,1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .exhibition-card {
+            background: rgba(20,20,20,.7);
+            border: 1px solid rgba(255,255,255,.06);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: .3s;
+        }
+
+            .exhibition-card:hover {
+                transform: translateY(-5px);
+                border-color: #C5A059;
+            }
+
+        .exhibition-img {
+            height: 145px;
+            background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #fff;
+        }
+
+        .exhibition-info {
+            padding: 1.2rem;
+        }
+
+        .exhibition-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: .5rem;
+            color: #C5A059;
+        }
+
+        .exhibition-meta {
+            display: flex;
+            flex-direction: column;
+            gap: .35rem;
+            font-size: .78rem;
+            opacity: .78;
+            margin-bottom: .8rem;
+        }
+
+        .exhibition-desc {
+            font-size: .82rem;
+            line-height: 1.45;
+            margin-bottom: 1rem;
+            opacity: .9;
+        }
+
+        .exhibition-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: .75rem;
+            border-top: 1px solid rgba(255,255,255,.08);
+        }
+
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: .25rem .8rem;
+            border-radius: 30px;
+            font-size: .7rem;
+            font-weight: 600;
+        }
+
+        .badge-current {
+            background: #28a745;
+            color: #fff;
+        }
+
+        .badge-upcoming {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .badge-past {
+            background: #6c757d;
+            color: #fff;
+        }
+
+        .badge-cancelled {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 6px 9px;
+            border-radius: 8px;
+            transition: .25s;
+            color: #ccc;
+        }
+
+            .btn-icon:hover {
+                background: rgba(197,160,89,.15);
+                transform: translateY(-2px);
+                color: #C5A059;
+            }
+
+            .btn-icon.delete:hover {
+                background: rgba(220,53,69,.15);
+                color: #dc3545;
+            }
+
+        .modal-custom {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,.7);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .modal-custom.active {
+                display: flex;
+            }
+
+        .modal-content-custom {
+            width: 90%;
+            max-width: 620px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 28px;
+            padding: 2rem;
+            position: relative;
+            background: #1A1A2E;
+            border: 1px solid rgba(197,160,89,.2);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: .4rem;
+                font-size: .85rem;
+                font-weight: 600;
+                color: #C5A059;
+            }
+
+        .form-control, .form-select, textarea.form-control {
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(197,160,89,.3);
+            color: #fff;
+            border-radius: 14px;
+            padding: .75rem 1rem;
+            width: 100%;
+        }
+
+            .form-control::placeholder, textarea.form-control::placeholder {
+                color: rgba(255,255,255,.55);
+            }
+
+            .form-select option {
+                background: #1A1A2E;
+                color: #fff;
+            }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            gap: 1rem;
+        }
+
+        .footer {
+            padding: 1rem;
+            margin-top: 2rem;
+            text-align: center;
+            border-radius: 20px;
+            font-size: .7rem;
+            background: rgba(20,20,20,.5);
+            color: rgba(255,255,255,.4);
+        }
+
+        @@media(max-width:992px) {
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+            }
+
+            .sidebar {
+                left: -70px;
+            }
+
+                .sidebar.active {
+                    left: 20px;
+                }
+        }
+
+        @@media(max-width:768px) {
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box input, .search-box, .filter-select {
+                width: 100%;
+            }
+
+            .exhibitions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="dark-mode">
+    <div class="app-wrapper">
+        <div class="sidebar">
+            <div class="sidebar-inner">
+                <div class="sidebar-profile" onclick="goToHome()">
+                    <div class="profile-avatar"><i class="fas fa-palette"></i></div>
+                    <div class="profile-name">ARTISTIC</div>
+                    <div class="profile-role">Staff Panel</div>
+                </div>
+
+                <div class="nav-menu">
+                    <div class="nav-item"><a href="@Url.Action("Dashboard", "Staff")"><i class="fas fa-home"></i><span class="nav-text">Dashboard</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ViewStudents", "Staff")"><i class="fas fa-users"></i><span class="nav-text">View Students</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ManageCompetitions", "Staff")"><i class="fas fa-trophy"></i><span class="nav-text">Competitions</span></a></div>
+                    <div class="nav-item active"><a href="@Url.Action("ManageExhibitions", "Staff")"><i class="fas fa-building"></i><span class="nav-text">Exhibitions</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ViewPostings", "Staff")"><i class="fas fa-clipboard-list"></i><span class="nav-text">View Postings</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("MarkPostings", "Staff")"><i class="fas fa-check-double"></i><span class="nav-text">Mark Postings</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("SendtoExhibition", "Staff")"><i class="fas fa-paper-plane"></i><span class="nav-text">Send to Exhibition</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ExhibitionStatus", "Staff")"><i class="fas fa-chart-line"></i><span class="nav-text">Exhibition Status</span></a></div>
+                </div>
+
+                <div class="nav-footer">
+                    <div class="logout-item"><a href="@Url.Action("Login", "Account")"><i class="fas fa-sign-out-alt"></i><span class="logout-text">Logout</span></a></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="top-header">
+                <div class="page-title">
+                    <h2><i class="fas fa-building me-2" style="color:#C5A059;"></i>Manage Exhibitions</h2>
+                    <p>Create, edit, delete, search and retrieve all art exhibitions</p>
+                </div>
+                <div style="display:flex; align-items:center; gap:1rem;">
+                    <div class="theme-toggle" id="themeToggle"><i class="fas fa-sun" id="themeIcon"></i></div>
+                    <div class="user-avatar"><i class="fas fa-user-tie"></i></div>
+                </div>
+            </div>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">@TempData["Success"]</div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">@TempData["Error"]</div>
+            }
+
+            <div class="container-fluid mt-4">
+                <div class="row g-4 mb-4">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-building"></i></div>
+                            <div class="stat-value">@total</div>
+                            <div class="stat-label">Total Exhibitions</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-play-circle"></i></div>
+                            <div class="stat-value">@ongoing</div>
+                            <div class="stat-label">Ongoing</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                            <div class="stat-value">@upcoming</div>
+                            <div class="stat-label">Upcoming</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                            <div class="stat-value">@completed</div>
+                            <div class="stat-label">Completed</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-12">
+                        <div class="chart-card">
+                            <div class="filter-bar">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="searchInput" placeholder="Search exhibitions by name, venue, city...">
+                                </div>
+                                <select class="filter-select" id="statusFilter">
+                                    <option value="all">All Status</option>
+                                    <option value="ongoing">Ongoing</option>
+                                    <option value="upcoming">Upcoming</option>
+                                    <option value="concluded">Concluded</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                                <button class="btn-gold" type="button" onclick="openModal('addExhibitionModal')">
+                                    <i class="fas fa-plus"></i> Add Exhibition
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="exhibitions-table">
+                            <div class="chart-title"><i class="fas fa-calendar-alt"></i> Exhibitions List</div>
+
+                            <div class="exhibitions-grid" id="exhibitionsGrid">
+                                @if (exhibitions.Any())
+                                {
+                                    foreach (var ex in exhibitions)
+                                    {
+                                        var statusText = ex.Status.ToString();
+                                        var statusLower = statusText.ToLower();
+                                        var badgeClass = ex.Status == ExhibitionStatus.Ongoing ? "badge-current" :
+                                        ex.Status == ExhibitionStatus.Upcoming ? "badge-upcoming" :
+                                        ex.Status == ExhibitionStatus.Concluded ? "badge-past" :
+                                        "badge-cancelled";
+
+                                        var listingCount = ex.ExhibitionListings?.Count ?? 0;
+
+                                        <div class="exhibition-card"
+                                             data-status="@statusLower"
+                                             data-search="@($"{ex.ExhibitionName} {ex.Venue} {ex.City} {ex.Country}".ToLower())">
+                                            <div class="exhibition-img">
+                                                @if (!string.IsNullOrEmpty(ex.ImagePath))
+                                                {
+                                                    <img src="@ex.ImagePath" alt="@ex.ExhibitionName" style="width: 100%; height: 100%; object-fit: cover;">
+                                                }
+                                                else
+                                                {
+                                                    <i class="fas fa-palette"></i>
+                                                }
+                                            </div>
+                                            <div class="exhibition-info">
+                                                <div class="exhibition-title">@ex.ExhibitionName</div>
+
+                                                <div class="exhibition-meta">
+                                                    <span><i class="far fa-calendar-alt"></i> @ex.ExhibitionStartDate.ToString("yyyy-MM-dd") - @ex.ExhibitionEndDate.ToString("yyyy-MM-dd")</span>
+                                                    <span><i class="fas fa-map-marker-alt"></i> @ex.Venue, @ex.City, @ex.Country</span>
+                                                    <span><i class="fas fa-images"></i> @listingCount artwork listing(s)</span>
+                                                </div>
+
+                                                <div class="exhibition-desc">
+                                                    @(string.IsNullOrWhiteSpace(ex.Description) ? "No description added." : ex.Description)
+                                                </div>
+
+                                                @if (!string.IsNullOrWhiteSpace(ex.AdditionalNotes))
+                                                {
+                                                    <div class="exhibition-desc"><strong>Notes:</strong> @ex.AdditionalNotes</div>
+                                                }
+
+                                                <div class="exhibition-footer">
+                                                    <span class="badge-status @badgeClass">
+                                                        <i class="fas fa-circle"></i> @statusText
+                                                    </span>
+
+                                                    <div>
+                                                        <button class="btn-icon edit" type="button" onclick="openModal('editExhibitionModal_@ex.ExhibitionId')" title="Edit">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+
+                                                        <form asp-controller="Staff" asp-action="DeleteExhibition" method="post" style="display:inline;"
+                                                              onsubmit="return confirmDelete('@JavaScriptEncoder.Default.Encode(ex.ExhibitionName)', @listingCount);">
+                                                            @Html.AntiForgeryToken()
+                                                            <input type="hidden" name="id" value="@ex.ExhibitionId" />
+                                                            <button class="btn-icon delete" type="submit" title="Delete">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-custom" id="editExhibitionModal_@ex.ExhibitionId">
+                                            <div class="modal-content-custom">
+                                                <button class="modal-close" type="button" onclick="closeModal('editExhibitionModal_@ex.ExhibitionId')">&times;</button>
+                                                <h3>Edit Exhibition</h3>
+
+                                                <form asp-controller="Staff" asp-action="EditExhibition" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="ExhibitionId" value="@ex.ExhibitionId" />
+
+                                                    <div class="form-group">
+                                                        <label>Exhibition Name *</label>
+                                                        <input type="text" class="form-control" name="ExhibitionName" value="@ex.ExhibitionName" required />
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label>Description</label>
+                                                        <textarea class="form-control" name="Description" rows="3">@ex.Description</textarea>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label>Venue *</label>
+                                                        <input type="text" class="form-control" name="Venue" value="@ex.Venue" required />
+                                                    </div>
+
+                                                    <div class="form-row">
+                                                        <div class="form-group">
+                                                            <label>City</label>
+                                                            <input type="text" class="form-control" name="City" value="@ex.City" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Country</label>
+                                                            <input type="text" class="form-control" name="Country" value="@ex.Country" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-row">
+                                                        <div class="form-group">
+                                                            <label>Start Date *</label>
+                                                            <input type="date" class="form-control" name="ExhibitionStartDate" value="@ex.ExhibitionStartDate.ToString("yyyy-MM-dd")" required />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>End Date *</label>
+                                                            <input type="date" class="form-control" name="ExhibitionEndDate" value="@ex.ExhibitionEndDate.ToString("yyyy-MM-dd")" required />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label>Status *</label>
+                                                        <select class="form-select" name="Status" required>
+                                                            @if (ex.Status == ExhibitionStatus.Upcoming)
+                                                            {
+                                                                <option value="1" selected>Upcoming</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="1">Upcoming</option>
+                                                            }
+
+                                                            @if (ex.Status == ExhibitionStatus.Ongoing)
+                                                            {
+                                                                <option value="2" selected>Ongoing</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="2">Ongoing</option>
+                                                            }
+
+                                                            @if (ex.Status == ExhibitionStatus.Concluded)
+                                                            {
+                                                                <option value="3" selected>Concluded</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="3">Concluded</option>
+                                                            }
+
+                                                            @if (ex.Status == ExhibitionStatus.Cancelled)
+                                                            {
+                                                                <option value="4" selected>Cancelled</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="4">Cancelled</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label>Additional Notes</label>
+                                                        <textarea class="form-control" name="AdditionalNotes" rows="3">@ex.AdditionalNotes</textarea>
+                                                    </div>
+
+                                                    <div class="d-flex gap-2 mt-3">
+                                                        <button type="button" class="btn-secondary-custom" style="flex:1;" onclick="closeModal('editExhibitionModal_@ex.ExhibitionId')">Cancel</button>
+                                                        <button type="submit" class="btn-gold" style="flex:2;">Update Exhibition</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="text-center" style="grid-column:1/-1; padding:3rem;">No exhibitions found</div>
+                                }
+                            </div>
+
+                            <div id="noResults" class="text-center" style="display:none; padding:3rem;">No matching exhibitions found</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>© 2025 ARTISTIC - Institute of Fine Arts. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-custom" id="addExhibitionModal">
+        <div class="modal-content-custom">
+            <button class="modal-close" type="button" onclick="closeModal('addExhibitionModal')">&times;</button>
+            <h3>Add New Exhibition</h3>
+
+            <form asp-controller="Staff" asp-action="CreateExhibition" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <label>Exhibition Name *</label>
+                    <input type="text" class="form-control" name="ExhibitionName" placeholder="e.g., Karachi Fine Arts Exhibition" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea class="form-control" name="Description" rows="3" placeholder="Describe the exhibition..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Venue *</label>
+                    <input type="text" class="form-control" name="Venue" placeholder="e.g., Institute Art Gallery" required />
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" class="form-control" name="City" value="Karachi" />
+                    </div>
+                    <div class="form-group">
+                        <label>Country</label>
+                        <input type="text" class="form-control" name="Country" value="Pakistan" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Start Date *</label>
+                        <input type="date" class="form-control" name="ExhibitionStartDate" required />
+                    </div>
+                    <div class="form-group">
+                        <label>End Date *</label>
+                        <input type="date" class="form-control" name="ExhibitionEndDate" required />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Status *</label>
+                    <select class="form-select" name="Status" required>
+                        <option value="1" selected>Upcoming</option>
+                        <option value="2">Ongoing</option>
+                        <option value="3">Concluded</option>
+                        <option value="4">Cancelled</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Additional Notes</label>
+                    <textarea class="form-control" name="AdditionalNotes" rows="3" placeholder="Any additional notes..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Exhibition Image (Optional)</label>
+                    <input type="file" class="form-control" name="ImageFile" accept="image/*" />
+                    <small class="text-muted">Upload JPG, JPEG or PNG image</small>
+                </div>
+                <div class="d-flex gap-2 mt-3">
+                    <button type="button" class="btn-secondary-custom" style="flex:1;" onclick="closeModal('addExhibitionModal')">Cancel</button>
+                    <button type="submit" class="btn-gold" style="flex:2;">Save Exhibition</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <button class="scroll-top" id="scrollTop"><i class="fas fa-arrow-up"></i></button>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        if (localStorage.getItem('staffTheme') === 'light') {
+            body.classList.remove('dark-mode');
+            body.classList.add('light-mode');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            if (body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                localStorage.setItem('staffTheme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            } else {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                localStorage.setItem('staffTheme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+        });
+
+        function goToHome() {
+            window.location.href = '@Url.Action("Index", "Home")';
+        }
+
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        function confirmDelete(name, listingCount) {
+            if (listingCount > 0) {
+                alert('This exhibition has artwork listings, so it cannot be deleted.');
+                return false;
+            }
+
+            return confirm('Delete "' + name + '"? This action cannot be undone.');
+        }
+
+        const searchInput = document.getElementById('searchInput');
+        const statusFilter = document.getElementById('statusFilter');
+
+        function applyFilters() {
+            const search = (searchInput?.value || '').toLowerCase().trim();
+            const status = statusFilter?.value || 'all';
+            const cards = document.querySelectorAll('.exhibition-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const cardSearch = card.getAttribute('data-search') || '';
+                const cardStatus = card.getAttribute('data-status') || '';
+
+                const matchesSearch = search === '' || cardSearch.includes(search);
+                const matchesStatus = status === 'all' || cardStatus === status;
+
+                if (matchesSearch && matchesStatus) {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            const noResults = document.getElementById('noResults');
+            if (noResults) noResults.style.display = visibleCount === 0 && cards.length > 0 ? 'block' : 'none';
+        }
+
+        if (searchInput) searchInput.addEventListener('input', applyFilters);
+        if (statusFilter) statusFilter.addEventListener('change', applyFilters);
+    </script>
+</body>
+</html>

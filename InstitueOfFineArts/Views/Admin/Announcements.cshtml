@@ -1,0 +1,926 @@
+﻿@{
+    ViewData["Title"] = "Announcements";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Announcements | ARTISTIC Institute</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body.dark-mode {
+            background: #0A0A0A;
+            color: #FFFFFF;
+        }
+
+        body.light-mode {
+            background: #F0F2F5;
+            color: #1A1A1A;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 70px;
+            border-radius: 40px;
+            transition: all 0.3s cubic-bezier(0.2,0.9,0.4,1.1);
+            z-index: 1000;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+        }
+
+            .sidebar:hover {
+                width: 260px;
+                border-radius: 28px;
+            }
+
+        body.dark-mode .sidebar {
+            background: rgba(20,20,30,0.9);
+            border: 1px solid rgba(197,160,89,0.15);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        body.light-mode .sidebar {
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(0,0,0,0.08);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        @@media (max-width: 992px) {
+            .sidebar {
+                left: -70px;
+            }
+
+                .sidebar.active {
+                    left: 20px;
+                }
+
+            .menu-toggle {
+                display: block !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                width: 100%;
+                padding: 16px !important;
+            }
+        }
+
+        .sidebar-inner {
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .sidebar-profile {
+            width: 100%;
+            text-align: center;
+            padding: 0 0 20px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .sidebar-profile:hover {
+                opacity: 0.8;
+            }
+
+        body.dark-mode .sidebar-profile {
+            border-color: rgba(255,255,255,0.08);
+        }
+
+        body.light-mode .sidebar-profile {
+            border-color: rgba(0,0,0,0.06);
+        }
+
+        .profile-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #000;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar:hover .profile-avatar {
+            width: 50px;
+            height: 50px;
+            font-size: 1.4rem;
+        }
+
+        .profile-name {
+            margin-top: 10px;
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar:hover .profile-name {
+            font-size: 0.85rem;
+            opacity: 1;
+            margin-top: 12px;
+        }
+
+        .profile-role {
+            margin-top: 4px;
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar:hover .profile-role {
+            font-size: 0.65rem;
+            opacity: 0.6;
+        }
+
+        .nav-menu {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            width: 100%;
+            border-radius: 30px;
+            transition: all 0.25s ease;
+        }
+
+            .nav-item a {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 12px;
+                text-decoration: none;
+                border-radius: 30px;
+                transition: all 0.25s ease;
+                font-weight: 500;
+                white-space: nowrap;
+            }
+
+                .nav-item a i {
+                    width: 28px;
+                    height: 28px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.1rem;
+                    color: #C5A059;
+                    flex-shrink: 0;
+                }
+
+        .nav-text {
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .sidebar:hover .nav-text {
+            font-size: 0.85rem;
+            opacity: 1;
+        }
+
+        body.dark-mode .nav-item a {
+            color: rgba(255,255,255,0.7);
+        }
+
+        body.light-mode .nav-item a {
+            color: #4A5568;
+        }
+
+        .nav-item:hover a {
+            transform: translateX(4px);
+        }
+
+        body.dark-mode .nav-item:hover a {
+            background: rgba(197,160,89,0.12);
+            color: #C5A059;
+        }
+
+        body.light-mode .nav-item:hover a {
+            background: rgba(197,160,89,0.08);
+            color: #C5A059;
+        }
+
+        body.dark-mode .nav-item.active a {
+            background: rgba(197,160,89,0.15);
+            color: #C5A059;
+        }
+
+        body.light-mode .nav-item.active a {
+            background: rgba(197,160,89,0.1);
+            color: #C5A059;
+        }
+
+        .nav-footer {
+            width: 100%;
+            margin-top: 30px;
+            padding: 20px 12px 0;
+            border-top: 1px solid;
+        }
+
+        body.dark-mode .nav-footer {
+            border-color: rgba(255,255,255,0.08);
+        }
+
+        body.light-mode .nav-footer {
+            border-color: rgba(0,0,0,0.06);
+        }
+
+        .logout-item {
+            width: 100%;
+            border-radius: 30px;
+        }
+
+            .logout-item a {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 12px;
+                text-decoration: none;
+                border-radius: 30px;
+                transition: all 0.25s ease;
+                white-space: nowrap;
+            }
+
+                .logout-item a i {
+                    width: 28px;
+                    font-size: 1.1rem;
+                    flex-shrink: 0;
+                }
+
+        body.dark-mode .logout-item a {
+            color: rgba(255,255,255,0.7);
+        }
+
+        body.light-mode .logout-item a {
+            color: #E53E3E;
+        }
+
+        .logout-text {
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar:hover .logout-text {
+            font-size: 0.85rem;
+            opacity: 1;
+        }
+
+        .logout-item:hover a {
+            transform: translateX(4px);
+        }
+
+        body.dark-mode .logout-item:hover a {
+            background: rgba(229,62,62,0.15);
+            color: #E53E3E;
+        }
+
+        body.light-mode .logout-item:hover a {
+            background: #FEE2E2;
+            color: #E53E3E;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 100px;
+            padding: 24px 32px;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        @@media (max-width: 992px) {
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 12px 24px;
+            border-radius: 24px;
+            margin-bottom: 28px;
+        }
+
+        body.dark-mode .top-header {
+            background: rgba(20,20,20,0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        body.light-mode .top-header {
+            background: #FFFFFF;
+            border: 1px solid #E8ECEF;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 12px;
+        }
+
+        body.dark-mode .menu-toggle {
+            color: white;
+        }
+
+        body.light-mode .menu-toggle {
+            color: #333;
+        }
+
+        .page-title h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .page-title p {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .theme-toggle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .theme-toggle {
+            background: rgba(255,255,255,0.08);
+            color: #FFD700;
+        }
+
+        body.light-mode .theme-toggle {
+            background: #F0F2F5;
+            color: #C5A059;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg);
+        }
+
+        .user-dropdown {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .dropdown-menu-custom {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            min-width: 160px;
+            border-radius: 16px;
+            padding: 8px;
+            display: none;
+            z-index: 100;
+        }
+
+        body.dark-mode .dropdown-menu-custom {
+            background: #1A1A2E;
+            border: 1px solid rgba(197,160,89,0.2);
+        }
+
+        body.light-mode .dropdown-menu-custom {
+            background: white;
+            border: 1px solid #E8ECEF;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .user-dropdown:hover .dropdown-menu-custom {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: 0.2s;
+        }
+
+        body.dark-mode .dropdown-item {
+            color: white;
+        }
+
+        body.light-mode .dropdown-item {
+            color: #333;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(197,160,89,0.15);
+        }
+
+        /* Cards */
+        .chart-card {
+            border-radius: 24px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        body.dark-mode .chart-card {
+            background: rgba(20,20,20,0.7);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        body.light-mode .chart-card {
+            background: #FFFFFF;
+            border: 1px solid #E8ECEF;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .chart-card:hover {
+            transform: translateY(-5px);
+            border-color: #C5A059;
+        }
+
+        .chart-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #C5A059;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            color: #000;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .btn-gold:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(197,160,89,0.3);
+            }
+
+        .btn-sm {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .btn-sm:hover {
+                transform: scale(1.02);
+            }
+
+        .footer {
+            padding: 1rem;
+            margin-top: 2rem;
+            text-align: center;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+
+        body.dark-mode .footer {
+            background: rgba(20,20,20,0.5);
+            color: rgba(255,255,255,0.4);
+        }
+
+        body.light-mode .footer {
+            background: #FFFFFF;
+            color: #8A8A8A;
+            border: 1px solid #E8ECEF;
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            border: none;
+            z-index: 999;
+        }
+
+            .scroll-top.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .modal-custom {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .modal-custom.active {
+                display: flex;
+            }
+
+        .modal-content-custom {
+            width: 90%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border-radius: 28px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        body.dark-mode .modal-content-custom {
+            background: #1A1A2E;
+            border: 1px solid rgba(197,160,89,0.2);
+        }
+
+        body.light-mode .modal-content-custom {
+            background: white;
+            border: 1px solid #E8ECEF;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+            .modal-close:hover {
+                transform: rotate(90deg);
+                color: #C5A059;
+            }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 0.4rem;
+                font-size: 0.8rem;
+                font-weight: 500;
+            }
+
+        .form-control, .form-select {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .form-control, body.dark-mode .form-select {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(197,160,89,0.3);
+            color: white;
+        }
+
+        body.light-mode .form-control, body.light-mode .form-select {
+            background: #F0F2F5;
+            border: 1px solid #E8ECEF;
+            color: #333;
+        }
+
+        @@media (max-width: 768px) {
+            .chart-card {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+
+    <div class="app-wrapper">
+        <div class="sidebar">
+            <div class="sidebar-inner">
+                <div class="sidebar-profile" onclick="goToHome()">
+                    <div class="profile-avatar"><i class="fas fa-palette"></i></div>
+                    <div class="profile-name">ARTISTIC</div>
+                    <div class="profile-role">Admin Panel</div>
+                </div>
+                <div class="nav-menu">
+                    <div class="nav-item"><a href="@Url.Action("Dashboard", "Admin")"><i class="fas fa-home"></i><span class="nav-text">Dashboard</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ManageStaff", "Admin")"><i class="fas fa-users"></i><span class="nav-text">Manage Staff</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ManageStudents", "Admin")"><i class="fas fa-user-graduate"></i><span class="nav-text">Manage Students</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ManageCompetitions", "Admin")"><i class="fas fa-trophy"></i><span class="nav-text">Competitions</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ManageExhibitions", "Admin")"><i class="fas fa-building"></i><span class="nav-text">Exhibitions</span></a></div>
+                    <div class="nav-item active"><a href="@Url.Action("Announcements", "Admin")"><i class="fas fa-bullhorn"></i><span class="nav-text">Announcements</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("Reports", "Admin")"><i class="fas fa-chart-bar"></i><span class="nav-text">Reports</span></a></div>
+                </div>
+                <div class="nav-footer">
+                    <div class="logout-item"><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span class="logout-text">Logout</span></a></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="top-header">
+                <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <div class="page-title"><h2>Announcements</h2><p>Post and manage important announcements</p></div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="theme-toggle" id="themeToggle"><i class="fas fa-sun" id="themeIcon"></i></div>
+                    <div class="user-dropdown"><div class="user-avatar"><i class="fas fa-user-cog"></i></div><div class="dropdown-menu-custom"><a href="#" class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></div></div>
+                </div>
+            </div>
+
+            <div class="container-fluid mt-4">
+                <div class="row mb-4"><div class="col-12"><button class="btn-gold" style="width: auto;" onclick="openModal('addAnnouncementModal')"><i class="fas fa-plus me-2"></i> Post New Announcement</button></div></div>
+
+                <div class="row g-4" id="announcementsList"></div>
+            </div>
+
+            <div class="footer"><p>© 2025 ARTISTIC - Institute of Fine Arts. All rights reserved.</p></div>
+        </div>
+    </div>
+
+    <div class="modal-custom" id="addAnnouncementModal">
+        <div class="modal-content-custom">
+            <button class="modal-close" onclick="closeModal('addAnnouncementModal')">&times;</button><h3>Post New Announcement</h3>
+            <form id="announcementForm">
+                <div class="form-group"><label>Title *</label><input type="text" class="form-control" id="announcementTitle" required></div>
+                <div class="form-group"><label>Content *</label><textarea class="form-control" id="announcementContent" rows="5" required></textarea></div>
+                <button type="submit" class="btn-gold">Post Announcement</button>
+            </form>
+        </div>
+    </div>
+
+    <button class="scroll-top" id="scrollTop"><i class="fas fa-arrow-up"></i></button>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // Dark/Light Mode
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        if (localStorage.getItem('adminTheme') === 'light') {
+        body.classList.remove('dark-mode'); body.classList.add('light-mode');
+        themeIcon.classList.remove('fa-sun'); themeIcon.classList.add('fa-moon');
+        } else {
+        body.classList.add('dark-mode'); body.classList.remove('light-mode');
+        themeIcon.classList.remove('fa-moon'); themeIcon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+        if (body.classList.contains('dark-mode')) {
+        body.classList.remove('dark-mode'); body.classList.add('light-mode');
+        localStorage.setItem('adminTheme', 'light');
+        themeIcon.classList.remove('fa-sun'); themeIcon.classList.add('fa-moon');
+        } else {
+        body.classList.remove('light-mode'); body.classList.add('dark-mode');
+        localStorage.setItem('adminTheme', 'dark');
+        themeIcon.classList.remove('fa-moon'); themeIcon.classList.add('fa-sun');
+        }
+        });
+
+        // Menu Toggle for Mobile
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        if (menuToggle) menuToggle.addEventListener('click', () => sidebar.classList.toggle('active'));
+
+        // Scroll Top
+        const scrollBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => { if (window.scrollY > 300) scrollBtn.classList.add('show'); else scrollBtn.classList.remove('show'); });
+        scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        // Function to go to Home Page
+        function goToHome() {
+        window.location.href = '@Url.Action("Index", "Home")';
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); document.body.style.overflow = 'auto'; }
+
+        function showSuccess(msg) {
+        Swal.fire({
+        title: 'Success!',
+        text: msg,
+        icon: 'success',
+        confirmButtonColor: '#C5A059',
+        background: body.classList.contains('dark-mode') ? '#1A1A2E' : '#FFFFFF',
+        color: body.classList.contains('dark-mode') ? 'white' : '#333',
+        timer: 2000,
+        showConfirmButton: false
+        });
+        }
+
+        function showConfirm(message, callback) {
+        Swal.fire({
+        title: 'Are you sure?',
+        text: message,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#C5A059',
+        cancelButtonColor: '#dc3545',
+        confirmButtonText: 'Yes',
+        background: body.classList.contains('dark-mode') ? '#1A1A2E' : '#FFFFFF',
+        color: body.classList.contains('dark-mode') ? 'white' : '#333'
+        }).then((result) => { if (result.isConfirmed && callback) callback(); });
+        }
+
+        function logout() {
+        Swal.fire({
+        title: 'Logout?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#C5A059',
+        confirmButtonText: 'Yes',
+        background: body.classList.contains('dark-mode') ? '#1A1A2E' : '#FFFFFF',
+        color: body.classList.contains('dark-mode') ? 'white' : '#333'
+        }).then((r) => { if (r.isConfirmed) window.location.href = '@Url.Action("Index", "Home")'; });
+        }
+
+        function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+
+        const STORAGE_KEY = 'adminAnnouncements';
+
+        const defaultAnnouncements = [
+            { id: 1, title: 'Summer Art Festival 2025 Announced!', content: 'Summer Art Festival 2025 is now open for submissions. Last date to submit is June 15, 2025.', date: '2025-03-01' },
+            { id: 2, title: 'Exhibition Opportunity', content: 'Selected artworks will be displayed at National Art Expo 2025. Submit your best work!', date: '2025-03-05' },
+            { id: 3, title: 'Staff Meeting Notice', content: 'All staff members are requested to attend a meeting on March 20, 2025 at 10:00 AM.', date: '2025-03-10' }
+        ];
+
+        function getAnnouncements() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (!saved) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultAnnouncements));
+                return defaultAnnouncements;
+            }
+
+            try {
+                return JSON.parse(saved) || [];
+            } catch {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultAnnouncements));
+                return defaultAnnouncements;
+            }
+        }
+
+        function saveAnnouncements(announcements) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(announcements));
+        }
+
+        function loadAnnouncements() {
+            const container = document.getElementById('announcementsList');
+            const announcements = getAnnouncements();
+
+            container.innerHTML = '';
+
+            if (!announcements.length) {
+                container.innerHTML = `
+                    <div class="col-12">
+                        <div class="chart-card text-center">
+                            <h4 style="color:#C5A059;">No announcements found</h4>
+                            <p style="opacity:0.7;">Click “Post New Announcement” to add one.</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            announcements.forEach(a => {
+                container.innerHTML += `
+                    <div class="col-md-6 col-lg-4" data-aos="fade-up">
+                        <div class="chart-card" style="height:100%; display:flex; flex-direction:column;">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="chart-title"><i class="fas fa-bullhorn"></i> Announcement</div>
+                                <button class="btn-sm" onclick="deleteAnnouncement(${a.id})"><i class="fas fa-trash"></i> Delete</button>
+                            </div>
+                            <h4 style="color:#C5A059; margin-bottom:8px;">${escapeHtml(a.title)}</h4>
+                            <p style="opacity:0.7; font-size:0.8rem;"><i class="far fa-calendar"></i> ${escapeHtml(a.date)}</p>
+                            <p style="margin-top:10px; flex:1;">${escapeHtml(a.content)}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteAnnouncement(id) {
+            const announcements = getAnnouncements();
+            const ann = announcements.find(a => a.id === id);
+
+            showConfirm(`Delete "${ann?.title}"?`, () => {
+                const updated = announcements.filter(a => a.id !== id);
+                saveAnnouncements(updated);
+                loadAnnouncements();
+                showSuccess('Announcement deleted!');
+            });
+        }
+
+        document.getElementById('announcementForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const announcements = getAnnouncements();
+
+            const newAnn = {
+                id: Date.now(),
+                title: document.getElementById('announcementTitle').value.trim(),
+                content: document.getElementById('announcementContent').value.trim(),
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            if (!newAnn.title || !newAnn.content) {
+                Swal.fire({
+                    title: 'Missing fields',
+                    text: 'Please enter title and content.',
+                    icon: 'warning',
+                    confirmButtonColor: '#C5A059',
+                    background: body.classList.contains('dark-mode') ? '#1A1A2E' : '#FFFFFF',
+                    color: body.classList.contains('dark-mode') ? 'white' : '#333'
+                });
+                return;
+            }
+
+            announcements.unshift(newAnn);
+            saveAnnouncements(announcements);
+            loadAnnouncements();
+            closeModal('addAnnouncementModal');
+            document.getElementById('announcementForm').reset();
+            showSuccess('Announcement posted!');
+        });
+
+        loadAnnouncements();
+    </script>
+</body>
+</html>

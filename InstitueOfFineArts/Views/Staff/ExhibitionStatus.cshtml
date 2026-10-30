@@ -1,0 +1,952 @@
+﻿@model IEnumerable<InstituteOfFineArts.Models.ExhibitionListing>
+@using InstituteOfFineArts.Models
+
+@{
+    ViewData["Title"] = "Exhibition Status";
+
+    var listings = Model?.ToList() ?? new List<ExhibitionListing>();
+    var totalExhibitions = listings.Select(x => x.ExhibitionId).Distinct().Count();
+    var totalArtworksSent = listings.Count;
+    var soldArtworks = listings.Count(x => x.SaleStatus == SaleStatus.Sold);
+    var paidToStudents = listings.Count(x => x.PaymentStatus == PaymentStatus.Paid);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exhibition Status | Staff Panel</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body.dark-mode {
+            background: #0A0A0A;
+            color: #FFFFFF;
+            font-family: 'Inter',sans-serif;
+        }
+
+        body.light-mode {
+            background: #F0F2F5;
+            color: #1A1A1A;
+            font-family: 'Inter',sans-serif;
+        }
+
+        .app-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 70px;
+            border-radius: 40px;
+            transition: .3s;
+            z-index: 1000;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+            background: rgba(20,20,30,.9);
+            border: 1px solid rgba(197,160,89,.15);
+        }
+
+            .sidebar:hover {
+                width: 260px;
+                border-radius: 28px;
+            }
+
+        .sidebar-inner {
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .sidebar-profile {
+            width: 100%;
+            text-align: center;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .profile-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg,#C5A059,#E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+        }
+
+        .profile-name, .profile-role, .nav-text, .logout-text {
+            font-size: 0;
+            opacity: 0;
+            transition: .3s;
+            white-space: nowrap;
+        }
+
+        .sidebar:hover .profile-name {
+            font-size: .85rem;
+            opacity: 1;
+            margin-top: 12px;
+        }
+
+        .sidebar:hover .profile-role {
+            font-size: .65rem;
+            opacity: .6;
+            margin-top: 4px;
+        }
+
+        .nav-menu {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 0 12px;
+        }
+
+        .nav-item a, .logout-item a {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px;
+            text-decoration: none;
+            border-radius: 30px;
+            color: rgba(255,255,255,.7);
+            transition: .25s;
+            white-space: nowrap;
+        }
+
+            .nav-item a i, .logout-item a i {
+                width: 28px;
+                height: 28px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #C5A059;
+                flex-shrink: 0;
+            }
+
+        .sidebar:hover .nav-text, .sidebar:hover .logout-text {
+            font-size: .85rem;
+            opacity: 1;
+        }
+
+        .nav-item:hover a, .nav-item.active a {
+            background: rgba(197,160,89,.15);
+            color: #C5A059;
+            transform: translateX(4px);
+        }
+
+        .nav-footer {
+            width: 100%;
+            margin-top: 30px;
+            padding: 20px 12px 0;
+            border-top: 1px solid rgba(255,255,255,.08);
+        }
+
+        .logout-item a i {
+            color: #E53E3E;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 100px;
+            padding: 24px 32px;
+            overflow-x: hidden;
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 16px 24px;
+            border-radius: 24px;
+            margin-bottom: 28px;
+            background: rgba(20,20,20,.7);
+            border: 1px solid rgba(255,255,255,.05);
+        }
+
+        .page-title h2 {
+            font-family: 'Playfair Display',serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .page-title p {
+            font-size: .8rem;
+            opacity: .7;
+            margin: 4px 0 0;
+        }
+
+        .theme-toggle, .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle {
+            background: rgba(255,255,255,.08);
+            color: #FFD700;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            background: linear-gradient(135deg,#C5A059,#E8C87A);
+            color: #000;
+        }
+
+        .stat-card, .table-card {
+            border-radius: 24px;
+            padding: 1.5rem;
+            background: rgba(20,20,20,.7);
+            border: 1px solid rgba(255,255,255,.05);
+            height: 100%;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            color: #C5A059;
+            margin-bottom: .8rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: .8rem;
+            opacity: .7;
+        }
+
+        .chart-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #C5A059;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: .5rem 1rem;
+            border-radius: 50px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.1);
+        }
+
+            .search-box input {
+                background: transparent;
+                border: none;
+                outline: none;
+                color: inherit;
+                width: 250px;
+            }
+
+        .filter-select {
+            background: rgba(255,255,255,.06);
+            border: 1px solid #C5A059;
+            border-radius: 50px;
+            padding: .5rem 1rem;
+            color: #fff;
+        }
+
+            .filter-select option {
+                background: #1A1A2E;
+                color: #fff;
+            }
+
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .table-custom th, .table-custom td {
+                padding: 1rem .8rem;
+                border-bottom: 1px solid rgba(255,255,255,.08);
+                vertical-align: middle;
+                font-size: .85rem;
+            }
+
+            .table-custom th {
+                color: #C5A059;
+                font-weight: 600;
+            }
+
+        .art-img {
+            width: 70px;
+            height: 55px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid rgba(197,160,89,.3);
+        }
+
+        .badge-status {
+            padding: .25rem .7rem;
+            border-radius: 30px;
+            font-size: .7rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-available {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-sold {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .badge-returned {
+            background: #6c757d;
+            color: white;
+        }
+
+        .badge-withdrawn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .badge-paid {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-pending {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .badge-na {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg,#C5A059,#E8C87A);
+            color: #000;
+            border: none;
+            padding: .45rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            cursor: pointer;
+        }
+
+            .btn-gold:hover {
+                color: #000;
+                transform: translateY(-1px);
+            }
+
+        .btn-small {
+            padding: .35rem .8rem;
+            font-size: .78rem;
+        }
+
+        .btn-secondary-custom {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: .55rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .modal-custom {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,.7);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .modal-custom.active {
+                display: flex;
+            }
+
+        .modal-content-custom {
+            width: 92%;
+            max-width: 760px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 28px;
+            padding: 2rem;
+            position: relative;
+            background: #1A1A2E;
+            border: 1px solid rgba(197,160,89,.2);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: .4rem;
+                font-size: .85rem;
+                color: #C5A059;
+                font-weight: 600;
+            }
+
+        .form-control, .form-select, textarea.form-control {
+            width: 100%;
+            padding: .75rem 1rem;
+            border-radius: 14px;
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(197,160,89,.3);
+            color: white;
+        }
+
+            .form-control::placeholder, textarea.form-control::placeholder {
+                color: rgba(255,255,255,.55);
+            }
+
+            .form-select option {
+                background: #1A1A2E;
+                color: white;
+            }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            gap: 1rem;
+        }
+
+        .footer {
+            padding: 1rem;
+            margin-top: 2rem;
+            text-align: center;
+            border-radius: 20px;
+            font-size: .7rem;
+            background: rgba(20,20,20,.5);
+            color: rgba(255,255,255,.4);
+        }
+
+        @@media(max-width:992px) {
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+            }
+
+            .sidebar {
+                left: -70px;
+            }
+
+                .sidebar.active {
+                    left: 20px;
+                }
+        }
+
+        @@media(max-width:768px) {
+            .search-box, .search-box input, .filter-select {
+                width: 100%;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-row {
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+
+<body class="dark-mode">
+    <div class="app-wrapper">
+        <div class="sidebar">
+            <div class="sidebar-inner">
+                <div class="sidebar-profile" onclick="goToHome()">
+                    <div class="profile-avatar"><i class="fas fa-palette"></i></div>
+                    <div class="profile-name">ARTISTIC</div>
+                    <div class="profile-role">Staff Panel</div>
+                </div>
+
+                <div class="nav-menu">
+                    <div class="nav-item"><a href="@Url.Action("Dashboard", "Staff")"><i class="fas fa-home"></i><span class="nav-text">Dashboard</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ViewStudents", "Staff")"><i class="fas fa-users"></i><span class="nav-text">View Students</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ManageCompetitions", "Staff")"><i class="fas fa-trophy"></i><span class="nav-text">Competitions</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ManageExhibitions", "Staff")"><i class="fas fa-building"></i><span class="nav-text">Exhibitions</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ViewPostings", "Staff")"><i class="fas fa-clipboard-list"></i><span class="nav-text">View Postings</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("MarkPostings", "Staff")"><i class="fas fa-check-double"></i><span class="nav-text">Mark Postings</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("SendtoExhibition", "Staff")"><i class="fas fa-paper-plane"></i><span class="nav-text">Send to Exhibition</span></a></div>
+                    <div class="nav-item active"><a href="@Url.Action("ExhibitionStatus", "Staff")"><i class="fas fa-chart-line"></i><span class="nav-text">Exhibition Status</span></a></div>
+                </div>
+
+                <div class="nav-footer">
+                    <div class="logout-item"><a href="@Url.Action("Login", "Account")"><i class="fas fa-sign-out-alt"></i><span class="logout-text">Logout</span></a></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="top-header">
+                <div class="page-title">
+                    <h2><i class="fas fa-chart-line me-2" style="color:#C5A059;"></i>Exhibition Status</h2>
+                    <p>Track exhibition listings, sale status, buyer details and student payment status</p>
+                </div>
+                <div style="display:flex; align-items:center; gap:1rem;">
+                    <div class="theme-toggle" id="themeToggle"><i class="fas fa-sun" id="themeIcon"></i></div>
+                    <div class="user-avatar"><i class="fas fa-user-tie"></i></div>
+                </div>
+            </div>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">@TempData["Success"]</div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">@TempData["Error"]</div>
+            }
+
+            <div class="container-fluid mt-4">
+                <div class="row g-4 mb-4">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-building"></i></div>
+                            <div class="stat-value">@totalExhibitions</div>
+                            <div class="stat-label">Total Exhibitions</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-palette"></i></div>
+                            <div class="stat-value">@totalArtworksSent</div>
+                            <div class="stat-label">Artworks Sent</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
+                            <div class="stat-value">@soldArtworks</div>
+                            <div class="stat-label">Sold Artworks</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
+                            <div class="stat-value">@paidToStudents</div>
+                            <div class="stat-label">Paid to Students</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="table-card">
+                            <div class="chart-title"><i class="fas fa-list"></i> Exhibition Listings</div>
+
+                            <div class="filter-row">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="searchInput" placeholder="Search artwork, student, exhibition...">
+                                </div>
+
+                                <select class="filter-select" id="saleFilter">
+                                    <option value="all">All Sale Status</option>
+                                    <option value="available">Available</option>
+                                    <option value="sold">Sold</option>
+                                    <option value="returned">Returned</option>
+                                    <option value="withdrawn">Withdrawn</option>
+                                </select>
+
+                                <a href="@Url.Action("SendtoExhibition", "Staff")" class="btn-gold">
+                                    <i class="fas fa-paper-plane"></i> Send More Artworks
+                                </a>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table-custom" id="listingTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Artwork</th>
+                                            <th>Student</th>
+                                            <th>Competition</th>
+                                            <th>Exhibition</th>
+                                            <th>Quoted Price</th>
+                                            <th>Sale Status</th>
+                                            <th>Final Sale</th>
+                                            <th>Payment</th>
+                                            <th>Listed At</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (!listings.Any())
+                                        {
+                                            <tr>
+                                                <td colspan="11" class="text-center py-4">No artwork has been sent to exhibition yet.</td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            foreach (var item in listings)
+                                            {
+                                                var submission = item.Submission;
+                                                var student = submission?.Student;
+                                                var competition = submission?.Competition;
+                                                var exhibition = item.Exhibition;
+
+                                                var studentName = student == null ? "N/A" : $"{student.FirstName} {student.LastName}";
+                                                var artworkTitle = submission?.PaintingTitle ?? "N/A";
+                                                var exhibitionName = exhibition?.ExhibitionName ?? "N/A";
+                                                var competitionTitle = competition?.Title ?? "N/A";
+
+                                                var saleClass = item.SaleStatus == SaleStatus.Sold ? "badge-sold" :
+                                                item.SaleStatus == SaleStatus.Returned ? "badge-returned" :
+                                                item.SaleStatus == SaleStatus.Withdrawn ? "badge-withdrawn" :
+                                                "badge-available";
+
+                                                var paymentClass = item.PaymentStatus == PaymentStatus.Paid ? "badge-paid" :
+                                                item.PaymentStatus == PaymentStatus.Pending ? "badge-pending" :
+                                                "badge-na";
+
+                                                <tr data-sale="@item.SaleStatus.ToString().ToLower()"
+                                                    data-search="@($"{artworkTitle} {studentName} {competitionTitle} {exhibitionName}".ToLower())">
+                                                    <td>
+                                                        @if (!string.IsNullOrWhiteSpace(submission?.ImageFilePath))
+                                                        {
+                                                            <img src="@submission.ImageFilePath" class="art-img" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>N/A</span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        <strong>@artworkTitle</strong><br />
+                                                        <small>@(submission?.TextType ?? "")</small>
+                                                    </td>
+                                                    <td>@studentName</td>
+                                                    <td>@competitionTitle</td>
+                                                    <td>
+                                                        <strong>@exhibitionName</strong><br />
+                                                        <small>@(exhibition?.Venue ?? "")</small>
+                                                    </td>
+                                                    <td>Rs. @item.StudentQuotedPrice.ToString("N0")</td>
+                                                    <td><span class="badge-status @saleClass">@item.SaleStatus</span></td>
+                                                    <td>
+                                                        @if (item.FinalSalePrice.HasValue)
+                                                        {
+                                                            <span>Rs. @item.FinalSalePrice.Value.ToString("N0")</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>-</span>
+                                                        }
+                                                    </td>
+                                                    <td><span class="badge-status @paymentClass">@item.PaymentStatus</span></td>
+                                                    <td>@item.ListedAt.ToString("MMM dd, yyyy")</td>
+                                                    <td>
+                                                        <button type="button" class="btn-gold btn-small" onclick="openModal('updateListing_@item.ExhibitionListingId')">
+                                                            <i class="fas fa-edit"></i> Update
+                                                        </button>
+                                                    </td>
+                                                </tr>
+
+                                                <div class="modal-custom" id="updateListing_@item.ExhibitionListingId">
+                                                    <div class="modal-content-custom">
+                                                        <button class="modal-close" type="button" onclick="closeModal('updateListing_@item.ExhibitionListingId')">&times;</button>
+                                                        <h3>Update Sale / Payment Status</h3>
+
+                                                        <form asp-controller="Staff" asp-action="UpdateExhibitionListingStatus" method="post">
+                                                            @Html.AntiForgeryToken()
+
+                                                            <input type="hidden" name="ExhibitionListingId" value="@item.ExhibitionListingId" />
+
+                                                            <div class="form-row">
+                                                                <div class="form-group">
+                                                                    <label>Sale Status</label>
+                                                                    <select class="form-select" name="SaleStatus" required>
+                                                                        @if (item.SaleStatus == SaleStatus.Available)
+                                                                        {
+                                                                            <option value="1" selected>Available</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="1">Available</option>
+                                                                        }
+
+                                                                        @if (item.SaleStatus == SaleStatus.Sold)
+                                                                        {
+                                                                            <option value="2" selected>Sold</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="2">Sold</option>
+                                                                        }
+
+                                                                        @if (item.SaleStatus == SaleStatus.Returned)
+                                                                        {
+                                                                            <option value="3" selected>Returned</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="3">Returned</option>
+                                                                        }
+
+                                                                        @if (item.SaleStatus == SaleStatus.Withdrawn)
+                                                                        {
+                                                                            <option value="4" selected>Withdrawn</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="4">Withdrawn</option>
+                                                                        }
+                                                                    </select>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label>Final Sale Price</label>
+                                                                    <input type="number" step="0.01" class="form-control" name="FinalSalePrice" value="@(item.FinalSalePrice?.ToString("0.00") ?? "")" placeholder="Example: 2500" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-row">
+                                                                <div class="form-group">
+                                                                    <label>Date Sold</label>
+                                                                    <input type="date" class="form-control" name="DateSold" value="@(item.DateSold?.ToString("yyyy-MM-dd") ?? "")" />
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label>Payment Status</label>
+                                                                    <select class="form-select" name="PaymentStatus" required>
+                                                                        @if (item.PaymentStatus == PaymentStatus.NotApplicable)
+                                                                        {
+                                                                            <option value="0" selected>Not Applicable</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="0">Not Applicable</option>
+                                                                        }
+
+                                                                        @if (item.PaymentStatus == PaymentStatus.Pending)
+                                                                        {
+                                                                            <option value="1" selected>Pending</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="1">Pending</option>
+                                                                        }
+
+                                                                        @if (item.PaymentStatus == PaymentStatus.Paid)
+                                                                        {
+                                                                            <option value="2" selected>Paid</option>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="2">Paid</option>
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-row">
+                                                                <div class="form-group">
+                                                                    <label>Buyer Name</label>
+                                                                    <input type="text" class="form-control" name="BuyerName" value="@item.BuyerName" placeholder="Buyer full name" />
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label>Buyer Phone</label>
+                                                                    <input type="text" class="form-control" name="BuyerPhone" value="@item.BuyerPhone" placeholder="03xxxxxxxxx" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-row">
+                                                                <div class="form-group">
+                                                                    <label>Buyer Email</label>
+                                                                    <input type="email" class="form-control" name="BuyerEmail" value="@item.BuyerEmail" placeholder="buyer@email.com" />
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label>Amount Paid To Student</label>
+                                                                    <input type="number" step="0.01" class="form-control" name="AmountPaidToStudent" value="@(item.AmountPaidToStudent?.ToString("0.00") ?? "")" placeholder="Example: 2000" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Buyer Address</label>
+                                                                <textarea class="form-control" name="BuyerAddress" rows="2">@item.BuyerAddress</textarea>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Payment Date</label>
+                                                                <input type="date" class="form-control" name="PaymentDate" value="@(item.PaymentDate?.ToString("yyyy-MM-dd") ?? "")" />
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Payment Remarks</label>
+                                                                <textarea class="form-control" name="PaymentRemarks" rows="3">@item.PaymentRemarks</textarea>
+                                                            </div>
+
+                                                            <div class="d-flex gap-2 mt-3">
+                                                                <button type="button" class="btn-secondary-custom" style="flex:1;" onclick="closeModal('updateListing_@item.ExhibitionListingId')">Cancel</button>
+                                                                <button type="submit" class="btn-gold" style="flex:2;">Save Status</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div id="noResults" class="text-center py-4" style="display:none;">No matching records found.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>© 2025 ARTISTIC - Institute of Fine Arts. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const body = document.body;
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+
+        if (localStorage.getItem('staffTheme') === 'light') {
+            body.classList.remove('dark-mode');
+            body.classList.add('light-mode');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            if (body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                localStorage.setItem('staffTheme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            } else {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                localStorage.setItem('staffTheme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+        });
+
+        function goToHome() {
+            window.location.href = '@Url.Action("Index", "Home")';
+        }
+
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        const searchInput = document.getElementById('searchInput');
+        const saleFilter = document.getElementById('saleFilter');
+
+        function applyFilters() {
+            const search = (searchInput?.value || '').toLowerCase().trim();
+            const sale = saleFilter?.value || 'all';
+            const rows = document.querySelectorAll('#listingTable tbody tr[data-sale]');
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const rowSearch = row.getAttribute('data-search') || '';
+                const rowSale = row.getAttribute('data-sale') || '';
+
+                const matchesSearch = search === '' || rowSearch.includes(search);
+                const matchesSale = sale === 'all' || rowSale === sale;
+
+                if (matchesSearch && matchesSale) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            const noResults = document.getElementById('noResults');
+            if (noResults) noResults.style.display = visibleCount === 0 && rows.length > 0 ? 'block' : 'none';
+        }
+
+        if (searchInput) searchInput.addEventListener('input', applyFilters);
+        if (saleFilter) saleFilter.addEventListener('change', applyFilters);
+    </script>
+</body>
+</html>

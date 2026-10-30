@@ -1,0 +1,1181 @@
+﻿@model IEnumerable<InstituteOfFineArts.Models.Staff>
+
+@{
+    ViewData["Title"] = "Manage Staff";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Manage Staff | ARTISTIC Institute</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body.dark-mode {
+            background: #0A0A0A;
+            color: #FFFFFF;
+        }
+
+        body.light-mode {
+            background: #F0F2F5;
+            color: #1A1A1A;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 70px;
+            border-radius: 40px;
+            transition: all 0.3s cubic-bezier(0.2,0.9,0.4,1.1);
+            z-index: 1000;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+        }
+
+            .sidebar:hover {
+                width: 260px;
+                border-radius: 28px;
+            }
+
+        body.dark-mode .sidebar {
+            background: rgba(20,20,30,0.9);
+            border: 1px solid rgba(197,160,89,0.15);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        body.light-mode .sidebar {
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(0,0,0,0.08);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        @@media (max-width: 992px) {
+            .sidebar {
+                left: -70px;
+            }
+
+                .sidebar.active {
+                    left: 20px;
+                }
+
+            .menu-toggle {
+                display: block !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                width: 100%;
+                padding: 16px !important;
+            }
+        }
+
+        .sidebar-inner {
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .sidebar-profile {
+            width: 100%;
+            text-align: center;
+            padding: 0 0 20px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .sidebar-profile:hover {
+                opacity: 0.8;
+            }
+
+        body.dark-mode .sidebar-profile {
+            border-color: rgba(255,255,255,0.08);
+        }
+
+        body.light-mode .sidebar-profile {
+            border-color: rgba(0,0,0,0.06);
+        }
+
+        .profile-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #000;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar:hover .profile-avatar {
+            width: 50px;
+            height: 50px;
+            font-size: 1.4rem;
+        }
+
+        .profile-name {
+            margin-top: 10px;
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar:hover .profile-name {
+            font-size: 0.85rem;
+            opacity: 1;
+            margin-top: 12px;
+        }
+
+        .profile-role {
+            margin-top: 4px;
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar:hover .profile-role {
+            font-size: 0.65rem;
+            opacity: 0.6;
+        }
+
+        .nav-menu {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            width: 100%;
+            border-radius: 30px;
+            transition: all 0.25s ease;
+        }
+
+            .nav-item a {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 12px;
+                text-decoration: none;
+                border-radius: 30px;
+                transition: all 0.25s ease;
+                font-weight: 500;
+                white-space: nowrap;
+            }
+
+                .nav-item a i {
+                    width: 28px;
+                    height: 28px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.1rem;
+                    color: #C5A059;
+                    flex-shrink: 0;
+                }
+
+        .nav-text {
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .sidebar:hover .nav-text {
+            font-size: 0.85rem;
+            opacity: 1;
+        }
+
+        body.dark-mode .nav-item a {
+            color: rgba(255,255,255,0.7);
+        }
+
+        body.light-mode .nav-item a {
+            color: #4A5568;
+        }
+
+        .nav-item:hover a {
+            transform: translateX(4px);
+        }
+
+        body.dark-mode .nav-item:hover a {
+            background: rgba(197,160,89,0.12);
+            color: #C5A059;
+        }
+
+        body.light-mode .nav-item:hover a {
+            background: rgba(197,160,89,0.08);
+            color: #C5A059;
+        }
+
+        body.dark-mode .nav-item.active a {
+            background: rgba(197,160,89,0.15);
+            color: #C5A059;
+        }
+
+        body.light-mode .nav-item.active a {
+            background: rgba(197,160,89,0.1);
+            color: #C5A059;
+        }
+
+        .nav-footer {
+            width: 100%;
+            margin-top: 30px;
+            padding: 20px 12px 0;
+            border-top: 1px solid;
+        }
+
+        body.dark-mode .nav-footer {
+            border-color: rgba(255,255,255,0.08);
+        }
+
+        body.light-mode .nav-footer {
+            border-color: rgba(0,0,0,0.06);
+        }
+
+        .logout-item {
+            width: 100%;
+            border-radius: 30px;
+        }
+
+            .logout-item a {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 12px;
+                text-decoration: none;
+                border-radius: 30px;
+                transition: all 0.25s ease;
+                white-space: nowrap;
+            }
+
+                .logout-item a i {
+                    width: 28px;
+                    font-size: 1.1rem;
+                    flex-shrink: 0;
+                }
+
+        body.dark-mode .logout-item a {
+            color: rgba(255,255,255,0.7);
+        }
+
+        body.light-mode .logout-item a {
+            color: #E53E3E;
+        }
+
+        .logout-text {
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar:hover .logout-text {
+            font-size: 0.85rem;
+            opacity: 1;
+        }
+
+        .logout-item:hover a {
+            transform: translateX(4px);
+        }
+
+        body.dark-mode .logout-item:hover a {
+            background: rgba(229,62,62,0.15);
+            color: #E53E3E;
+        }
+
+        body.light-mode .logout-item:hover a {
+            background: #FEE2E2;
+            color: #E53E3E;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 100px;
+            padding: 24px 32px;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        @@media (max-width: 992px) {
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 12px 24px;
+            border-radius: 24px;
+            margin-bottom: 28px;
+        }
+
+        body.dark-mode .top-header {
+            background: rgba(20,20,20,0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        body.light-mode .top-header {
+            background: #FFFFFF;
+            border: 1px solid #E8ECEF;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 12px;
+        }
+
+        body.dark-mode .menu-toggle {
+            color: white;
+        }
+
+        body.light-mode .menu-toggle {
+            color: #333;
+        }
+
+        .page-title h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .page-title p {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .theme-toggle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .theme-toggle {
+            background: rgba(255,255,255,0.08);
+            color: #FFD700;
+        }
+
+        body.light-mode .theme-toggle {
+            background: #F0F2F5;
+            color: #C5A059;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg);
+        }
+
+        .user-dropdown {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .dropdown-menu-custom {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            min-width: 160px;
+            border-radius: 16px;
+            padding: 8px;
+            display: none;
+            z-index: 100;
+        }
+
+        body.dark-mode .dropdown-menu-custom {
+            background: #1A1A2E;
+            border: 1px solid rgba(197,160,89,0.2);
+        }
+
+        body.light-mode .dropdown-menu-custom {
+            background: white;
+            border: 1px solid #E8ECEF;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .user-dropdown:hover .dropdown-menu-custom {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: 0.2s;
+        }
+
+        body.dark-mode .dropdown-item {
+            color: white;
+        }
+
+        body.light-mode .dropdown-item {
+            color: #333;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(197,160,89,0.15);
+        }
+
+        /* Cards */
+        .recent-table {
+            border-radius: 24px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        body.dark-mode .recent-table {
+            background: rgba(20,20,20,0.7);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        body.light-mode .recent-table {
+            background: #FFFFFF;
+            border: 1px solid #E8ECEF;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .chart-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #C5A059;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .table-custom th, .table-custom td {
+                padding: 0.8rem 0.5rem;
+                text-align: left;
+                border-bottom: 1px solid;
+            }
+
+        body.dark-mode .table-custom th, body.dark-mode .table-custom td {
+            border-color: rgba(255,255,255,0.06);
+        }
+
+        body.light-mode .table-custom th, body.light-mode .table-custom td {
+            border-color: #E8ECEF;
+        }
+
+        .table-custom th {
+            color: #C5A059;
+            font-weight: 600;
+        }
+
+        .badge-active {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 0.25rem 0.7rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-inactive {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            color: white;
+            padding: 0.25rem 0.7rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            color: #000;
+            border: none;
+            padding: 0.35rem 0.9rem;
+            border-radius: 25px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+            padding: 0.35rem 0.9rem;
+            border-radius: 25px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .btn-edit:hover, .btn-delete:hover {
+                transform: translateY(-2px);
+            }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            color: #000;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .btn-gold:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(197,160,89,0.3);
+            }
+
+        .footer {
+            padding: 1rem;
+            margin-top: 2rem;
+            text-align: center;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+
+        body.dark-mode .footer {
+            background: rgba(20,20,20,0.5);
+            color: rgba(255,255,255,0.4);
+        }
+
+        body.light-mode .footer {
+            background: #FFFFFF;
+            color: #8A8A8A;
+            border: 1px solid #E8ECEF;
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            border: none;
+            z-index: 999;
+        }
+
+            .scroll-top.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        /* Modal */
+        .modal-custom {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .modal-custom.active {
+                display: flex;
+            }
+
+        .modal-content-custom {
+            width: 90%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border-radius: 28px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        body.dark-mode .modal-content-custom {
+            background: #1A1A2E;
+            border: 1px solid rgba(197,160,89,0.2);
+        }
+
+        body.light-mode .modal-content-custom {
+            background: white;
+            border: 1px solid #E8ECEF;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+            .modal-close:hover {
+                transform: rotate(90deg);
+                color: #C5A059;
+            }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 0.4rem;
+                font-size: 0.8rem;
+                font-weight: 500;
+            }
+
+        .form-control, .form-select {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-select {
+            cursor: pointer;
+            appearance: auto;
+            -webkit-appearance: menulist;
+            -moz-appearance: menulist;
+        }
+
+            .form-select option {
+                padding: 10px;
+                display: block;
+            }
+
+        body.dark-mode .form-control, body.dark-mode .form-select {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(197,160,89,0.3);
+            color: white;
+        }
+
+            body.dark-mode .form-select option {
+                background: #1A1A2E;
+                color: white;
+            }
+
+        body.light-mode .form-control, body.light-mode .form-select {
+            background: #F0F2F5;
+            border: 1px solid #E8ECEF;
+            color: #333;
+        }
+
+            body.light-mode .form-select option {
+                background: white;
+                color: #333;
+            }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.7rem;
+            margin-top: 0.3rem;
+        }
+
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
+
+        @@media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+
+    @if (TempData["Success"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                Swal.fire({ title: 'Success!', text: '@TempData["Success"]', icon: 'success', confirmButtonColor: '#C5A059' });
+            });
+        </script>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                Swal.fire({ title: 'Error!', text: '@TempData["Error"]', icon: 'error', confirmButtonColor: '#C5A059' });
+            });
+        </script>
+    }
+
+
+    <div class="app-wrapper">
+        <div class="sidebar">
+            <div class="sidebar-inner">
+                <div class="sidebar-profile" onclick="goToHome()">
+                    <div class="profile-avatar"><i class="fas fa-palette"></i></div>
+                    <div class="profile-name">ARTISTIC</div>
+                    <div class="profile-role">Admin Panel</div>
+                </div>
+                <div class="nav-menu">
+                    <div class="nav-item"><a href="@Url.Action("Dashboard", "Admin")"><i class="fas fa-home"></i><span class="nav-text">Dashboard</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ManageStaff", "Admin")"><i class="fas fa-users"></i><span class="nav-text">Manage Staff</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ManageStudents", "Admin")"><i class="fas fa-user-graduate"></i><span class="nav-text">Manage Students</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ManageCompetitions", "Admin")"><i class="fas fa-trophy"></i><span class="nav-text">Competitions</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ManageExhibitions", "Admin")"><i class="fas fa-building"></i><span class="nav-text">Exhibitions</span></a></div>
+                    <div class="nav-item active"><a href="@Url.Action("Announcements", "Admin")"><i class="fas fa-bullhorn"></i><span class="nav-text">Announcements</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("Reports", "Admin")"><i class="fas fa-chart-bar"></i><span class="nav-text">Reports</span></a></div>
+                </div>
+                <div class="nav-footer">
+                    <div class="logout-item"><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span class="logout-text">Logout</span></a></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="top-header">
+                <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <div class="page-title"><h2>Manage Staff</h2><p>Add, edit, or remove staff members</p></div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="theme-toggle" id="themeToggle"><i class="fas fa-sun" id="themeIcon"></i></div>
+                    <div class="user-dropdown"><div class="user-avatar"><i class="fas fa-user-cog"></i></div><div class="dropdown-menu-custom"><a href="#" class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></div></div>
+                </div>
+            </div>
+
+            <div class="container-fluid mt-4">
+                <div class="row mb-4"><div class="col-12"><button class="btn-gold" style="width: auto;" onclick="openModal('addStaffModal')"><i class="fas fa-user-plus me-2"></i> Add New Staff</button></div></div>
+
+                <div class="recent-table">
+                    <div class="chart-title mb-3"><i class="fas fa-users"></i> All Staff Members <span style="margin-left: auto; font-size: 0.75rem;">Total: @(Model?.Count() ?? 0) staff members</span></div>
+                    <div class="table-responsive">
+                        <table class="table-custom">
+                            <thead>
+                                <tr><th>ID</th><th>Name</th><th>Email</th><th>Staff Code</th><th>Designation</th><th>Department</th><th>Joining Date</th><th>Status</th><th>Actions</th></tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Any())
+                                {
+                                    foreach (var staff in Model)
+                                    {
+                                        <tr>
+                                            <td>@staff.StaffId</td>
+                                            <td><strong>@staff.FirstName @staff.LastName</strong></td>
+                                            <td>@(staff.ApplicationUser?.Email ?? "-")</td>
+                                            <td><code style="background:rgba(197,160,89,0.1);padding:0.2rem 0.5rem;border-radius:8px;">STF@staff.StaffId</code></td>
+                                            <td>@(staff.Designation ?? "-")</td>
+                                            <td>@(staff.HandlesSubject ?? "-")</td>
+                                            <td>@staff.DateJoined.ToString("yyyy-MM-dd")</td>
+                                            <td>
+                                                @if (staff.IsActive)
+                                                {
+                                                    <span class="badge-active">Active</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge-inactive">Inactive</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="btn-edit" type="button" onclick="openModal('editStaffModal_@staff.StaffId')">
+                                                        <i class="fas fa-edit"></i> Edit
+                                                    </button>
+
+                                                    <form asp-controller="Admin" asp-action="DeleteStaff" method="post" style="display:inline;">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="id" value="@staff.StaffId" />
+                                                        <button class="btn-delete" type="submit" onclick="return confirm('Are you sure you want to delete/deactivate this staff member?');">
+                                                            <i class="fas fa-trash-alt"></i> Delete
+                                                        </button>
+                                                    </form>
+                                                </div>
+
+                                                <div class="modal-custom" id="editStaffModal_@staff.StaffId">
+                                                    <div class="modal-content-custom">
+                                                        <button type="button" class="modal-close" onclick="closeModal('editStaffModal_@staff.StaffId')">&times;</button>
+                                                        <h3>Edit Staff</h3>
+
+                                                        <form asp-controller="Admin" asp-action="UpdateStaff" method="post">
+                                                            @Html.AntiForgeryToken()
+                                                            <input type="hidden" name="StaffId" value="@staff.StaffId" />
+
+                                                            <div class="form-group">
+                                                                <label>First Name *</label>
+                                                                <input type="text" class="form-control" name="FirstName" value="@staff.FirstName" required />
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Last Name *</label>
+                                                                <input type="text" class="form-control" name="LastName" value="@staff.LastName" required />
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Email/Login Email *</label>
+                                                                <input type="email" class="form-control" name="Email" value="@staff.ApplicationUser?.Email" required />
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Gender *</label>
+                                                                <input type="text" class="form-control" name="Gender" value="@staff.Gender" required />
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Date of Birth *</label>
+                                                                <input type="date" class="form-control" name="DateOfBirth" value="@staff.DateOfBirth.ToString("yyyy-MM-dd")" required />
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Address *</label>
+                                                                <input type="text" class="form-control" name="Address" value="@staff.Address" required />
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Phone Number *</label>
+                                                                <input type="text" class="form-control" name="PhoneNumber" value="@staff.PhoneNumber" required />
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Emergency Contact</label>
+                                                                <input type="text" class="form-control" name="EmergencyContact" value="@staff.EmergencyContact" />
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Qualification</label>
+                                                                <input type="text" class="form-control" name="Qualification" value="@staff.Qualification" />
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Date Joined *</label>
+                                                                <input type="date" class="form-control" name="DateJoined" value="@staff.DateJoined.ToString("yyyy-MM-dd")" required />
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Handles Class</label>
+                                                                <input type="text" class="form-control" name="HandlesClass" value="@staff.HandlesClass" />
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Handles Subject / Department</label>
+                                                                <input type="text" class="form-control" name="HandlesSubject" value="@staff.HandlesSubject" />
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Designation</label>
+                                                                <input type="text" class="form-control" name="Designation" value="@staff.Designation" />
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Remarks</label>
+                                                                <textarea class="form-control" name="Remarks" rows="3">@staff.Remarks</textarea>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Status</label>
+                                                                <select class="form-select" name="IsActive">
+                                                                    @if (staff.IsActive)
+                                                                    {
+                                                                        <option value="true" selected>Active</option>
+                                                                        <option value="false">Inactive</option>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="true">Active</option>
+                                                                        <option value="false" selected>Inactive</option>
+                                                                    }
+                                                                </select>
+                                                            </div>
+
+                                                            <button type="submit" class="btn-gold">Update Staff Member</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="9" class="text-center">No staff members found.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer"><p>© 2025 ARTISTIC - Institute of Fine Arts. All rights reserved.</p></div>
+        </div>
+    </div>
+
+    <div class="modal-custom" id="addStaffModal">
+        <div class="modal-content-custom">
+            <button type="button" class="modal-close" onclick="closeModal('addStaffModal')">&times;</button>
+            <h3 id="staffModalTitle">Add New Staff</h3>
+
+            <form asp-controller="Admin" asp-action="CreateStaff" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <label>First Name *</label>
+                    <input type="text" class="form-control" name="FirstName" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Last Name *</label>
+                    <input type="text" class="form-control" name="LastName" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Email/Login Email *</label>
+                    <input type="email" class="form-control" name="Email" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Password *</label>
+                    <input type="password" class="form-control" name="Password" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Confirm Password *</label>
+                    <input type="password" class="form-control" name="ConfirmPassword" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Gender *</label>
+                    <select class="form-select" name="Gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Date of Birth *</label>
+                    <input type="date" class="form-control" name="DateOfBirth" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Address *</label>
+                    <input type="text" class="form-control" name="Address" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number *</label>
+                    <input type="text" class="form-control" name="PhoneNumber" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Emergency Contact</label>
+                    <input type="text" class="form-control" name="EmergencyContact" />
+                </div>
+
+                <div class="form-group">
+                    <label>Qualification</label>
+                    <input type="text" class="form-control" name="Qualification" />
+                </div>
+
+                <div class="form-group">
+                    <label>Date Joined *</label>
+                    <input type="date" class="form-control" name="DateJoined" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Handles Class</label>
+                    <input type="text" class="form-control" name="HandlesClass" placeholder="BFA Semester 1" />
+                </div>
+
+                <div class="form-group">
+                    <label>Handles Subject / Department</label>
+                    <select class="form-select" name="HandlesSubject">
+                        <option value="">Select Department</option>
+                        <option value="Fine Arts">Fine Arts</option>
+                        <option value="Digital Art">Digital Art</option>
+                        <option value="Animation">Animation</option>
+                        <option value="Management">Management</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Designation</label>
+                    <select class="form-select" name="Designation">
+                        <option value="">Select Designation</option>
+                        <option value="Senior Faculty">Senior Faculty</option>
+                        <option value="Junior Faculty">Junior Faculty</option>
+                        <option value="Assistant">Assistant</option>
+                        <option value="Manager">Manager</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Remarks</label>
+                    <textarea class="form-control" name="Remarks" rows="3"></textarea>
+                </div>
+
+                <button type="submit" class="btn-gold">Save Staff Member</button>
+            </form>
+        </div>
+    </div>
+
+    <button class="scroll-top" id="scrollTop"><i class="fas fa-arrow-up"></i></button>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // Theme
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+        if (localStorage.getItem('adminTheme') === 'light') {
+        body.classList.remove('dark-mode'); body.classList.add('light-mode');
+        themeIcon.classList.remove('fa-sun'); themeIcon.classList.add('fa-moon');
+        } else {
+        body.classList.add('dark-mode'); body.classList.remove('light-mode');
+        themeIcon.classList.remove('fa-moon'); themeIcon.classList.add('fa-sun');
+        }
+        themeToggle.addEventListener('click', () => {
+        if (body.classList.contains('dark-mode')) {
+        body.classList.remove('dark-mode'); body.classList.add('light-mode');
+        localStorage.setItem('adminTheme', 'light');
+        themeIcon.classList.remove('fa-sun'); themeIcon.classList.add('fa-moon');
+        } else {
+        body.classList.remove('light-mode'); body.classList.add('dark-mode');
+        localStorage.setItem('adminTheme', 'dark');
+        themeIcon.classList.remove('fa-moon'); themeIcon.classList.add('fa-sun');
+        }
+        });
+
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        if (menuToggle) menuToggle.addEventListener('click', () => sidebar.classList.toggle('active'));
+
+        const scrollBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => { if (window.scrollY > 300) scrollBtn.classList.add('show'); else scrollBtn.classList.remove('show'); });
+        scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        function goToHome() {
+        window.location.href = '@Url.Action("Login", "Account")';
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); document.body.style.overflow = 'auto'; }
+
+        function showSuccess(msg) {
+        Swal.fire({
+        title: 'Success!',
+        text: msg,
+        icon: 'success',
+        confirmButtonColor: '#C5A059',
+        background: body.classList.contains('dark-mode') ? '#1A1A2E' : '#FFFFFF',
+        color: body.classList.contains('dark-mode') ? 'white' : '#333',
+        timer: 2000,
+        showConfirmButton: false
+        });
+        }
+
+        function showConfirm(message, callback) {
+        Swal.fire({
+        title: 'Are you sure?',
+        text: message,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#C5A059',
+        cancelButtonColor: '#dc3545',
+        confirmButtonText: 'Yes',
+        background: body.classList.contains('dark-mode') ? '#1A1A2E' : '#FFFFFF',
+        color: body.classList.contains('dark-mode') ? 'white' : '#333'
+        }).then((result) => { if (result.isConfirmed && callback) callback(); });
+        }
+
+        function logout() {
+        Swal.fire({
+        title: 'Logout?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#C5A059',
+        confirmButtonText: 'Yes',
+        background: body.classList.contains('dark-mode') ? '#1A1A2E' : '#FFFFFF',
+        color: body.classList.contains('dark-mode') ? 'white' : '#333'
+        }).then((r) => { if (r.isConfirmed) window.location.href = '@Url.Action("Login", "Account")'; });
+        }
+
+        // Static staff JavaScript data removed. Staff list and add form now use database via ASP.NET Core.
+    </script>
+</body>
+</html>

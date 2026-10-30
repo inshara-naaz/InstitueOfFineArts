@@ -1,0 +1,1421 @@
+﻿@{
+    ViewData["Title"] = "Staff Dashboard";
+
+    int studentCount = ViewBag.StudentCount == null ? 0 : Convert.ToInt32(ViewBag.StudentCount);
+    int competitionCount = ViewBag.CompetitionCount == null ? 0 : Convert.ToInt32(ViewBag.CompetitionCount);
+    int submissionCount = ViewBag.SubmissionCount == null ? 0 : Convert.ToInt32(ViewBag.SubmissionCount);
+    int exhibitionCount = ViewBag.ExhibitionCount == null ? 0 : Convert.ToInt32(ViewBag.ExhibitionCount);
+
+    int pendingSubmissionCount = ViewBag.PendingSubmissionCount == null ? 0 : Convert.ToInt32(ViewBag.PendingSubmissionCount);
+    int reviewedSubmissionCount = ViewBag.ReviewedSubmissionCount == null ? 0 : Convert.ToInt32(ViewBag.ReviewedSubmissionCount);
+    int bestSubmissionCount = ViewBag.BestSubmissionCount == null ? 0 : Convert.ToInt32(ViewBag.BestSubmissionCount);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Staff Dashboard | ARTISTIC Institute</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body.dark-mode {
+            background: #0A0A0A;
+            color: #FFFFFF;
+        }
+
+        body.light-mode {
+            background: #F0F2F5;
+            color: #1A1A1A;
+        }
+
+        .app-wrapper {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 70px;
+            border-radius: 40px;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            z-index: 1000;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+        }
+
+            .sidebar:hover {
+                width: 260px;
+                border-radius: 28px;
+            }
+
+        body.dark-mode .sidebar {
+            background: rgba(20, 20, 30, 0.9);
+            border: 1px solid rgba(197, 160, 89, 0.15);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        body.light-mode .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0,0,0,0.08);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        @@media (max-width: 992px) {
+            .sidebar {
+                left: -70px;
+            }
+
+                .sidebar.active {
+                    left: 20px;
+                }
+
+            .menu-toggle {
+                display: block !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                width: 100%;
+                padding: 16px !important;
+            }
+        }
+
+        .sidebar-inner {
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .sidebar-profile {
+            width: 100%;
+            text-align: center;
+            padding: 0 0 20px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .sidebar-profile:hover {
+                opacity: 0.8;
+            }
+
+        body.dark-mode .sidebar-profile {
+            border-color: rgba(255,255,255,0.08);
+        }
+
+        body.light-mode .sidebar-profile {
+            border-color: rgba(0,0,0,0.06);
+        }
+
+        .profile-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #000;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar:hover .profile-avatar {
+            width: 50px;
+            height: 50px;
+            font-size: 1.4rem;
+        }
+
+        .profile-name {
+            margin-top: 10px;
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar:hover .profile-name {
+            font-size: 0.85rem;
+            opacity: 1;
+            margin-top: 12px;
+        }
+
+        .profile-role {
+            margin-top: 4px;
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar:hover .profile-role {
+            font-size: 0.65rem;
+            opacity: 0.6;
+        }
+
+        .nav-menu {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            width: 100%;
+            border-radius: 30px;
+            transition: all 0.25s ease;
+        }
+
+            .nav-item a {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 12px;
+                text-decoration: none;
+                border-radius: 30px;
+                transition: all 0.25s ease;
+                font-weight: 500;
+                white-space: nowrap;
+            }
+
+                .nav-item a i {
+                    width: 28px;
+                    height: 28px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.1rem;
+                    color: #C5A059;
+                    flex-shrink: 0;
+                }
+
+        .nav-text {
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .sidebar:hover .nav-text {
+            font-size: 0.85rem;
+            opacity: 1;
+        }
+
+        body.dark-mode .nav-item a {
+            color: rgba(255,255,255,0.7);
+        }
+
+        body.light-mode .nav-item a {
+            color: #4A5568;
+        }
+
+        .nav-item:hover a {
+            transform: translateX(4px);
+        }
+
+        body.dark-mode .nav-item:hover a {
+            background: rgba(197,160,89,0.12);
+            color: #C5A059;
+        }
+
+        body.light-mode .nav-item:hover a {
+            background: rgba(197,160,89,0.08);
+            color: #C5A059;
+        }
+
+        body.dark-mode .nav-item.active a {
+            background: rgba(197,160,89,0.15);
+            color: #C5A059;
+        }
+
+        body.light-mode .nav-item.active a {
+            background: rgba(197,160,89,0.1);
+            color: #C5A059;
+        }
+
+        .nav-footer {
+            width: 100%;
+            margin-top: 30px;
+            padding: 20px 12px 0;
+            border-top: 1px solid;
+        }
+
+        body.dark-mode .nav-footer {
+            border-color: rgba(255,255,255,0.08);
+        }
+
+        body.light-mode .nav-footer {
+            border-color: rgba(0,0,0,0.06);
+        }
+
+        .logout-item {
+            width: 100%;
+            border-radius: 30px;
+        }
+
+            .logout-item a {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 12px;
+                text-decoration: none;
+                border-radius: 30px;
+                transition: all 0.25s ease;
+                white-space: nowrap;
+            }
+
+                .logout-item a i {
+                    width: 28px;
+                    font-size: 1.1rem;
+                    flex-shrink: 0;
+                }
+
+        body.dark-mode .logout-item a {
+            color: rgba(255,255,255,0.7);
+        }
+
+        body.light-mode .logout-item a {
+            color: #E53E3E;
+        }
+
+        .logout-text {
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar:hover .logout-text {
+            font-size: 0.85rem;
+            opacity: 1;
+        }
+
+        .logout-item:hover a {
+            transform: translateX(4px);
+        }
+
+        body.dark-mode .logout-item:hover a {
+            background: rgba(229,62,62,0.15);
+            color: #E53E3E;
+        }
+
+        body.light-mode .logout-item:hover a {
+            background: #FEE2E2;
+            color: #E53E3E;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 100px;
+            padding: 24px 32px;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        @@media (max-width: 992px) {
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 12px 24px;
+            border-radius: 24px;
+            margin-bottom: 28px;
+        }
+
+        body.dark-mode .top-header {
+            background: rgba(20,20,20,0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        body.light-mode .top-header {
+            background: #FFFFFF;
+            border: 1px solid #E8ECEF;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 12px;
+        }
+
+        body.dark-mode .menu-toggle {
+            color: white;
+        }
+
+        body.light-mode .menu-toggle {
+            color: #333;
+        }
+
+        .page-title h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .page-title p {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .theme-toggle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .theme-toggle {
+            background: rgba(255,255,255,0.08);
+            color: #FFD700;
+        }
+
+        body.light-mode .theme-toggle {
+            background: #F0F2F5;
+            color: #C5A059;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg);
+        }
+
+        .user-dropdown {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .dropdown-menu-custom {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            min-width: 160px;
+            border-radius: 16px;
+            padding: 8px;
+            display: none;
+            z-index: 100;
+        }
+
+        body.dark-mode .dropdown-menu-custom {
+            background: #1A1A2E;
+            border: 1px solid rgba(197,160,89,0.2);
+        }
+
+        body.light-mode .dropdown-menu-custom {
+            background: white;
+            border: 1px solid #E8ECEF;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .user-dropdown:hover .dropdown-menu-custom {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: 0.2s;
+        }
+
+        body.dark-mode .dropdown-item {
+            color: white;
+        }
+
+        body.light-mode .dropdown-item {
+            color: #333;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(197,160,89,0.15);
+        }
+
+        /* Cards */
+        .stat-card, .chart-card, .recent-table {
+            border-radius: 24px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        body.dark-mode .stat-card,
+        body.dark-mode .chart-card,
+        body.dark-mode .recent-table {
+            background: rgba(20,20,20,0.7);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        body.light-mode .stat-card,
+        body.light-mode .chart-card,
+        body.light-mode .recent-table {
+            background: #FFFFFF;
+            border: 1px solid #E8ECEF;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .stat-card:hover, .chart-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            color: #C5A059;
+            margin-bottom: 0.8rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .trend-up {
+            color: #28a745;
+            font-size: 0.7rem;
+            margin-top: 0.5rem;
+        }
+
+        .chart-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #C5A059;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+        }
+
+        /* Progress Bars */
+        .category-list, .country-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .category-item, .country-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-name, .country-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        .progress-bar-custom {
+            background: rgba(0,0,0,0.08);
+            border-radius: 10px;
+            height: 6px;
+            overflow: hidden;
+        }
+
+        body.dark-mode .progress-bar-custom {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #C5A059, #E8C87A);
+            border-radius: 10px;
+        }
+
+        /* Activity */
+        .activity-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+        }
+
+            .activity-item:hover {
+                background: rgba(197,160,89,0.06);
+            }
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(197,160,89,0.12);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #C5A059;
+        }
+
+        .activity-detail {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .activity-time {
+            font-size: 0.7rem;
+            opacity: 0.6;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .quick-btn {
+            border-radius: 40px;
+            padding: 0.5rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        body.dark-mode .quick-btn {
+            background: rgba(197,160,89,0.1);
+            border: 1px solid rgba(197,160,89,0.2);
+            color: white;
+        }
+
+        body.light-mode .quick-btn {
+            background: #F0F2F5;
+            border: 1px solid #E8ECEF;
+            color: #333;
+        }
+
+        .quick-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        body.dark-mode .quick-btn:hover {
+            background: rgba(197,160,89,0.2);
+        }
+
+        /* Table */
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .table-custom th, .table-custom td {
+                padding: 0.8rem 0.5rem;
+                text-align: left;
+                border-bottom: 1px solid;
+            }
+
+        body.dark-mode .table-custom th, body.dark-mode .table-custom td {
+            border-color: rgba(255,255,255,0.06);
+        }
+
+        body.light-mode .table-custom th, body.light-mode .table-custom td {
+            border-color: #E8ECEF;
+        }
+
+        .table-custom th {
+            color: #C5A059;
+            font-weight: 600;
+        }
+
+        .badge-status {
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-pending {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .badge-approved {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-reviewed {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-sm {
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border: none;
+            padding: 0.25rem 0.8rem;
+            border-radius: 20px;
+            color: #000;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .footer {
+            padding: 1rem;
+            margin-top: 2rem;
+            text-align: center;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+
+        body.dark-mode .footer {
+            background: rgba(20,20,20,0.5);
+            color: rgba(255,255,255,0.4);
+        }
+
+        body.light-mode .footer {
+            background: #FFFFFF;
+            color: #8A8A8A;
+            border: 1px solid #E8ECEF;
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            border: none;
+            z-index: 999;
+        }
+
+            .scroll-top.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        /* Modal */
+        .modal-custom {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .modal-custom.active {
+                display: flex;
+            }
+
+        .modal-content-custom {
+            width: 90%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border-radius: 28px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        body.dark-mode .modal-content-custom {
+            background: #1A1A2E;
+            border: 1px solid rgba(197,160,89,0.2);
+        }
+
+        body.light-mode .modal-content-custom {
+            background: white;
+            border: 1px solid #E8ECEF;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+            .modal-close:hover {
+                transform: rotate(90deg);
+                color: #C5A059;
+            }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 0.4rem;
+                font-size: 0.8rem;
+                font-weight: 500;
+            }
+
+        .form-control, .form-select {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-select {
+            cursor: pointer;
+            appearance: auto;
+            -webkit-appearance: menulist;
+            -moz-appearance: menulist;
+        }
+
+            .form-select option {
+                padding: 10px;
+                display: block;
+            }
+
+        body.dark-mode .form-control, body.dark-mode .form-select {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(197,160,89,0.3);
+            color: white;
+        }
+
+            body.dark-mode .form-select option {
+                background: #1A1A2E;
+                color: white;
+            }
+
+        body.light-mode .form-control, body.light-mode .form-select {
+            background: #F0F2F5;
+            border: 1px solid #E8ECEF;
+            color: #333;
+        }
+
+            body.light-mode .form-select option {
+                background: white;
+                color: #333;
+            }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            color: #000;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .btn-gold:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(197,160,89,0.3);
+            }
+
+        /* SweetAlert2 Dark Mode Fix */
+        body.dark-mode .swal2-popup {
+            background: #1A1A2E !important;
+            color: #FFFFFF !important;
+            border: 1px solid rgba(197,160,89,0.2) !important;
+            border-radius: 24px !important;
+        }
+
+        body.dark-mode .swal2-title {
+            color: #FFFFFF !important;
+        }
+
+        body.dark-mode .swal2-html-container {
+            color: #CCCCCC !important;
+        }
+
+        body.dark-mode .swal2-input, body.dark-mode .swal2-textarea, body.dark-mode .swal2-select {
+            background: rgba(255,255,255,0.08) !important;
+            border: 1px solid rgba(197,160,89,0.3) !important;
+            color: #FFFFFF !important;
+            border-radius: 12px !important;
+        }
+
+            body.dark-mode .swal2-select option {
+                background: #1A1A2E !important;
+                color: #FFFFFF !important;
+            }
+
+        body.dark-mode .swal2-styled.swal2-cancel {
+            background: #3A3A5E !important;
+            color: #FFFFFF !important;
+        }
+
+        body.light-mode .swal2-popup {
+            background: #FFFFFF !important;
+            color: #1A1A1A !important;
+            border: 1px solid #E8ECEF !important;
+        }
+
+        body.light-mode .swal2-input, body.light-mode .swal2-textarea, body.light-mode .swal2-select {
+            background: #F0F2F5 !important;
+            border: 1px solid #E8ECEF !important;
+            color: #1A1A1A !important;
+        }
+
+        @@media (max-width: 768px) {
+            .quick-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+
+    <div class="app-wrapper">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-inner">
+                <div class="sidebar-profile" onclick="goToHome()">
+                    <div class="profile-avatar"><i class="fas fa-palette"></i></div>
+                    <div class="profile-name">ARTISTIC</div>
+                    <div class="profile-role">Staff Panel</div>
+                </div>
+
+                <div class="nav-menu">
+                    <div class="nav-item active"><a href="@Url.Action("Dashboard", "Staff")"><i class="fas fa-home"></i><span class="nav-text">Dashboard</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ViewStudents", "Staff")"><i class="fas fa-users"></i><span class="nav-text">View Students</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ManageCompetitions", "Staff")"><i class="fas fa-trophy"></i><span class="nav-text">Competitions</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ManageExhibitions", "Staff")"><i class="fas fa-building"></i><span class="nav-text">Exhibitions</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ViewPostings", "Staff")"><i class="fas fa-clipboard-list"></i><span class="nav-text">View Postings</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("MarkPostings", "Staff")"><i class="fas fa-check-double"></i><span class="nav-text">Mark Postings</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("SendtoExhibition", "Staff")"><i class="fas fa-paper-plane"></i><span class="nav-text">Send to Exhibition</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ExhibitionStatus", "Staff")"><i class="fas fa-chart-line"></i><span class="nav-text">Exhibition Status</span></a></div>
+                </div>
+
+                <div class="nav-footer">
+                    <div class="logout-item"><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span class="logout-text">Logout</span></a></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="top-header">
+                <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <div class="page-title">
+                    <h2>Staff Dashboard</h2>
+                    <p>Welcome back, Staff! Manage competitions, evaluate submissions, and organize exhibitions.</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="theme-toggle" id="themeToggle"><i class="fas fa-sun" id="themeIcon"></i></div>
+                    <div class="user-dropdown">
+                        <div class="user-avatar"><i class="fas fa-user-tie"></i></div>
+                        <div class="dropdown-menu-custom">
+                            <a href="#" class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid mt-4">
+                <!-- Stats Cards -->
+                <div class="row g-4 mb-4">
+                    <div class="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+                            <div class="stat-value">@studentCount</div>
+                            <div class="stat-label">Total Students</div>
+                            <div class="trend-up">Registered students in database</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                            <div class="stat-value">@competitionCount</div>
+                            <div class="stat-label">Total Competitions</div>
+                            <div class="trend-up">Competitions in database</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-palette"></i></div>
+                            <div class="stat-value">@submissionCount</div>
+                            <div class="stat-label">Total Submissions</div>
+                            <div class="trend-up">Submitted artworks in database</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-building"></i></div>
+                            <div class="stat-value">@exhibitionCount</div>
+                            <div class="stat-label">Total Exhibitions</div>
+                            <div class="trend-up">Exhibitions in database</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="row g-4 mb-4">
+                    <div class="col-lg-8">
+                        <div class="chart-card">
+                            <div class="chart-title"><i class="fas fa-chart-line"></i> Monthly Submissions Trend</div>
+                            <div class="chart-container"><canvas id="submissionsChart"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="chart-card">
+                            <div class="chart-title"><i class="fas fa-chart-pie"></i> Submission Status</div>
+                            <div class="chart-container"><canvas id="statusChart"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category & Evaluation Distribution -->
+                <div class="row g-4 mb-4">
+                    <div class="col-lg-6">
+                        <div class="chart-card">
+                            <div class="chart-title"><i class="fas fa-chart-simple"></i> Submissions by Category</div>
+                            <div class="category-list">
+                                <div><div class="category-item"><div class="category-name"><div class="category-color" style="background: #C5A059;"></div><span>Painting</span></div><div>38%</div></div><div class="progress-bar-custom"><div class="progress-fill" style="width: 38%;"></div></div></div>
+                                <div><div class="category-item"><div class="category-name"><div class="category-color" style="background: #E8C87A;"></div><span>Digital Art</span></div><div>30%</div></div><div class="progress-bar-custom"><div class="progress-fill" style="width: 30%;"></div></div></div>
+                                <div><div class="category-item"><div class="category-name"><div class="category-color" style="background: #A8883A;"></div><span>Animation</span></div><div>20%</div></div><div class="progress-bar-custom"><div class="progress-fill" style="width: 20%;"></div></div></div>
+                                <div><div class="category-item"><div class="category-name"><div class="category-color" style="background: #8A8A8A;"></div><span>Sketches</span></div><div>12%</div></div><div class="progress-bar-custom"><div class="progress-fill" style="width: 12%;"></div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="chart-card">
+                            <div class="chart-title"><i class="fas fa-star"></i> Evaluation Status</div>
+                            <div class="category-list">
+                                <div><div class="category-item"><div class="category-name"><div class="category-color" style="background: #28a745;"></div><span>Best</span></div><div>@bestSubmissionCount</div></div><div class="progress-bar-custom"><div class="progress-fill" style="width: @(submissionCount == 0 ? 0 : (bestSubmissionCount * 100 / submissionCount))%; background: #28a745;"></div></div></div>
+                                <div><div class="category-item"><div class="category-name"><div class="category-color" style="background: #ffc107;"></div><span>Pending</span></div><div>@pendingSubmissionCount</div></div><div class="progress-bar-custom"><div class="progress-fill" style="width: @(submissionCount == 0 ? 0 : (pendingSubmissionCount * 100 / submissionCount))%; background: #ffc107;"></div></div></div>
+                                <div><div class="category-item"><div class="category-name"><div class="category-color" style="background: #17a2b8;"></div><span>Reviewed</span></div><div>@reviewedSubmissionCount</div></div><div class="progress-bar-custom"><div class="progress-fill" style="width: @(submissionCount == 0 ? 0 : (reviewedSubmissionCount * 100 / submissionCount))%; background: #17a2b8;"></div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Submissions Table -->
+                <div class="row g-4 mb-4">
+                    <div class="col-lg-12">
+                        <div class="recent-table">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="chart-title"><i class="fas fa-clock"></i> Pending Submissions to Evaluate</div>
+                                <a href="@Url.Action("ViewPostings", "Staff")" style="color: #C5A059; text-decoration: none;">View All <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table-custom">
+                                    <thead><tr><th>Student</th><th>Competition</th><th>Title</th><th>Submitted On</th><th>Status</th><th>Action</th></tr></thead>
+                                    <tbody>
+                                        @if (submissionCount == 0)
+                                        {
+                                            <tr>
+                                                <td colspan="6" class="text-center">No submissions found yet.</td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="5">There are @submissionCount submissions in the database.</td>
+                                                <td>
+                                                    <a class="btn-sm" href="@Url.Action("ViewPostings", "Staff")" style="text-decoration:none;">View</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity & Quick Actions -->
+                <div class="row g-4 mb-4">
+                    <div class="col-lg-5">
+                        <div class="chart-card">
+                            <div class="chart-title"><i class="fas fa-history"></i> Recent Activity</div>
+                            <div class="activity-timeline">
+                                <div class="activity-item"><div class="activity-icon"><i class="fas fa-upload"></i></div><div class="activity-detail"><div class="activity-title">New submission received</div><div class="activity-time">2 minutes ago</div></div></div>
+                                <div class="activity-item"><div class="activity-icon"><i class="fas fa-check-circle"></i></div><div class="activity-detail"><div class="activity-title">You evaluated 3 submissions</div><div class="activity-time">1 hour ago</div></div></div>
+                                <div class="activity-item"><div class="activity-icon"><i class="fas fa-trophy"></i></div><div class="activity-detail"><div class="activity-title">Competition deadline approaching</div><div class="activity-time">3 hours ago</div></div></div>
+                                <div class="activity-item"><div class="activity-icon"><i class="fas fa-building"></i></div><div class="activity-detail"><div class="activity-title">New exhibition announced</div><div class="activity-time">5 hours ago</div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="chart-card">
+                            <div class="chart-title"><i class="fas fa-bolt"></i> Quick Actions</div>
+                            <div class="quick-actions">
+                                <div class="quick-btn" onclick="window.location.href='@Url.Action("MarkPostings", "Staff")'"><i class="fas fa-clipboard-list"></i> <span>Evaluate Submissions</span></div>
+                                <div class="quick-btn" onclick="window.location.href='@Url.Action("ManageCompetitions", "Staff")'"><i class="fas fa-trophy"></i> <span>Manage Competitions</span></div>
+                                <div class="quick-btn" onclick="window.location.href='@Url.Action("ManageExhibitions", "Staff")'"><i class="fas fa-building"></i> <span>Organize Exhibition</span></div>
+                                <div class="quick-btn" onclick="window.location.href='@Url.Action("ViewStudents", "Staff")'"><i class="fas fa-users"></i> <span>View Students</span></div>
+                                <div class="quick-btn" onclick="window.location.href='@Url.Action("ExhibitionStatus", "Staff")'"><i class="fas fa-chart-line"></i> <span>Exhibition Status</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>© 2025 ARTISTIC - Institute of Fine Arts. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-custom" id="evaluateSubmissionModal">
+        <div class="modal-content-custom">
+            <button class="modal-close" onclick="closeModal('evaluateSubmissionModal')">&times;</button>
+            <h3>Evaluate Submission</h3>
+            <form id="evaluateForm">
+                <div class="form-group"><label>Student Name</label><input type="text" class="form-control" id="studentName" placeholder="Enter student name" required></div>
+                <div class="form-group"><label>Artwork Title</label><input type="text" class="form-control" id="artworkTitle" placeholder="Artwork title" required></div>
+                <div class="form-group"><label>Marks (out of 100)</label><input type="number" class="form-control" id="marks" placeholder="Enter marks" min="0" max="100" required></div>
+                <div class="form-group"><label>Remarks / Feedback</label><textarea class="form-control" id="remarks" rows="3" placeholder="Add your feedback..."></textarea></div>
+                <div class="form-group"><label>Status</label><select class="form-select" id="evalStatus"><option>Approved</option><option>Pending Changes</option><option>Rejected</option></select></div>
+                <button type="submit" class="btn-gold">Submit Evaluation</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-custom" id="addCompetitionModal">
+        <div class="modal-content-custom">
+            <button class="modal-close" onclick="closeModal('addCompetitionModal')">&times;</button>
+            <h3>Manage Competition</h3>
+            <form id="competitionForm">
+                <div class="form-group"><label>Competition Title</label><input type="text" class="form-control" id="compTitle" required></div>
+                <div class="form-group"><label>Theme</label><input type="text" class="form-control" id="compTheme"></div>
+                <div class="form-group"><label>Start Date</label><input type="date" class="form-control" id="compStartDate" required></div>
+                <div class="form-group"><label>End Date</label><input type="date" class="form-control" id="compEndDate" required></div>
+                <div class="form-group"><label>Prize Details</label><textarea class="form-control" id="compPrize" rows="3"></textarea></div>
+                <button type="submit" class="btn-gold">Save Competition</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-custom" id="addExhibitionModal">
+        <div class="modal-content-custom">
+            <button class="modal-close" onclick="closeModal('addExhibitionModal')">&times;</button>
+            <h3>Organize Exhibition</h3>
+            <form id="exhibitionForm">
+                <div class="form-group"><label>Exhibition Title</label><input type="text" class="form-control" id="exhTitle" required></div>
+                <div class="form-group"><label>Venue</label><input type="text" class="form-control" id="exhVenue" required></div>
+                <div class="form-group"><label>Start Date</label><input type="date" class="form-control" id="exhStartDate" required></div>
+                <div class="form-group"><label>End Date</label><input type="date" class="form-control" id="exhEndDate" required></div>
+                <div class="form-group"><label>Description</label><textarea class="form-control" id="exhDesc" rows="3"></textarea></div>
+                <button type="submit" class="btn-gold">Create Exhibition</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-custom" id="addPostingModal">
+        <div class="modal-content-custom">
+            <button class="modal-close" onclick="closeModal('addPostingModal')">&times;</button>
+            <h3>Post Announcement</h3>
+            <form id="postingForm">
+                <div class="form-group"><label>Title</label><input type="text" class="form-control" id="postTitle" required></div>
+                <div class="form-group"><label>Content</label><textarea class="form-control" id="postContent" rows="5" required></textarea></div>
+                <div class="form-group"><label>Target Audience</label><select class="form-select" id="postAudience"><option>All Students</option><option>Competition Participants</option><option>Exhibition Visitors</option></select></div>
+                <button type="submit" class="btn-gold">Post Announcement</button>
+            </form>
+        </div>
+    </div>
+
+    <button class="scroll-top" id="scrollTop"><i class="fas fa-arrow-up"></i></button>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // Dark/Light Mode
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        if (localStorage.getItem('staffTheme') === 'light') {
+            body.classList.remove('dark-mode');
+            body.classList.add('light-mode');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        } else {
+            body.classList.add('dark-mode');
+            body.classList.remove('light-mode');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            if (body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                localStorage.setItem('staffTheme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            } else {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                localStorage.setItem('staffTheme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+        });
+
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        if (menuToggle) menuToggle.addEventListener('click', () => sidebar.classList.toggle('active'));
+
+        const scrollBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) scrollBtn.classList.add('show');
+            else scrollBtn.classList.remove('show');
+        });
+        scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        function goToHome() {
+            window.location.href = '@Url.Action("Login", "Account")';
+        }
+
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        function showSuccess(msg) {
+            Swal.fire({
+                title: 'Success!',
+                text: msg,
+                icon: 'success',
+                confirmButtonColor: '#C5A059',
+                background: body.classList.contains('dark-mode') ? '#1A1A2E' : '#FFFFFF',
+                color: body.classList.contains('dark-mode') ? 'white' : '#333',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+
+        function evaluateSubmission() {
+            Swal.fire({
+                title: 'Evaluate Submission',
+                html: '<strong>Student:</strong> Fatima Akhtar<br><strong>Artwork:</strong> Whispers of Nature<br><br><input type="number" id="marks" class="swal2-input" placeholder="Marks (0-100)"><textarea id="remarks" class="swal2-textarea" placeholder="Remarks/Feedback"></textarea>',
+                showCancelButton: true,
+                confirmButtonColor: '#C5A059',
+                confirmButtonText: 'Submit Evaluation',
+                background: body.classList.contains('dark-mode') ? '#1A1A2E' : '#FFFFFF',
+                color: body.classList.contains('dark-mode') ? 'white' : '#333',
+                preConfirm: () => {
+                    const marks = document.getElementById('marks').value;
+                    const remarks = document.getElementById('remarks').value;
+                    if (!marks) {
+                        Swal.showValidationMessage('Please enter marks');
+                    }
+                    return { marks: marks, remarks: remarks };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    showSuccess('Evaluation submitted successfully!');
+                }
+            });
+        }
+
+        function generateReport() {
+            showSuccess('Report generated successfully!');
+        }
+
+        function logout() {
+            Swal.fire({
+                title: 'Logout?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#C5A059',
+                confirmButtonText: 'Yes',
+                background: body.classList.contains('dark-mode') ? '#1A1A2E' : '#FFFFFF',
+                color: body.classList.contains('dark-mode') ? 'white' : '#333'
+            }).then((r) => {
+                if (r.isConfirmed) window.location.href = '@Url.Action("Login", "Account")';
+            });
+        }
+
+        // Form submit handlers
+        document.getElementById('evaluateForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            showSuccess('Evaluation submitted!');
+            closeModal('evaluateSubmissionModal');
+            e.target.reset();
+        });
+
+        document.getElementById('competitionForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            showSuccess('Competition saved!');
+            closeModal('addCompetitionModal');
+            e.target.reset();
+        });
+
+        document.getElementById('exhibitionForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            showSuccess('Exhibition created!');
+            closeModal('addExhibitionModal');
+            e.target.reset();
+        });
+
+        document.getElementById('postingForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            showSuccess('Announcement posted!');
+            closeModal('addPostingModal');
+            e.target.reset();
+        });
+
+        // Charts
+        const ctx = document.getElementById('submissionsChart')?.getContext('2d');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Submissions',
+                        data: [12, 19, 25, 32, 38, 45],
+                        borderColor: '#C5A059',
+                        backgroundColor: 'rgba(197, 160, 89, 0.05)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: body.classList.contains('dark-mode') ? 'white' : '#333' }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            ticks: { color: body.classList.contains('dark-mode') ? 'white' : '#333' }
+                        },
+                        x: {
+                            ticks: { color: body.classList.contains('dark-mode') ? 'white' : '#333' }
+                        }
+                    }
+                }
+            });
+        }
+
+        const ctxPie = document.getElementById('statusChart')?.getContext('2d');
+        if (ctxPie) {
+            new Chart(ctxPie, {
+                type: 'pie',
+                data: {
+                    labels: ['Best', 'Pending', 'Reviewed'],
+                    datasets: [{
+                        data: [@bestSubmissionCount, @pendingSubmissionCount, @reviewedSubmissionCount],
+                        backgroundColor: ['#28a745', '#ffc107', '#17a2b8']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: body.classList.contains('dark-mode') ? 'white' : '#333' }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

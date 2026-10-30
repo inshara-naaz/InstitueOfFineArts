@@ -1,0 +1,1955 @@
+﻿
+@model IEnumerable<InstituteOfFineArts.Models.Competition>
+@using InstituteOfFineArts.Models
+
+@{
+    ViewData["Title"] = "Competitions | ARTISTIC Institute of Fine Arts – Premier Art Institute of Pakistan";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Competitions | ARTISTIC Institute of Fine Arts – Premier Art Institute of Pakistan</title>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@@400;500;600;700;800;900&family=Poppins:wght@@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Light Mode Colors (Default Dark) */
+        :root {
+            --primary: #C5A059;
+            --primary-dark: #A8883A;
+            --primary-light: #D4B87A;
+            --secondary: #1A1A2E;
+            --dark: #0A0A0A;
+            --darker: #050505;
+            --gray: #8A8A8A;
+            --light-gray: #EAEAEA;
+            --white: #FFFFFF;
+            --black: #000000;
+            --bg-body: var(--dark);
+            --text-color: var(--white);
+            --card-bg: rgba(26, 26, 46, 0.85);
+            --footer-bg: var(--darker);
+            --navbar-bg: rgba(5, 5, 5, 0.95);
+            --border-color: rgba(197, 160, 89, 0.15);
+            --stats-bg: rgba(26, 26, 46, 0.8);
+            --modal-bg: linear-gradient(135deg, rgba(26, 26, 46, 0.98), rgba(10, 10, 10, 0.98));
+            --shadow-gold: 0 10px 30px rgba(197, 160, 89, 0.3);
+            --shadow-gold-lg: 0 20px 40px rgba(197, 160, 89, 0.2);
+            --gradient-gold: linear-gradient(135deg, #C5A059 0%, #E8C87A 50%, #C5A059 100%);
+            --gradient-dark: linear-gradient(135deg, #0A0A0A 0%, #1A1A2E 100%);
+            --transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            --transition-fast: all 0.3s ease;
+        }
+
+        /* Light Mode - White & Gold only */
+        body.light-mode {
+            --bg-body: #FFFFFF;
+            --text-color: #1A1A1A;
+            --card-bg: #FFFFFF;
+            --footer-bg: #F5F5F5;
+            --navbar-bg: #FFFFFF;
+            --border-color: rgba(197, 160, 89, 0.25);
+            --stats-bg: #FFFFFF;
+            --modal-bg: #FFFFFF;
+            --secondary: #F8F8F8;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-color);
+            overflow-x: hidden;
+            transition: var(--transition);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        /* Dark/Light Mode Toggle Button */
+        .theme-toggle {
+            background: rgba(197, 160, 89, 0.15);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-left: 0.5rem;
+        }
+
+            .theme-toggle:hover {
+                background: var(--primary);
+                color: var(--black);
+                transform: rotate(15deg);
+            }
+
+            .theme-toggle i {
+                font-size: 1.2rem;
+            }
+
+        /* Particle Background */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: var(--navbar-bg);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+            .navbar.scrolled {
+                padding: 0.7rem 2rem;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+            .logo:hover {
+                transform: scale(1.05);
+                letter-spacing: 2px;
+            }
+
+        .nav-link {
+            color: var(--text-color) !important;
+            opacity: 0.8;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+            .nav-link::after {
+                content: '';
+                position: absolute;
+                bottom: -5px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background: var(--gradient-gold);
+                transition: var(--transition);
+            }
+
+            .nav-link:hover::after {
+                width: 100%;
+            }
+
+            .nav-link:hover {
+                color: var(--primary) !important;
+                opacity: 1;
+                transform: translateY(-2px);
+            }
+
+        .btn-nav {
+            background: transparent;
+            border: 1.5px solid var(--primary);
+            color: var(--primary);
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+            .btn-nav:hover {
+                background: var(--primary);
+                color: var(--black);
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-gold);
+            }
+
+        .btn-register {
+            background: var(--gradient-gold);
+            color: var(--black);
+            border: none;
+            cursor: pointer;
+        }
+
+            .btn-register:hover {
+                background: var(--primary-light);
+            }
+
+        /* Page Header with Animation */
+        .page-header {
+            padding: 140px 0 80px;
+            background: var(--gradient-dark);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            z-index: 1;
+        }
+
+            .page-header::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(197, 160, 89, 0.08), transparent);
+                animation: rotateBg 20s linear infinite;
+                z-index: -1;
+            }
+
+        @@keyframes rotateBg {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .page-header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            animation: fadeInDown 0.8s ease;
+            color: #FFFFFF;
+        }
+
+        body.light-mode .page-header h1 {
+            color: #FFFFFF;
+        }
+
+        .page-header h1 span {
+            color: var(--primary);
+        }
+
+        @@keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header p {
+            color: rgba(255, 255, 255, 0.8);
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        body.light-mode .page-header p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: var(--stats-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: -40px auto 3rem;
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            border: 1px solid var(--border-color);
+            animation: slideInUp 0.8s ease 0.4s both;
+        }
+
+        @@keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-item {
+            text-align: center;
+            transition: var(--transition);
+        }
+
+            .stat-item:hover {
+                transform: translateY(-5px);
+            }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--gray);
+            letter-spacing: 1px;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            padding: 2rem 0;
+            animation: fadeIn 0.8s ease 0.6s both;
+        }
+
+        .filter-btn {
+            background: rgba(197, 160, 89, 0.1);
+            border: 1px solid var(--border-color);
+            color: var(--gray);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+            .filter-btn:hover,
+            .filter-btn.active {
+                background: var(--primary);
+                color: var(--black);
+                border-color: var(--primary);
+                transform: translateY(-2px);
+            }
+
+        /* Competition Cards */
+        .competition-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+            height: 100%;
+            cursor: pointer;
+            position: relative;
+            animation: scaleIn 0.5s ease backwards;
+        }
+
+        @@keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .competition-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-gold-lg);
+        }
+
+        .competition-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.2), transparent);
+            transition: var(--transition);
+        }
+
+        .competition-card:hover::before {
+            left: 100%;
+        }
+
+        .card-img-wrapper {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .competition-card:hover .card-img {
+            transform: scale(1.15);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--gradient-gold);
+            color: var(--black);
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            z-index: 1;
+            animation: pulse 2s infinite;
+        }
+
+        @@keyframes pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 0 10px rgba(197, 160, 89, 0);
+            }
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--text-color);
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.75rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .card-prize {
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar-custom {
+            height: 6px;
+            background: rgba(197, 160, 89, 0.2);
+            border-radius: 10px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-gold);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-size: 0.7rem;
+        }
+
+        .progress-percent {
+            color: var(--gray);
+        }
+
+        .progress-slots {
+            color: var(--gray);
+        }
+
+        /* Premium View Details Button */
+        .btn-view-details {
+            background: linear-gradient(135deg, rgba(197, 160, 89, 0.1), rgba(197, 160, 89, 0.05));
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.6rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            letter-spacing: 1px;
+        }
+
+            .btn-view-details::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: var(--gradient-gold);
+                transition: var(--transition);
+                z-index: -1;
+                border-radius: 50px;
+            }
+
+            .btn-view-details:hover::before {
+                left: 0;
+            }
+
+            .btn-view-details:hover {
+                color: var(--black);
+                transform: translateY(-3px);
+                box-shadow: var(--shadow-gold);
+            }
+
+        /* Featured Winners Section */
+        .featured-winners {
+            background: linear-gradient(135deg, rgba(197, 160, 89, 0.05), rgba(26, 26, 46, 0.05));
+            border-radius: 30px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        body.light-mode .featured-winners {
+            background: #F8F8F8;
+        }
+
+        .winner-highlight {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 15px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+            .winner-highlight:hover {
+                transform: translateX(10px);
+                border-left: 3px solid var(--primary);
+            }
+
+        .winner-highlight-img {
+            width: 60px;
+            height: 60px;
+            background: rgba(197, 160, 89, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        /* CTA Banner */
+        .cta-banner {
+            background: linear-gradient(135deg, rgba(197, 160, 89, 0.15), rgba(26, 26, 46, 0.95));
+            border-radius: 30px;
+            padding: 2.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            margin-top: 3rem;
+        }
+
+        body.light-mode .cta-banner {
+            background: linear-gradient(135deg, #F5F0E6, #E8E0D0);
+            border: 1px solid var(--primary);
+        }
+
+        .cta-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 70% 30%, rgba(197, 160, 89, 0.08), transparent);
+        }
+
+        .cta-banner h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
+            position: relative;
+            z-index: 1;
+            color: var(--text-color);
+        }
+
+        body.light-mode .cta-banner h3 {
+            color: #1A1A1A;
+        }
+
+        .cta-banner p {
+            color: var(--gray);
+            margin-bottom: 1.2rem;
+            position: relative;
+            z-index: 1;
+            font-size: 0.9rem;
+        }
+
+        body.light-mode .cta-banner p {
+            color: #555;
+        }
+
+        .cta-banner .btn-primary-gold {
+            background: var(--gradient-gold);
+            color: var(--black);
+            padding: 0.6rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            border: none;
+            transition: var(--transition);
+            display: inline-block;
+            width: auto;
+            min-width: 180px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+            .cta-banner .btn-primary-gold:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-gold);
+            }
+
+        /* Footer */
+        .footer {
+            background: var(--footer-bg);
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-color);
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+            .footer-links li {
+                margin-bottom: 0.8rem;
+            }
+
+            .footer-links a {
+                color: var(--gray);
+                text-decoration: none;
+                transition: var(--transition);
+            }
+
+                .footer-links a:hover {
+                    color: var(--primary);
+                    padding-left: 5px;
+                }
+
+        .social-icons-footer {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-icon-footer {
+            width: 40px;
+            height: 40px;
+            background: rgba(197, 160, 89, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+            .social-icon-footer:hover {
+                background: var(--primary);
+                color: black;
+                transform: translateY(-5px) rotate(360deg);
+            }
+
+        /* Scroll Top */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 45px;
+            height: 45px;
+            background: var(--gradient-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--black);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            border: none;
+            z-index: 999;
+        }
+
+            .scroll-top.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .scroll-top:hover {
+                transform: translateY(-3px);
+            }
+
+        /* Premium Modal */
+        .premium-modal,
+        .login-modal,
+        .register-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .premium-modal.active,
+            .login-modal.active,
+            .register-modal.active {
+                display: flex;
+                animation: fadeIn 0.3s ease;
+            }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-glass,
+        .modal-login-glass,
+        .modal-register-glass {
+            background: var(--modal-bg);
+            border-radius: 30px;
+            max-width: 550px;
+            width: 90%;
+            padding: 2rem 1.5rem 1.5rem 1.5rem;
+            border: 1px solid var(--border-color);
+            animation: modalPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        @@keyframes modalPop {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: var(--transition);
+            background: none;
+            border: none;
+            z-index: 10;
+        }
+
+            .close-modal:hover {
+                color: var(--primary);
+                transform: rotate(90deg);
+            }
+
+        .modal-header-custom {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+            .modal-header-custom h3 {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--text-color);
+            }
+
+            .modal-header-custom p {
+                color: var(--gray);
+                font-size: 0.8rem;
+            }
+
+        .btn-primary-gold {
+            background: var(--gradient-gold);
+            color: var(--black);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            border: none;
+            transition: var(--transition);
+            cursor: pointer;
+            width: 100%;
+        }
+
+            .btn-primary-gold:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-gold);
+            }
+
+        .role-selector {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-btn {
+            background: rgba(197, 160, 89, 0.1);
+            border: 1px solid var(--border-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+            .role-btn.active {
+                background: var(--primary);
+                color: var(--black);
+            }
+
+            .role-btn:hover {
+                background: var(--primary);
+                color: var(--black);
+            }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+            .input-group label {
+                font-size: 0.75rem;
+                margin-bottom: 0.3rem;
+                display: block;
+                color: var(--gray);
+            }
+
+            .input-group input,
+            .input-group select {
+                width: 100%;
+                padding: 0.7rem;
+                background: rgba(197, 160, 89, 0.05);
+                border: 1px solid var(--border-color);
+                border-radius: 10px;
+                color: var(--text-color);
+                font-size: 0.85rem;
+            }
+
+            .input-group select {
+                appearance: auto;
+                -webkit-appearance: menulist;
+                -moz-appearance: menulist;
+                cursor: pointer;
+            }
+
+                .input-group select option {
+                    background: var(--card-bg);
+                    color: var(--text-color);
+                }
+
+        body.light-mode .input-group select option {
+            background: #ffffff;
+            color: #1a1a1a;
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+            .switch-form span {
+                color: var(--primary);
+            }
+
+        .demo-creds p {
+            font-size: 0.7rem;
+            margin-bottom: 0.3rem;
+            cursor: pointer;
+            color: var(--primary);
+        }
+
+            .demo-creds p:hover {
+                text-decoration: underline;
+            }
+
+        .modal-header {
+            background: var(--gradient-gold);
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+            .modal-header h3 {
+                margin: 0;
+                color: var(--black);
+                font-size: 1.3rem;
+                font-weight: 700;
+            }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--black);
+            transition: var(--transition);
+        }
+
+            .modal-close:hover {
+                transform: rotate(90deg);
+            }
+
+        .modal-body-custom {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-footer-custom {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .modal-detail-item {
+            display: flex;
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-detail-label {
+            width: 100px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .modal-detail-value {
+            flex: 1;
+            color: var(--text-color);
+        }
+
+        .modal-badge {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+            .modal-badge.ongoing {
+                background: #ffc107;
+                color: #000;
+            }
+
+            .modal-badge.upcoming {
+                background: #0dcaf0;
+                color: #000;
+            }
+
+        .info-box {
+            background: rgba(197, 160, 89, 0.08);
+            border-radius: 15px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        body.light-mode .info-box {
+            background: rgba(197, 160, 89, 0.12);
+        }
+
+        .info-box i {
+            color: var(--primary);
+            margin-right: 0.5rem;
+        }
+
+        .btn-apply-modal {
+            background: var(--gradient-gold);
+            color: var(--black);
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            border: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+            .btn-apply-modal:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-gold);
+            }
+
+        @@media (max-width: 768px) {
+            .stats-bar {
+                margin: -20px 1rem 2rem;
+                padding: 1rem;
+            }
+
+            .cta-banner h3 {
+                font-size: 1.3rem;
+            }
+
+            .cta-banner {
+                padding: 1.5rem;
+            }
+
+                .cta-banner .btn-primary-gold {
+                    padding: 0.5rem 1.2rem;
+                    min-width: 150px;
+                    font-size: 0.75rem;
+                }
+
+            .modal-glass,
+            .modal-login-glass,
+            .modal-register-glass {
+                max-width: 95%;
+                max-height: 85vh;
+                padding: 1.8rem 1rem 1rem 1rem;
+            }
+
+            .modal-header-custom h3 {
+                font-size: 1.2rem;
+            }
+
+            .modal-detail-label {
+                width: 80px;
+                font-size: 0.75rem;
+            }
+
+            .featured-winners {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="particles-js"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg" id="navbar">
+        <div class="container">
+            <a class="logo" asp-controller="Home" asp-action="Index">✨ ARTISTIC</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Competitions">Competitions</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Exhibitions">Exhibitions</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Gallery">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                </ul>
+                <div class="ms-lg-3 d-flex gap-2 align-items-center flex-wrap">
+                    <div class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-sun" id="themeIcon"></i>
+                    </div>
+                    <a href="javascript:void(0)" class="btn-nav" id="loginBtn">Login</a>
+                    <a href="javascript:void(0)" class="btn-nav btn-register" id="registerBtn">Register</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Art <span style="color: var(--primary);">Competitions</span></h1>
+            <p>Showcase your talent, win amazing prizes, and get recognized nationally</p>
+        </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <div class="container">
+        <div class="stats-bar">
+            <div class="row text-center">
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <div class="stat-number">@ViewBag.TotalCompetitions+</div>
+                        <div class="stat-label">Annual Competitions</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <div class="stat-number">@ViewBag.TotalParticipants+</div>
+                        <div class="stat-label">Participants</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <div class="stat-number">PKR @ViewBag.TotalPrizeAmount+</div>
+                        <div class="stat-label">Total Prizes</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <div class="stat-number">@ViewBag.TotalWinners+</div>
+                        <div class="stat-label">Winning Artists</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <section class="filters-section">
+        <div class="container">
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <button class="filter-btn active" data-filter="all">All Competitions</button>
+                <button class="filter-btn" data-filter="ongoing">🔥 Ongoing</button>
+                <button class="filter-btn" data-filter="upcoming">📅 Upcoming</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Winners Section -->
+    <div class="container">
+        <div class="featured-winners" data-aos="fade-up">
+            <div class="text-center mb-3">
+                <span class="section-tag">🏆 Featured Winners</span>
+                <h3 class="mt-2" style="font-size: 1.3rem;">Top Performers of 2024</h3>
+            </div>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="winner-highlight" onclick="showWinnerDetails()">
+                        <div class="winner-highlight-img"><i class="fas fa-crown" style="color: #FFD700;"></i></div>
+                        <div><strong>Fatima Akhtar</strong><br><small>Gold Medal - PKR 150,000</small></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="winner-highlight" onclick="showWinnerDetails()">
+                        <div class="winner-highlight-img"><i class="fas fa-medal" style="color: #C0C0C0;"></i></div>
+                        <div><strong>Zara Malik</strong><br><small>Silver Medal - PKR 120,000</small></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="winner-highlight" onclick="showWinnerDetails()">
+                        <div class="winner-highlight-img"><i class="fas fa-medal" style="color: #CD7F32;"></i></div>
+                        <div><strong>Hira Noor</strong><br><small>Bronze Medal - PKR 95,000</small></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Competitions Grid - DYNAMIC FROM DATABASE -->
+    <section class="py-4">
+        <div class="container">
+            <div class="row g-4" id="competitionsGrid">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var comp in Model)
+                    {
+                        var statusText = comp.Status == CompetitionStatus.Ongoing ? "ongoing" : "upcoming";
+                        var statusBadge = comp.Status == CompetitionStatus.Ongoing ? "🔥 ONGOING" : "📅 UPCOMING";
+                        var randomRegistered = new Random().Next(5, 50);
+                        var randomPercent = comp.Status == CompetitionStatus.Ongoing ? new Random().Next(30, 90) : new Random().Next(0, 30);
+
+                        <div class="col-md-4 competition-item" data-category="@statusText">
+                            <div class="competition-card"
+                                 onclick='openCompetitionModal(
+                         "@comp.Title.Replace("\"", "\\\"")",
+                         "@(comp.Status == CompetitionStatus.Ongoing ? "ongoing" : "upcoming")",
+                         "@comp.Description?.Replace("\"", "\\\"")",
+                         "@comp.Conditions?.Replace("\"", "\\\"")",
+                         "@comp.EndDate.ToString("MMM dd, yyyy")",
+                         "@comp.Description?.Replace("\"", "\\\"")",
+                         "@randomRegistered"
+                     )'>
+                                <div class="card-img-wrapper">
+                                    @if (!string.IsNullOrEmpty(comp.ImagePath))
+                                    {
+                                        <img src="@comp.ImagePath" class="card-img" alt="@comp.Title">
+                                    }
+                                    else
+                                    {
+                                        <img src="https://images.pexels.com/photos/102127/pexels-photo-102127.jpeg?w=400" class="card-img" alt="Competition">
+                                    }
+                                    <span class="card-badge">@statusBadge</span>
+                                </div>
+                                <div class="card-body">
+                                    <h3 class="card-title">@comp.Title</h3>
+                                    <div class="card-meta">
+                                        <span><i class="far fa-calendar"></i> @comp.StartDate.ToString("MMM dd, yyyy") - @comp.EndDate.ToString("MMM dd, yyyy")</span>
+                                        <span><i class="fas fa-users"></i> @randomRegistered Registered</span>
+                                    </div>
+                                    <div class="card-prize">🏆 @(string.IsNullOrEmpty(comp.Conditions) ? "PKR 0 + Medal" : comp.Conditions)</div>
+                                    <div class="progress-bar-custom">
+                                        <div class="progress-fill" style="width: @randomPercent%;"></div>
+                                    </div>
+                                    <div class="progress-info">
+                                        <span class="progress-percent">@randomPercent% Registered</span>
+                                        <span class="progress-slots">@(50 - randomRegistered) Slots Left</span>
+                                    </div>
+                                    <button class="btn-view-details">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center py-5">
+                        <h3>No competitions available at the moment.</h3>
+                        <p>Please check back later for upcoming art competitions!</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="py-5">
+        <div class="container">
+            <div class="cta-banner" data-aos="zoom-in">
+                <h3>Ready to Showcase Your Talent?</h3>
+                <p>
+                    Join our competitions and get recognized nationally. Last date to register for ongoing competition is
+                    approaching fast!
+                </p>
+                <button class="btn-primary-gold" id="ctaRegisterBtn">
+                    <i class="fas fa-arrow-right me-2"></i>Register
+                    Now
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="footer-logo">✨ ARTISTIC</div>
+                    <p class="mt-3" style="color: var(--gray);">
+                        Institute of Fine Arts - Where creativity meets
+                        excellence. Established by industry professionals with years of experience in animation and fine
+                        arts.
+                    </p>
+                    <div class="social-icons-footer">
+                        <a href="#" class="social-icon-footer"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon-footer"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon-footer"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon-footer"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h5 style="color: var(--primary); margin-bottom: 1.2rem;">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Competitions">Competitions</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Exhibitions">Exhibitions</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Gallery">Gallery</a></li>
+
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h5 style="color: var(--primary); margin-bottom: 1.2rem;">Resources</h5>
+                    <ul class="footer-links">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                        <li><a href="#" onclick="openLoginModal()">Login</a></li>
+                        <li><a href="#" onclick="openRegisterModal()">Register</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 style="color: var(--primary); margin-bottom: 1.2rem;">Contact Info</h5>
+                    <ul class="footer-links">
+                        <li>
+                            <i class="fas fa-map-marker-alt me-2" style="color: var(--primary);"></i> 123 Art District,
+                            Mall Road, Lahore, Pakistan
+                        </li>
+                        <li><i class="fas fa-phone me-2" style="color: var(--primary);"></i> +92 300 1234567</li>
+                        <li>
+                            <i class="fas fa-envelope me-2" style="color: var(--primary);"></i> info@@artistic.edu.pk
+                        </li>
+                        <li>
+                            <i class="fas fa-clock me-2" style="color: var(--primary);"></i> Mon-Fri: 9:00 AM - 6:00 PM
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4" style="border-color: var(--border-color);">
+            <div class="text-center">
+                <p style="color: var(--gray); margin: 0;">
+                    © 2025 ARTISTIC - Institute of Fine Arts. All rights reserved.
+                    Designed with <i class="fas fa-heart" style="color: var(--primary);"></i> in Lahore
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <button class="scroll-top" id="scrollTop"><i class="fas fa-arrow-up"></i></button>
+
+    <!-- Competition Modal -->
+    <div class="premium-modal" id="competitionModal">
+        <div class="modal-glass">
+            <div class="modal-header">
+                <h3 id="modalTitle">Summer Art Festival 2025</h3>
+                <button class="modal-close" onclick="closeCompetitionModal()">&times;</button>
+            </div>
+            <div class="modal-body-custom">
+                <div class="text-center mb-3">
+                    <span class="modal-badge ongoing" id="modalStatus">🔥 ONGOING</span>
+                </div>
+                <div class="modal-detail-item">
+                    <div class="modal-detail-label">🎨 Theme:</div>
+                    <div class="modal-detail-value" id="modalTheme">-</div>
+                </div>
+                <div class="modal-detail-item">
+                    <div class="modal-detail-label">🏆 Prize:</div>
+                    <div class="modal-detail-value" id="modalPrize">-</div>
+                </div>
+                <div class="modal-detail-item">
+                    <div class="modal-detail-label">📅 Deadline:</div>
+                    <div class="modal-detail-value" id="modalDeadline">-</div>
+                </div>
+                <div class="modal-detail-item">
+                    <div class="modal-detail-label">👥 Submissions:</div>
+                    <div class="modal-detail-value" id="modalSubmissions">-</div>
+                </div>
+                <div class="modal-detail-item">
+                    <div class="modal-detail-label">📝 Description:</div>
+                    <div class="modal-detail-value" id="modalDesc">-</div>
+                </div>
+                <div class="info-box">
+                    <i class="fas fa-list-check"></i> <strong>How to Participate:</strong><br>
+                    1️⃣ Login to your Student Account<br>
+                    2️⃣ Go to Competitions section<br>
+                    3️⃣ Click "Apply Now" on this competition<br>
+                    4️⃣ Upload your artwork (JPEG format, max 10MB)<br>
+                    5️⃣ Add title, description, and a poem/quotation<br>
+                    6️⃣ Submit before the deadline<br>
+                    ⚠️ Late submissions will be automatically disqualified!
+                </div>
+            </div>
+            <div class="modal-footer-custom">
+                <button class="btn-view-details" onclick="event.stopPropagation(); openCompetitionModal('@@comp.Title.Replace(" \"", "\\\" ")', '@@(comp.Status == CompetitionStatus.Ongoing ? " ongoing" : "upcoming" )', '@@comp.Description?.Replace("\"", "\\\"")' , '@@comp.Conditions?.Replace("\"", "\\\"")' , '@@comp.EndDate.ToString("MMM dd, yyyy")' , '@@comp.Description?.Replace("\"", "\\\"")' , '@@randomRegistered' )">View Details</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="register-modal" id="registerModal">
+        <div class="modal-register-glass">
+            <button class="close-modal" onclick="closeRegisterModal()">&times;</button>
+            <div class="modal-header-custom">
+                <h3>Create Account</h3>
+                <p>Join ARTISTIC Institute</p>
+            </div>
+
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="regName" placeholder="Enter your full name">
+            </div>
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" id="regEmail" placeholder="you@@example.com">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="regPassword" placeholder="Create a password (min 6 characters)">
+            </div>
+            <div class="input-group">
+                <label>Confirm Password</label>
+                <input type="password" id="regConfirmPassword" placeholder="Confirm your password">
+            </div>
+            <div class="input-group">
+                <label>Select Program (For Students)</label>
+                <select id="regProgram">
+                    <option value="Bachelor of Fine Arts (BFA)">Bachelor of Fine Arts (BFA)</option>
+                    <option value="Diploma in Digital Art">Diploma in Digital Art</option>
+                    <option value="Certificate in Animation">Certificate in Animation</option>
+                    <option value="Short Course in Painting">Short Course in Painting</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Register as</label>
+                <select id="regRole">
+                    <option value="Student">🎓 Student</option>
+                    <option value="Staff">👨‍🏫 Staff</option>
+                    <option value="Manager">📊 Manager</option>
+                </select>
+                <small style="color: var(--gray); font-size: 0.65rem; display: block; margin-top: 5px;">Note: Admin accounts can only be created by existing admins</small>
+            </div>
+
+            <button class="btn-primary-gold mt-2" onclick="handleRegister()">Register Now</button>
+
+            <div class="switch-form" onclick="switchToLogin()">
+                Already have an account? <span>Login here</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="modal-login-glass">
+            <button class="close-modal" onclick="closeLoginModal()">&times;</button>
+            <div class="modal-header-custom">
+                <h3>Welcome Back!</h3>
+            </div>
+            <div class="role-selector" id="roleSelector">
+                <div class="role-btn" data-role="Admin">👑 Admin</div>
+                <div class="role-btn" data-role="Manager">📊 Manager</div>
+                <div class="role-btn" data-role="Staff">👨‍🏫 Staff</div>
+                <div class="role-btn active" data-role="Student">🎓 Student</div>
+            </div>
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" placeholder="student@@artistic.edu.pk">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="••••••••">
+            </div>
+            <button class="btn-primary-gold mt-3" onclick="handleLogin()">Login</button>
+
+            <div class="switch-form" onclick="switchToRegister()">
+                Don't have an account? <span>Register here</span>
+            </div>
+
+            <div class="demo-creds mt-3 p-2" style="background: rgba(197,160,89,0.05); border-radius: 12px;">
+                <small style="color: var(--gray);">Demo Credentials:</small>
+                <p onclick="fillDemo('student@@artistic.edu.pk','student123')">🎓 student@@artistic.edu.pk / student123</p>
+                <p onclick="fillDemo('staff@@artistic.edu.pk','staff123')">👨‍🏫 staff@@artistic.edu.pk / staff123</p>
+                <p onclick="fillDemo('manager@@artistic.edu.pk','manager123')">📊 manager@@artistic.edu.pk / manager123</p>
+                <p onclick="fillDemo('admin@@artistic.edu.pk','admin123')">👑 admin@@artistic.edu.pk / admin123</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@@11"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+        AOS.init({ duration: 1000, once: true });
+
+        // Initialize localStorage with default users
+        if (!localStorage.getItem('registeredUsers')) {
+        function hashPassword(password) {
+        let hash = 0;
+        for (let i = 0; i < password.length; i++) {
+        hash = ((hash << 5) - hash) + password.charCodeAt(i);
+        hash |= 0;
+        }
+        return hash.toString();
+        }
+
+        const defaultUsers = {
+        students: [
+        { name: "Demo Student", email: "student@@artistic.edu.pk", password: "student123", program: "Bachelor of Fine Arts (BFA)" }
+        ],
+        staff: [
+        { name: "Demo Staff", email: "staff@@artistic.edu.pk", password: "staff123", department: "Fine Arts" }
+        ],
+        managers: [
+        { name: "Demo Manager", email: "manager@@artistic.edu.pk", password: "manager123", department: "Operations" }
+        ],
+        admins: [
+        { name: "Super Admin", email: "admin@@artistic.edu.pk", password: hashPassword("admin123"), role: "Super Admin" }
+        ]
+        };
+        localStorage.setItem('registeredUsers', JSON.stringify(defaultUsers));
+        }
+
+        function hashPassword(password) {
+        let hash = 0;
+        for (let i = 0; i < password.length; i++) {
+        hash = ((hash << 5) - hash) + password.charCodeAt(i);
+        hash |= 0;
+        }
+        return hash.toString();
+        }
+
+        // Dark/Light Mode Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        if (localStorage.getItem('theme') === 'light') {
+        body.classList.add('light-mode');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+        } else {
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+        body.classList.toggle('light-mode');
+        if (body.classList.contains('light-mode')) {
+        localStorage.setItem('theme', 'light');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+        } else {
+        localStorage.setItem('theme', 'dark');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        }
+        });
+
+        // Particles Background
+        particlesJS('particles-js', {
+        particles: { number: { value: 80 }, color: { value: '#C5A059' }, opacity: { value: 0.3 }, size: { value: 3, random: true }, move: { enable: true, speed: 2 } }
+        });
+
+        // Navbar Scroll
+        window.addEventListener('scroll', () => {
+        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+        document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 200);
+        });
+        document.getElementById('scrollTop').onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Filter Functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const filter = this.dataset.filter;
+        document.querySelectorAll('.competition-item').forEach(item => {
+        if (filter === 'all' || item.dataset.category.includes(filter)) {
+        item.style.display = 'block';
+        item.style.animation = 'scaleIn 0.5s ease';
+        } else {
+        item.style.display = 'none';
+        }
+        });
+        });
+        });
+
+        // Competition Modal Functions
+                // Competition Modal Functions
+                // Competition Modal Functions
+        let currentComp = {};
+
+        function openCompetitionModal(title, status, theme, prize, deadline, desc, submissions) {
+            console.log("Modal opening for:", title);
+
+            currentComp = {
+                title: title,
+                status: status,
+                theme: theme,
+                prize: prize,
+                deadline: deadline,
+                desc: desc,
+                submissions: submissions
+            };
+
+            // Modal elements ko update karo
+            document.getElementById('modalTitle').innerText = title || "Competition Details";
+
+            if (status === 'ongoing') {
+                document.getElementById('modalStatus').innerHTML = '🔥 ONGOING';
+                document.getElementById('modalStatus').className = 'modal-badge ongoing';
+            } else {
+                document.getElementById('modalStatus').innerHTML = '📅 UPCOMING';
+                document.getElementById('modalStatus').className = 'modal-badge upcoming';
+            }
+
+            document.getElementById('modalTheme').innerText = theme || "No theme specified";
+            document.getElementById('modalPrize').innerText = prize || "Prize not specified";
+            document.getElementById('modalDeadline').innerText = deadline || "No deadline specified";
+            document.getElementById('modalSubmissions').innerText = (submissions || 0) + ' submissions received';
+            document.getElementById('modalDesc').innerText = desc || "No description available";
+
+            // Modal show karo
+            const modal = document.getElementById('competitionModal');
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } else {
+                console.log("Modal element not found!");
+            }
+        }
+
+        function closeCompetitionModal() {
+            const modal = document.getElementById('competitionModal');
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        function applyCompetition() {
+            Swal.fire({
+                title: 'Application Started!',
+                html: `You're applying for:<br><strong>${currentComp.title}</strong><br><br>Please login to complete your submission.`,
+                icon: 'success',
+                confirmButtonColor: '#C5A059',
+                background: document.body.classList.contains('light-mode') ? '#FFFFFF' : '#1A1A2E',
+                color: document.body.classList.contains('light-mode') ? '#333' : 'white'
+            }).then(() => {
+                closeCompetitionModal();
+                openLoginModal();
+            });
+        }
+        // Modal Functions
+        let currentSelectedRole = 'Student';
+
+               function openLoginModal(preSelectedRole) {
+            const loginModal = document.getElementById('loginModal');
+            const registerModal = document.getElementById('registerModal');
+
+            if (registerModal) registerModal.classList.remove('active');
+            if (loginModal) {
+                loginModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            const selectedRoleInput = document.getElementById('SelectedRole');
+            if (selectedRoleInput) {
+                selectedRoleInput.value = preSelectedRole || 'Student';
+            }
+
+            document.querySelectorAll("#roleSelector .role-btn").forEach(btn => {
+                btn.classList.remove("active");
+                if (btn.innerText.includes(preSelectedRole || 'Student')) {
+                    btn.classList.add("active");
+                }
+            });
+        }
+
+        function closeLoginModal() {
+        document.getElementById('loginModal').classList.remove('active');
+        document.body.style.overflow = 'auto';
+        }
+
+        function openRegisterModal() {
+        document.getElementById('registerModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+        }
+
+        function closeRegisterModal() {
+        document.getElementById('registerModal').classList.remove('active');
+        document.body.style.overflow = 'auto';
+        // Reset form
+        document.getElementById('regName').value = '';
+        document.getElementById('regEmail').value = '';
+        document.getElementById('regPassword').value = '';
+        document.getElementById('regConfirmPassword').value = '';
+        document.getElementById('regProgram').value = 'Bachelor of Fine Arts (BFA)';
+        document.getElementById('regRole').value = 'Student';
+        }
+
+        function switchToLogin() {
+        closeRegisterModal();
+        openLoginModal();
+        }
+
+        function switchToRegister() {
+        closeLoginModal();
+        openRegisterModal();
+        }
+
+        function fillDemo(email, pass) {
+        document.getElementById('loginEmail').value = email;
+        document.getElementById('loginPassword').value = pass;
+        }
+
+        function showWinnerDetails() {
+        Swal.fire({
+        title: '🏆 Featured Winner',
+        text: 'This artist won a medal in our competition! Check the Gallery to see their artwork.',
+        icon: 'success',
+        confirmButtonColor: '#C5A059',
+        background: '#1A1A2E',
+        color: 'white'
+        });
+        }
+
+        // Role selection in login modal
+        document.querySelectorAll('.role-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+        document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentSelectedRole = this.dataset.role;
+        document.getElementById('loginEmail').placeholder = currentSelectedRole.toLowerCase() + '@@artistic.edu.pk';
+        });
+        });
+
+        // Registration Handler
+        function handleRegister() {
+        const name = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const confirmPassword = document.getElementById('regConfirmPassword').value;
+        const program = document.getElementById('regProgram').value;
+        const role = document.getElementById('regRole').value;
+
+        if (!name || !email || !password || !confirmPassword) {
+        Swal.fire({ title: 'Error!', text: 'Please fill all fields', icon: 'error', confirmButtonColor: '#C5A059' });
+        return;
+        }
+
+        if (password.length < 6) {
+        Swal.fire({ title: 'Error!', text: 'Password must be at least 6 characters', icon: 'error', confirmButtonColor: '#C5A059' });
+        return;
+        }
+
+        if (password !== confirmPassword) {
+        Swal.fire({ title: 'Error!', text: 'Passwords do not match', icon: 'error', confirmButtonColor: '#C5A059' });
+        return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('registeredUsers'));
+
+        const allUsers = [...users.students, ...users.staff, ...users.managers, ...users.admins];
+        if (allUsers.some(user => user.email === email)) {
+        Swal.fire({ title: 'Error!', text: 'Email already registered', icon: 'error', confirmButtonColor: '#C5A059' });
+        return;
+        }
+
+        if (role === 'Student') {
+        users.students.push({ name, email, password, program });
+        } else if (role === 'Staff') {
+        users.staff.push({ name, email, password, department: "Fine Arts" });
+        } else if (role === 'Manager') {
+        users.managers.push({ name, email, password, department: "Management" });
+        }
+
+        localStorage.setItem('registeredUsers', JSON.stringify(users));
+
+        Swal.fire({
+        title: 'Registration Successful!',
+        text: `You are now registered as a ${role}. Please login.`,
+        icon: 'success',
+        confirmButtonColor: '#C5A059'
+        }).then(() => {
+        closeRegisterModal();
+        openLoginModal();
+        document.getElementById('loginEmail').value = email;
+        document.getElementById('loginPassword').value = '';
+        // Set the role selector to match registered role
+        document.querySelectorAll('.role-btn').forEach(btn => {
+        if (btn.dataset.role === role) {
+        btn.click();
+        }
+        });
+        });
+        }
+
+        // Login Handler - Admin redirects to backend/admin/dashboard.html
+        function handleLogin() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        if (!email || !password) {
+        Swal.fire({ title: 'Error!', text: 'Please enter email and password', icon: 'error', confirmButtonColor: '#C5A059' });
+        return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('registeredUsers'));
+        let userFound = null;
+        let role = null;
+
+        if (currentSelectedRole === 'Student') {
+        const student = users.students.find(u => u.email === email && u.password === password);
+        if (student) {
+        userFound = student;
+        role = 'Student';
+        }
+        } else if (currentSelectedRole === 'Staff') {
+        const staff = users.staff.find(u => u.email === email && u.password === password);
+        if (staff) {
+        userFound = staff;
+        role = 'Staff';
+        }
+        } else if (currentSelectedRole === 'Manager') {
+        const manager = users.managers.find(u => u.email === email && u.password === password);
+        if (manager) {
+        userFound = manager;
+        role = 'Manager';
+        }
+        } else if (currentSelectedRole === 'Admin') {
+        const admin = users.admins.find(u => u.email === email && u.password === hashPassword(password));
+        if (admin) {
+        userFound = admin;
+        role = 'Admin';
+        }
+        }
+
+        if (userFound) {
+        localStorage.setItem('currentUser', JSON.stringify({ name: userFound.name, email, role }));
+
+        let redirect = '';
+        if (role === 'Student') redirect = 'student-dashboard.html';
+        else if (role === 'Staff') redirect = 'staff-dashboard.html';
+        else if (role === 'Manager') redirect = 'manager-dashboard.html';
+        else if (role === 'Admin') redirect = 'backend/admin/dashboard.html';
+
+        Swal.fire({
+        title: 'Login Successful!',
+        text: `Welcome ${userFound.name} to ${role} Dashboard`,
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+        }).then(() => {
+        window.location.href = redirect;
+        });
+        } else {
+        Swal.fire({ title: 'Error!', text: 'Invalid email or password', icon: 'error', confirmButtonColor: '#C5A059' });
+        }
+        }
+
+        // CTA Register Button
+        document.getElementById('ctaRegisterBtn').addEventListener('click', function (e) {
+        e.preventDefault();
+        openRegisterModal();
+        });
+
+        // Animate progress bars on scroll
+        const observerOptions = { threshold: 0.3 };
+        const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+        if (entry.isIntersecting) {
+        const fills = entry.target.querySelectorAll('.progress-fill');
+        fills.forEach(fill => {
+        const width = fill.style.width;
+        fill.style.width = '0%';
+        setTimeout(() => { fill.style.width = width; }, 100);
+        });
+        observer.unobserve(entry.target);
+        }
+        });
+        }, observerOptions);
+        document.querySelectorAll('.competition-card').forEach(card => observer.observe(card));
+
+        // Close modals on escape key
+        document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+        closeCompetitionModal();
+        closeLoginModal();
+        closeRegisterModal();
+        }
+        });
+
+
+                document.addEventListener("DOMContentLoaded", function () {
+            const loginBtn = document.getElementById("loginBtn");
+            const registerBtn = document.getElementById("registerBtn");
+
+            if (loginBtn) {
+                loginBtn.addEventListener("click", function () {
+                    openLoginModal("Student");
+                });
+            }
+
+            if (registerBtn) {
+                registerBtn.addEventListener("click", function () {
+                    openRegisterModal();
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

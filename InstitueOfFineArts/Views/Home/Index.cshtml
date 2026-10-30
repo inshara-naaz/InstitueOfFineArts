@@ -1,0 +1,2317 @@
+﻿@{
+    ViewData["Title"] = "Home | ARTISTIC Institute";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ARTISTIC | Institute of Fine Arts – Premier Art Institute of Pakistan</title>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css">
+
+    <style>
+        /* Light Mode Colors (Default Dark) */
+        :root {
+            --primary: #C5A059;
+            --primary-dark: #A8883A;
+            --primary-light: #D4B87A;
+            --secondary: #1A1A2E;
+            --dark: #0A0A0A;
+            --darker: #050505;
+            --gray: #8A8A8A;
+            --light-gray: #EAEAEA;
+            --white: #FFFFFF;
+            --black: #000000;
+            --bg-body: var(--dark);
+            --text-color: var(--white);
+            --card-bg: rgba(26, 26, 46, 0.85);
+            --footer-bg: var(--darker);
+            --navbar-bg: rgba(5, 5, 5, 0.95);
+            --border-color: rgba(197, 160, 89, 0.15);
+            --shadow-gold: 0 10px 30px rgba(197, 160, 89, 0.3);
+            --shadow-gold-lg: 0 20px 40px rgba(197, 160, 89, 0.2);
+            --gradient-gold: linear-gradient(135deg, #C5A059 0%, #E8C87A 50%, #C5A059 100%);
+            --gradient-dark: linear-gradient(135deg, #0A0A0A 0%, #1A1A2E 100%);
+            --transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* Light Mode - White & Gold only */
+        body.light-mode {
+            --bg-body: #FFFFFF;
+            --text-color: #1A1A1A;
+            --card-bg: #FFFFFF;
+            --footer-bg: #F5F5F5;
+            --navbar-bg: #FFFFFF;
+            --border-color: rgba(197, 160, 89, 0.25);
+            --secondary: #F8F8F8;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-color);
+            overflow-x: hidden;
+            transition: var(--transition);
+        }
+
+        /* Dark/Light Mode Toggle Button */
+        .theme-toggle {
+            background: rgba(197, 160, 89, 0.15);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-left: 0.5rem;
+        }
+
+            .theme-toggle:hover {
+                background: var(--primary);
+                color: var(--black);
+                transform: rotate(15deg);
+            }
+
+            .theme-toggle i {
+                font-size: 1.2rem;
+            }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Navbar - Responsive */
+        .navbar {
+            background: var(--navbar-bg);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+            .navbar.scrolled {
+                padding: 0.7rem 2rem;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            }
+
+        @@media (max-width: 991px) {
+            .navbar {
+                padding: 0.8rem 1rem;
+            }
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        @@media (max-width: 768px) {
+            .logo {
+                font-size: 1.3rem;
+            }
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            letter-spacing: 2px;
+        }
+
+        .nav-link {
+            color: var(--text-color) !important;
+            opacity: 0.8;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+            .nav-link::after {
+                content: '';
+                position: absolute;
+                bottom: -5px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background: var(--gradient-gold);
+                transition: var(--transition);
+            }
+
+            .nav-link:hover::after {
+                width: 100%;
+            }
+
+            .nav-link:hover {
+                color: var(--primary) !important;
+                opacity: 1;
+                transform: translateY(-2px);
+            }
+
+        .btn-nav {
+            background: transparent;
+            border: 1.5px solid var(--primary);
+            color: var(--primary);
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        @@media (max-width: 991px) {
+            .btn-nav {
+                display: inline-block;
+                margin: 0.3rem 0;
+                text-align: center;
+            }
+        }
+
+        .btn-nav:hover {
+            background: var(--primary);
+            color: var(--black);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .btn-register {
+            background: var(--gradient-gold);
+            color: var(--black);
+            border: none;
+        }
+
+            .btn-register:hover {
+                background: var(--primary-light);
+            }
+
+        /* Hero Section - Responsive */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 70px;
+            z-index: 1;
+        }
+
+        @@media (max-width: 991px) {
+            .hero {
+                margin-top: 60px;
+                text-align: center;
+            }
+        }
+
+        .glow-effect {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(197, 160, 89, 0.15), transparent);
+            border-radius: 50%;
+            animation: glowPulse 4s ease-in-out infinite;
+        }
+
+        @@media (max-width: 768px) {
+            .glow-effect {
+                width: 300px;
+                height: 300px;
+            }
+        }
+
+        @@keyframes glowPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.3);
+                opacity: 0.5;
+            }
+        }
+
+        .hero-title {
+            font-size: clamp(2rem, 5vw, 5rem);
+            font-weight: 900;
+            line-height: 1.2;
+        }
+
+        .typed-text {
+            color: var(--primary);
+            border-right: 3px solid var(--primary);
+            animation: blink 0.7s infinite;
+        }
+
+        @@keyframes blink {
+
+            0%,
+            100% {
+                border-color: transparent;
+            }
+
+            50% {
+                border-color: var(--primary);
+            }
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        @@keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-80px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @@keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(80px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        @@media (max-width: 991px) {
+            .hero-stats {
+                justify-content: center;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .hero-stats {
+                gap: 1rem;
+            }
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            font-family: 'Playfair Display', serif;
+        }
+
+        @@media (max-width: 480px) {
+            .stat-number {
+                font-size: 1.5rem;
+            }
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--gray);
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 4rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        @@media (max-width: 768px) {
+            .section {
+                padding: 2.5rem 0;
+            }
+        }
+
+        .section-tag {
+            display: inline-block;
+            background: rgba(197, 160, 89, 0.1);
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            color: var(--primary);
+        }
+
+        .section-dark {
+            background: var(--secondary);
+        }
+
+        /* Module Cards - Responsive Grid */
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        @@media (max-width: 768px) {
+            .module-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 1rem;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .module-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .module-card-3d {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+
+        @@media (max-width: 768px) {
+            .module-card-3d {
+                padding: 1rem;
+            }
+        }
+
+        .module-card-3d:hover {
+            transform: translateY(-10px);
+            background: linear-gradient(135deg, rgba(197, 160, 89, 0.1), var(--secondary));
+            border: 1px solid var(--primary);
+        }
+
+        .module-icon {
+            width: 55px;
+            height: 55px;
+            background: rgba(197, 160, 89, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            transition: var(--transition);
+        }
+
+        @@media (max-width: 768px) {
+            .module-icon {
+                width: 45px;
+                height: 45px;
+            }
+
+                .module-icon i {
+                    font-size: 1.2rem;
+                }
+        }
+
+        .module-card-3d:hover .module-icon {
+            background: var(--primary);
+            transform: rotateY(360deg);
+        }
+
+        .module-icon i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .module-card-3d:hover .module-icon i {
+            color: var(--black);
+        }
+
+        .module-card-3d h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        @@media (max-width: 768px) {
+            .module-card-3d h4 {
+                font-size: 0.9rem;
+            }
+        }
+
+        .module-card-3d p {
+            font-size: 0.7rem;
+            color: var(--gray);
+        }
+
+        @@media (max-width: 768px) {
+            .module-card-3d p {
+                font-size: 0.65rem;
+            }
+        }
+
+        /* 3D Flip Cards - Responsive */
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            perspective: 1000px;
+        }
+
+        @@media (max-width: 768px) {
+            .featured-grid {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 1rem;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .featured-card-3d {
+            position: relative;
+            width: 100%;
+            height: 380px;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: pointer;
+        }
+
+        @@media (max-width: 768px) {
+            .featured-card-3d {
+                height: 340px;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .featured-card-3d {
+                height: 320px;
+            }
+        }
+
+        .featured-card-3d:hover {
+            transform: rotateY(10deg) rotateX(5deg) translateY(-15px);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            overflow: hidden;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        .card-front {
+            transform: rotateY(0deg);
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--secondary), var(--darker));
+        }
+
+        .featured-card-3d:hover .card-front {
+            transform: rotateY(-180deg);
+        }
+
+        .featured-card-3d:hover .card-back {
+            transform: rotateY(0deg);
+        }
+
+        .card-front img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+        }
+
+            .card-overlay h4,
+            .card-overlay p {
+                color: white;
+            }
+
+        @@media (max-width: 768px) {
+            .card-overlay h4 {
+                font-size: 1rem;
+            }
+        }
+
+        .btn-small {
+            background: var(--primary);
+            color: var(--black);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+            .btn-small:hover {
+                transform: scale(1.05);
+            }
+
+        /* Competition Cards - Responsive */
+        .row.g-4 {
+            --bs-gutter-y: 1.5rem;
+        }
+
+        @@media (max-width: 768px) {
+            .row.g-4 {
+                --bs-gutter-y: 1rem;
+            }
+        }
+
+        .competition-card-3d {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+            height: 100%;
+            cursor: pointer;
+            position: relative;
+        }
+
+            .competition-card-3d::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.2), transparent);
+                transition: var(--transition);
+            }
+
+            .competition-card-3d:hover::before {
+                left: 100%;
+            }
+
+            .competition-card-3d:hover {
+                transform: translateY(-15px);
+                border-color: var(--primary);
+                box-shadow: var(--shadow-gold-lg);
+            }
+
+        .card-img-wrapper {
+            height: 220px;
+            overflow: hidden;
+        }
+
+        @@media (max-width: 768px) {
+            .card-img-wrapper {
+                height: 180px;
+            }
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+
+        .competition-card-3d:hover .card-img {
+            transform: scale(1.15);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--gradient-gold);
+            color: var(--black);
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            z-index: 1;
+            animation: pulse 2s infinite;
+        }
+
+        @@keyframes pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 0 10px rgba(197, 160, 89, 0);
+            }
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        @@media (max-width: 768px) {
+            .card-body {
+                padding: 1rem;
+            }
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        @@media (max-width: 768px) {
+            .card-title {
+                font-size: 1rem;
+            }
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.7rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        @@media (max-width: 480px) {
+            .card-meta {
+                gap: 0.5rem;
+                font-size: 0.6rem;
+            }
+        }
+
+        .card-prize {
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        @@media (max-width: 768px) {
+            .card-prize {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Premium View Details Button */
+        .btn-view-details {
+            background: linear-gradient(135deg, rgba(197, 160, 89, 0.1), rgba(197, 160, 89, 0.05));
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+            .btn-view-details::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: var(--gradient-gold);
+                transition: var(--transition);
+                z-index: -1;
+                border-radius: 50px;
+            }
+
+            .btn-view-details:hover::before {
+                left: 0;
+            }
+
+            .btn-view-details:hover {
+                color: var(--black);
+                transform: translateY(-3px);
+                box-shadow: var(--shadow-gold);
+            }
+
+        /* Winner Cards - Responsive */
+        .winner-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        @@media (max-width: 768px) {
+            .winner-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 1rem;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .winner-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .winner-card-3d {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        @@media (max-width: 768px) {
+            .winner-card-3d {
+                padding: 1rem;
+            }
+        }
+
+        .winner-card-3d::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background: linear-gradient(to top, rgba(197, 160, 89, 0.1), transparent);
+            transition: var(--transition);
+        }
+
+        .winner-card-3d:hover::after {
+            height: 100%;
+        }
+
+        .winner-card-3d:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+        }
+
+        .winner-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(197, 160, 89, 0.2), rgba(197, 160, 89, 0.05));
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        @@media (max-width: 768px) {
+            .winner-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+        }
+
+        .winner-card-3d:hover .winner-avatar {
+            transform: scale(1.1) rotate(360deg);
+        }
+
+        .winner-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        @@media (max-width: 768px) {
+            .winner-name {
+                font-size: 0.9rem;
+            }
+        }
+
+        .winner-title {
+            font-size: 0.7rem;
+            color: var(--primary);
+        }
+
+        /* Footer - Responsive */
+        .footer {
+            background: var(--footer-bg);
+            padding: 3rem 0 2rem;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border-color);
+            position: relative;
+            z-index: 2;
+        }
+
+        @@media (max-width: 768px) {
+            .footer {
+                padding: 2rem 0 1.5rem;
+                text-align: center;
+            }
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        @@media (max-width: 768px) {
+            .footer-logo {
+                font-size: 1.3rem;
+            }
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+            .footer-links li {
+                margin-bottom: 0.6rem;
+            }
+
+            .footer-links a {
+                color: var(--gray);
+                text-decoration: none;
+                transition: var(--transition);
+                font-size: 0.8rem;
+            }
+
+                .footer-links a:hover {
+                    color: var(--primary);
+                    padding-left: 5px;
+                }
+
+        .social-icons-footer {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        @@media (max-width: 768px) {
+            .social-icons-footer {
+                justify-content: center;
+            }
+        }
+
+        .social-icon-footer {
+            width: 35px;
+            height: 35px;
+            background: rgba(197, 160, 89, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+            .social-icon-footer:hover {
+                background: var(--primary);
+                color: black;
+                transform: translateY(-3px) rotate(360deg);
+            }
+
+        /* Chatbot - Responsive */
+        .chatbot-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 55px;
+            height: 55px;
+            background: var(--gradient-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            border: none;
+            animation: bounce 2s infinite;
+        }
+
+        @@media (max-width: 768px) {
+            .chatbot-btn {
+                width: 45px;
+                height: 45px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+
+        @@keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .chatbot-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .chatbot-btn i {
+            font-size: 1.5rem;
+            color: var(--black);
+        }
+
+        .chatbot-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 500px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .chatbot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--primary);
+            color: var(--black);
+        }
+
+            .chatbot-header h5 {
+                margin: 0;
+                font-size: 1rem;
+            }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--black);
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            max-width: 85%;
+        }
+
+        .user-message {
+            background: var(--primary);
+            color: var(--black);
+            margin-left: auto;
+        }
+
+        .bot-message {
+            background: rgba(197, 160, 89, 0.1);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .quick-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .quick-btn {
+            background: rgba(197, 160, 89, 0.2);
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            padding: 0.3rem 0.7rem;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--primary);
+        }
+
+            .quick-btn:hover {
+                background: var(--primary);
+                color: var(--black);
+            }
+
+        .chatbot-input {
+            display: flex;
+            padding: 0.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+            .chatbot-input input {
+                flex: 1;
+                padding: 0.5rem;
+                background: rgba(197, 160, 89, 0.05);
+                border: 1px solid var(--border-color);
+                border-radius: 20px;
+                color: var(--text-color);
+            }
+
+            .chatbot-input button {
+                background: var(--primary);
+                border: none;
+                border-radius: 50%;
+                width: 35px;
+                height: 35px;
+                margin-left: 0.5rem;
+                cursor: pointer;
+                color: var(--black);
+            }
+
+        @@media (max-width: 768px) {
+            .chatbot-window {
+                width: calc(100vw - 40px);
+                right: 20px;
+                left: 20px;
+                bottom: 80px;
+                height: 450px;
+            }
+        }
+
+        /* Scroll Top - FIXED POSITIONING */
+        .scroll-top {
+            position: fixed;
+            bottom: 100px;
+            right: 100px;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--black);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            border: none;
+            z-index: 999;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Desktop (1200px and above) */
+        @@media (min-width: 1200px) {
+            .scroll-top {
+                bottom: 100px;
+                right: 100px;
+            }
+        }
+
+        /* Laptop (992px to 1199px) */
+        @@media (min-width: 992px) and (max-width: 1199px) {
+            .scroll-top {
+                bottom: 100px;
+                right: 80px;
+            }
+        }
+
+        /* Tablet (768px to 991px) */
+        @@media (min-width: 768px) and (max-width: 991px) {
+            .scroll-top {
+                bottom: 90px;
+                right: 70px;
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        /* Mobile Large (576px to 767px) */
+        @@media (min-width: 576px) and (max-width: 767px) {
+            .scroll-top {
+                bottom: 80px;
+                right: 60px;
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        /* Mobile Small (below 576px) */
+        @@media (max-width: 575px) {
+            .scroll-top {
+                bottom: 70px;
+                right: 50px;
+                width: 38px;
+                height: 38px;
+            }
+        }
+
+        /* Extra Small (below 400px) */
+        @@media (max-width: 400px) {
+            .scroll-top {
+                bottom: 65px;
+                right: 40px;
+                width: 35px;
+                height: 35px;
+            }
+        }
+
+        .scroll-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+            background: var(--gradient-gold);
+        }
+
+        /* Premium Artwork Modal Styles */
+        .premium-modal,
+        .login-modal,
+        .register-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.96);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .premium-modal.active,
+            .login-modal.active,
+            .register-modal.active {
+                display: flex;
+                animation: fadeInModal 0.3s ease;
+            }
+
+        @@keyframes fadeInModal {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Artwork Premium Modal */
+        .artwork-premium-modal {
+            background: var(--card-bg);
+            border-radius: 30px;
+            max-width: 550px;
+            width: 90%;
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            animation: modalPopPremium 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            max-height: 85vh;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+            .artwork-premium-modal .close-modal {
+                top: 20px;
+                right: 20px;
+                z-index: 100;
+                background: rgba(0, 0, 0, 0.3);
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+            }
+
+                .artwork-premium-modal .close-modal:hover {
+                    background: var(--primary);
+                    color: var(--black);
+                }
+
+        @@keyframes modalPopPremium {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .artwork-modal-header {
+            background: var(--gradient-gold);
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .artwork-modal-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2.5rem;
+            color: var(--black);
+        }
+
+        .artwork-modal-badge {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--black);
+            margin-top: 0.5rem;
+        }
+
+        .artwork-modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 0.3rem;
+        }
+
+        .artwork-modal-artist {
+            color: rgba(0, 0, 0, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .artwork-modal-body {
+            padding: 1.5rem;
+            background: var(--card-bg);
+        }
+
+        .artwork-modal-desc {
+            color: var(--gray);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .artwork-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(197, 160, 89, 0.08);
+            border-radius: 20px;
+        }
+
+        .artwork-stat {
+            text-align: center;
+        }
+
+        .artwork-stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .artwork-stat-label {
+            font-size: 0.65rem;
+            color: var(--gray);
+        }
+
+        .artwork-modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 1rem;
+            background: var(--card-bg);
+            justify-content: center;
+        }
+
+        /* Common Modal Styles */
+        .modal-glass,
+        .modal-login-glass,
+        .modal-register-glass {
+            background: var(--card-bg);
+            border-radius: 28px;
+            max-width: 450px;
+            width: 90%;
+            padding: 2rem 1.5rem 1.5rem 1.5rem;
+            border: 1px solid rgba(197, 160, 89, 0.25);
+            animation: modalPop 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        @@media (max-width: 576px) {
+            .artwork-premium-modal {
+                max-width: 95%;
+                border-radius: 20px;
+            }
+
+            .artwork-modal-title {
+                font-size: 1.2rem;
+            }
+
+            .artwork-stats-grid {
+                gap: 0.5rem;
+            }
+
+            .artwork-stat-value {
+                font-size: 0.9rem;
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: var(--transition);
+            background: none;
+            border: none;
+            z-index: 10;
+        }
+
+            .close-modal:hover {
+                color: var(--primary);
+                transform: rotate(90deg);
+            }
+
+        .modal-header-custom {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+            .modal-header-custom h3 {
+                font-size: clamp(1.2rem, 4vw, 1.5rem);
+                font-weight: 700;
+                color: var(--text-color);
+            }
+
+            .modal-header-custom p {
+                color: var(--gray);
+                font-size: 0.8rem;
+            }
+
+        .btn-primary-gold {
+            background: var(--gradient-gold);
+            color: var(--black);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            border: none;
+            transition: var(--transition);
+            cursor: pointer;
+            width: 100%;
+        }
+
+            .btn-primary-gold:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-gold);
+            }
+
+        .role-selector {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-btn {
+            background: rgba(197, 160, 89, 0.1);
+            border: 1px solid var(--border-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+            .role-btn.active {
+                background: var(--primary);
+                color: var(--black);
+            }
+
+            .role-btn:hover {
+                background: var(--primary);
+                color: var(--black);
+            }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+            .input-group label {
+                font-size: 0.75rem;
+                margin-bottom: 0.3rem;
+                display: block;
+                color: var(--gray);
+            }
+
+            .input-group input,
+            .input-group select {
+                width: 100%;
+                padding: 0.7rem;
+                background: rgba(197, 160, 89, 0.05);
+                border: 1px solid var(--border-color);
+                border-radius: 10px;
+                color: var(--text-color);
+                font-size: 0.85rem;
+            }
+
+            .input-group select {
+                appearance: auto;
+                -webkit-appearance: menulist;
+                -moz-appearance: menulist;
+                cursor: pointer;
+            }
+
+                .input-group select option {
+                    background: var(--card-bg);
+                    color: var(--text-color);
+                }
+
+        body.light-mode .input-group select option {
+            background: #ffffff;
+            color: #1a1a1a;
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+            .switch-form span {
+                color: var(--primary);
+            }
+
+        .demo-creds p {
+            font-size: 0.7rem;
+            margin-bottom: 0.3rem;
+            cursor: pointer;
+            color: var(--primary);
+        }
+
+            .demo-creds p:hover {
+                text-decoration: underline;
+            }
+
+        /* Hero Image Responsive */
+        .hero-image img {
+            width: 100%;
+            border-radius: 20px;
+        }
+
+        @@media (max-width: 991px) {
+            .hero-image {
+                margin-top: 2rem;
+            }
+        }
+
+        /* Typed Text Container */
+        .hero-title br {
+            display: block;
+        }
+
+        @@media (max-width: 768px) {
+            .hero-title br {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="particles-js"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg" id="navbar">
+        <div class="container">
+            <a class="logo" asp-controller="Home" asp-action="Index">✨ ARTISTIC</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Competitions">Competitions</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Exhibitions">Exhibitions</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Gallery">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                </ul>
+                <div class="ms-lg-3 d-flex gap-2 align-items-center flex-wrap">
+                    <div class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-sun" id="themeIcon"></i>
+                    </div>
+                    <a href="javascript:void(0)" class="btn-nav" id="loginBtn">Login</a>
+                    <a href="javascript:void(0)" class="btn-nav btn-register" id="registerBtn">Register</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="glow-effect" style="top: 20%; left: 10%;"></div>
+        <div class="glow-effect" style="bottom: 10%; right: 5%; width: 400px; height: 400px;"></div>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="slide-in-left">
+                        <div class="section-tag mb-3"><i class="fas fa-award me-2"></i> Pakistan's #1 Fine Arts Institute</div>
+                        <h1 class="hero-title">Where Every<br><span class="typed-text"></span><br>Tells a Story</h1>
+                        <p class="mt-3" style="color: var(--gray);">Join the leading institute for animation, fine arts, and digital creativity. Showcase your talent in national competitions.</p>
+                        <div class="d-flex gap-3 mt-4 flex-wrap">
+                            <a asp-controller="Home" asp-action="Competitions" class="btn-primary-gold" style="width: auto; display: inline-block;"><i class="fas fa-trophy me-2"></i>Explore</a>
+                            <a asp-controller="Home" asp-action="Gallery" class="btn-view-details" style="width: auto; padding: 0.6rem 1.2rem;">View Gallery</a>
+                        </div>
+                        <div class="hero-stats">
+                            <div><div class="stat-number">287+</div><div class="stat-label">Submissions</div></div>
+                            <div><div class="stat-number">612+</div><div class="stat-label">Students</div></div>
+                            <div><div class="stat-number">415+</div><div class="stat-label">Awards</div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="slide-in-right hero-image">
+                        <img src="~/userImage/img/fine.png" alt="Art Studio" class="img-fluid rounded-4 shadow-lg" style="border: 1px solid rgba(197,160,89,0.3);">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modules Section -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center mb-4">
+                <span class="section-tag">Portal Access</span>
+                <h2 class="mt-2" style="font-size: 1.8rem;">Dedicated <span style="color: var(--primary);">Modules</span></h2>
+                <p style="color: var(--gray);">Role-based access for admin, manager, staff, and students</p>
+            </div>
+            <div class="module-grid">
+                <div class="module-card-3d" onclick="openLoginModal('Admin')">
+                    <div class="module-icon"><i class="fas fa-user-cog"></i></div>
+                    <h4>Admin Module</h4>
+                    <p>Manage staff & students, CRUD operations</p>
+                </div>
+                <div class="module-card-3d" onclick="openLoginModal('Manager')">
+                    <div class="module-icon"><i class="fas fa-chart-line"></i></div>
+                    <h4>Manager Module</h4>
+                    <p>View reports, analytics, overview</p>
+                </div>
+                <div class="module-card-3d" onclick="openLoginModal('Staff')">
+                    <div class="module-icon"><i class="fas fa-chalkboard-user"></i></div>
+                    <h4>Staff Module</h4>
+                    <p>Evaluate submissions, manage competitions</p>
+                </div>
+                <div class="module-card-3d" onclick="openLoginModal('Student')">
+                    <div class="module-icon"><i class="fas fa-user-graduate"></i></div>
+                    <h4>Student Module</h4>
+                    <p>Upload designs, view awards, track exhibitions</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Artworks -->
+    <section class="section section-dark">
+        <div class="container">
+            <div class="text-center mb-4">
+                <span class="section-tag">Student Showcase</span>
+                <h2 class="mt-2" style="font-size: 1.8rem;">Featured <span style="color: var(--primary);">Artworks</span></h2>
+            </div>
+            <div class="featured-grid">
+                <div class="featured-card-3d">
+                    <div class="card-front">
+                        <img src="https://images.pexels.com/photos/572937/pexels-photo-572937.jpeg?w=400" alt="Artwork">
+                        <div class="card-overlay"><h4>Whispers of Nature</h4><p>By Fatima Akhtar</p></div>
+                    </div>
+                    <div class="card-back">
+                        <h4>🏆 Award Winner</h4>
+                        <p>Gold Medal - Summer Art Festival 2024</p>
+                        <button class="btn-small" onclick="openArtworkModal('Whispers of Nature', 'Fatima Akhtar', 'Gold Medal - Summer Art Festival 2024', 'This captivating painting captures the serene beauty of Pakistan\'s northern forests with remarkable detail and emotional depth. The artist spent over 200 hours creating this masterpiece using oil on canvas.', 'https://images.pexels.com/photos/572937/pexels-photo-572937.jpeg?w=600', 'PKR 150,000', '2,500+', '95%', '🥇')">View Details</button>
+                    </div>
+                </div>
+                <div class="featured-card-3d">
+                    <div class="card-front">
+                        <img src="~/userImage/img/dreams.png" alt="Artwork">
+                        <div class="card-overlay"><h4>Digital Dreams</h4><p>By Zara Malik</p></div>
+                    </div>
+                    <div class="card-back">
+                        <h4>🏆 Award Winner</h4>
+                        <p>Silver Medal - Digital Art Competition</p>
+                        <button class="btn-small" onclick="openArtworkModal('Digital Dreams', 'Zara Malik', 'Silver Medal - Digital Art Competition', 'An innovative digital masterpiece blending traditional Pakistani motifs with futuristic cyberpunk elements. Created using Procreate and Photoshop, this artwork gained international recognition.', '~/userImage/img/dreams.png', 'PKR 120,000', '3,200+', '88%', '🥈')">View Details</button>
+                    </div>
+                </div>
+                <div class="featured-card-3d">
+                    <div class="card-front">
+                        <img src="~/userImage/img/emotion.png" alt="Artwork">
+                        <div class="card-overlay"><h4>Colors of Emotion</h4><p>By Hira Noor</p></div>
+                    </div>
+                    <div class="card-back">
+                        <h4>🏆 Award Winner</h4>
+                        <p>Bronze Medal - Traditional Painting</p>
+                        <button class="btn-small" onclick="openArtworkModal('Colors of Emotion', 'Hira Noor', 'Bronze Medal - Traditional Painting', 'A powerful abstract expression of human emotions through vibrant colors and bold brushstrokes. This acrylic painting represents the journey of self-discovery and received special appreciation from the jury.', '~/userImage/img/emotion.png', 'PKR 95,000', '1,800+', '92%', '🥉')">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Competitions Section -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center mb-4">
+                <span class="section-tag">Current & Upcoming</span>
+                <h2 class="mt-2" style="font-size: 1.8rem;">Featured <span style="color: var(--primary);">Competitions</span></h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4 col-sm-6">
+                    <div class="competition-card-3d">
+                        <div class="card-img-wrapper"><img src="https://images.pexels.com/photos/102127/pexels-photo-102127.jpeg?w=400" class="card-img"><span class="card-badge">🔥 ONGOING</span></div>
+                        <div class="card-body">
+                            <h3 class="card-title">Summer Art Festival 2025</h3>
+                            <div class="card-meta"><span><i class="far fa-calendar"></i> June 15, 2025</span><span><i class="fas fa-users"></i> 47 Submissions</span></div>
+                            <div class="card-prize">🏆 PKR 100,000 + Gold Medal</div>
+                            <button class="btn-view-details mt-2" onclick="openCompetitionModal()">View Details</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="competition-card-3d">
+                        <div class="card-img-wrapper"><img src="~/userImage/img/traditional.png" class="card-img"><span class="card-badge">📅 UPCOMING</span></div>
+                        <div class="card-body">
+                            <h3 class="card-title">Traditional Painting</h3>
+                            <div class="card-meta"><span><i class="far fa-calendar"></i> Aug 10 - Sep 20</span><span><i class="fas fa-users"></i> 12 Registered</span></div>
+                            <div class="card-prize">🥇 PKR 85,000 + Gold Medal</div>
+                            <button class="btn-view-details mt-2" onclick="openCompetitionModal()">View Details</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="competition-card-3d">
+                        <div class="card-img-wrapper"><img src="~/userImage/img/maters.png" class="card-img"><span class="card-badge">📅 UPCOMING</span></div>
+                        <div class="card-body">
+                            <h3 class="card-title">Digital Art Masters</h3>
+                            <div class="card-meta"><span><i class="far fa-calendar"></i> Oct 5 - Nov 15</span><span><i class="fas fa-users"></i> 8 Registered</span></div>
+                            <div class="card-prize">🥈 PKR 70,000 + Silver Medal</div>
+                            <button class="btn-view-details mt-2" onclick="openCompetitionModal()">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Winners Section -->
+    <section class="section section-dark">
+        <div class="container">
+            <div class="text-center mb-4">
+                <span class="section-tag">Hall of Fame</span>
+                <h2 class="mt-2" style="font-size: 1.8rem;">Previous <span style="color: var(--primary);">Award Winners</span></h2>
+            </div>
+            <div class="winner-grid">
+                <div class="winner-card-3d" onclick="showWinnerDetails()"><div class="winner-avatar"><i class="fas fa-user-circle"></i></div><div class="winner-name">Fatima Akhtar</div><div class="winner-title">🥇 Gold Medalist</div></div>
+                <div class="winner-card-3d" onclick="showWinnerDetails()"><div class="winner-avatar"><i class="fas fa-user-circle"></i></div><div class="winner-name">Zara Malik</div><div class="winner-title">🥈 Silver Medalist</div></div>
+                <div class="winner-card-3d" onclick="showWinnerDetails()"><div class="winner-avatar"><i class="fas fa-user-circle"></i></div><div class="winner-name">Hira Noor</div><div class="winner-title">🥉 Bronze Medalist</div></div>
+                <div class="winner-card-3d" onclick="showWinnerDetails()"><div class="winner-avatar"><i class="fas fa-user-circle"></i></div><div class="winner-name">Sara Khan</div><div class="winner-title">🏅 Special Mention</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-3">
+                    <div class="footer-logo">✨ ARTISTIC</div>
+                    <p class="mt-2 small" style="color: var(--gray);">Institute of Fine Arts - Where creativity meets excellence. Established by industry professionals with years of experience in animation and fine arts.</p>
+                    <div class="social-icons-footer">
+                        <a href="#" class="social-icon-footer"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon-footer"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon-footer"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon-footer"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-3">
+                    <h5 style="color: var(--primary); margin-bottom: 1rem; font-size: 0.9rem;">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Competitions">Competitions</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Exhibitions">Exhibitions</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Gallery">Gallery</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-3">
+                    <h5 style="color: var(--primary); margin-bottom: 1rem; font-size: 0.9rem;">Resources</h5>
+                    <ul class="footer-links">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                        <li><a href="#" onclick="openLoginModal()">Login</a></li>
+                        <li><a href="#" onclick="openRegisterModal()">Register</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 mb-3">
+                    <h5 style="color: var(--primary); margin-bottom: 1rem; font-size: 0.9rem;">Contact Info</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt me-2" style="color: var(--primary);"></i> 123 Art District, Mall Road, Lahore, Pakistan</li>
+                        <li><i class="fas fa-phone me-2" style="color: var(--primary);"></i> +92 300 1234567</li>
+                        <li><i class="fas fa-envelope me-2" style="color: var(--primary);"></i> info@artistic.edu.pk</li>
+                        <li><i class="fas fa-clock me-2" style="color: var(--primary);"></i> Mon-Fri: 9:00 AM - 6:00 PM</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-3" style="border-color: var(--border-color);">
+            <div class="text-center">
+                <p class="small" style="color: var(--gray); margin: 0;">© 2025 ARTISTIC - Institute of Fine Arts. All rights reserved. Designed with <i class="fas fa-heart" style="color: var(--primary);"></i> in Lahore</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll Top Button -->
+    <button class="scroll-top" id="scrollTop"><i class="fas fa-arrow-up"></i></button>
+
+    <!-- Chatbot -->
+    <div class="chatbot-btn" id="chatbotBtn"><i class="fas fa-robot"></i></div>
+    <div class="chatbot-window" id="chatbotWindow">
+        <div class="chatbot-header">
+            <h5><i class="fas fa-robot me-2"></i>Artistic AI Assistant</h5>
+            <button class="chatbot-close" id="closeChatbot">&times;</button>
+        </div>
+        <div class="chatbot-messages" id="chatMessages">
+            <div class="message bot-message">🎨 Welcome to ARTISTIC Institute of Fine Arts! I'm your AI assistant. Ask me about:<br>• Institute programs & courses<br>• Competition participation<br>• Exhibition submission process<br>• Registration & login help<br>• Awards & prizes<br>• Gallery showcases</div>
+            <div class="quick-buttons">
+                <button class="quick-btn" onclick="quickQuestion('programs')">📚 Programs</button>
+                <button class="quick-btn" onclick="quickQuestion('competition')">🏆 Competitions</button>
+                <button class="quick-btn" onclick="quickQuestion('exhibition')">🖼️ Exhibitions</button>
+                <button class="quick-btn" onclick="quickQuestion('register')">📝 Register</button>
+                <button class="quick-btn" onclick="quickQuestion('award')">🏅 Awards</button>
+                <button class="quick-btn" onclick="quickQuestion('gallery')">🎨 Gallery</button>
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatInput" placeholder="Ask me anything about ARTISTIC...">
+            <button id="sendChat"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- Competition Modal -->
+    <div class="premium-modal" id="competitionModal">
+        <div class="modal-glass">
+            <button class="close-modal" onclick="closeCompetitionModal()">&times;</button>
+            <div class="text-center mb-2"><i class="fas fa-trophy fa-3x" style="color: var(--primary);"></i></div>
+            <h3 class="text-center" style="font-size: 1.3rem;">Summer Art Festival 2025</h3>
+            <p class="text-center" style="color: var(--primary); font-size: 0.8rem;"><i class="far fa-calendar me-2"></i>June 15, 2025</p>
+            <div class="mb-2"><strong>🎨 Theme:</strong> Colors of Nature</div>
+            <div class="mb-2"><strong>🏆 Prize:</strong> PKR 100,000 + Gold Medal</div>
+            <div class="mb-3"><strong>📝 How to Participate:</strong><br>1. Login to Student Account<br>2. Upload artwork (JPEG)<br>3. Add description/poem<br>4. Submit before deadline</div>
+            <button class="btn-primary-gold w-100" onclick="applyCompetition()">Apply Now</button>
+        </div>
+    </div>
+
+    <!-- Artwork Premium Modal -->
+    <div class="premium-modal" id="artworkModal">
+        <div class="artwork-premium-modal">
+            <button class="close-modal" onclick="closeArtworkModal()">&times;</button>
+            <div class="artwork-modal-header">
+                <div class="artwork-modal-icon"><i class="fas fa-palette"></i></div>
+                <div class="artwork-modal-badge" id="artworkBadge">🥇 Gold Medal</div>
+                <h2 class="artwork-modal-title" id="artworkTitle">Whispers of Nature</h2>
+                <p class="artwork-modal-artist" id="artworkArtist">By Fatima Akhtar</p>
+            </div>
+            <div class="artwork-modal-body">
+                <p class="artwork-modal-desc" id="artworkDesc">This captivating painting captures the serene beauty of Pakistan's northern forests with remarkable detail and emotional depth.</p>
+                <div class="artwork-stats-grid">
+                    <div class="artwork-stat"><div class="artwork-stat-value" id="artworkValue">PKR 150,000</div><div class="artwork-stat-label">Estimated Value</div></div>
+                    <div class="artwork-stat"><div class="artwork-stat-value" id="artworkLikes">2,500+</div><div class="artwork-stat-label">Likes</div></div>
+                    <div class="artwork-stat"><div class="artwork-stat-value" id="artworkRating">95%</div><div class="artwork-stat-label">Rating</div></div>
+                </div>
+            </div>
+            <div class="artwork-modal-footer">
+                <button class="btn-primary-gold" onclick="openLoginModal()"><i class="fas fa-heart me-2"></i>Like this Artwork</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="register-modal" id="registerModal">
+        <div class="modal-register-glass">
+            <button type="button" class="close-modal" onclick="closeRegisterModal()">&times;</button>
+            <div class="modal-header-custom">
+                <h3>Create Account</h3>
+                <p>Join ARTISTIC Institute</p>
+            </div>
+            <form asp-controller="Account" asp-action="Register" method="post">
+                @Html.AntiForgeryToken()
+                <div class="input-group"><label>Full Name</label><input type="text" name="FullName" placeholder="Enter your full name" required></div>
+                <div class="input-group"><label>Email Address</label><input type="email" name="Email" placeholder="you@example.com" required></div>
+                <div class="input-group"><label>Password</label><input type="password" name="Password" placeholder="Create a password (min 6 characters)" required></div>
+                <div class="input-group"><label>Confirm Password</label><input type="password" name="ConfirmPassword" placeholder="Confirm your password" required></div>
+                <div class="input-group">
+                    <label>Register as</label>
+                    <select name="Role" required>
+                        <option value="Student">🎓 Student</option>
+                        <option value="Staff">👨‍🏫 Staff</option>
+                        <option value="Manager">📊 Manager</option>
+                    </select>
+                    <small style="color: var(--gray); font-size: 0.65rem; display: block; margin-top: 5px;">Note: Admin accounts can only be created by existing admins</small>
+                </div>
+                <button type="submit" class="btn-primary-gold mt-2">Register Now</button>
+            </form>
+            <div class="switch-form" onclick="switchToLogin()">Already have an account? <span>Login here</span></div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="modal-login-glass">
+            <button type="button" class="close-modal" onclick="closeLoginModal()">&times;</button>
+            <div class="modal-header-custom"><h3>Welcome Back!</h3></div>
+            <form asp-controller="Account" asp-action="Login" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="SelectedRole" id="SelectedRole" value="Student" />
+                <div class="role-selector" id="roleSelector">
+                    <button type="button" class="role-btn" onclick="selectLoginRole(this, 'Admin')">👑 Admin</button>
+                    <button type="button" class="role-btn" onclick="selectLoginRole(this, 'Manager')">📊 Manager</button>
+                    <button type="button" class="role-btn" onclick="selectLoginRole(this, 'Staff')">👨‍🏫 Staff</button>
+                    <button type="button" class="role-btn active" onclick="selectLoginRole(this, 'Student')">🎓 Student</button>
+                </div>
+                <div class="input-group"><label>Email</label><input type="email" name="Email" placeholder="student@example.com" required></div>
+                <div class="input-group"><label>Password</label><input type="password" name="Password" placeholder="••••••••" required></div>
+                <input type="hidden" name="RememberMe" value="false" />
+                <button type="submit" class="btn-primary-gold mt-3">Login</button>
+            </form>
+            <div class="switch-form" onclick="switchToRegister()">Don't have an account? <span>Register here</span></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+        // ============================================
+        // FIXED JAVASCRIPT - DARK MODE + CHATBOT + PARTICLES
+        // ============================================
+
+        AOS.init({ duration: 1000, once: true });
+
+        // ---------- PARTICLES.JS ----------
+        particlesJS('particles-js', {
+            particles: { number: { value: 80 }, color: { value: '#C5A059' }, opacity: { value: 0.3 }, size: { value: 3, random: true }, move: { enable: true, speed: 2 } }
+        });
+
+        // ---------- DARK/LIGHT MODE ----------
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        function setTheme(isLight) {
+            if (isLight) {
+                body.classList.add('light-mode');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.remove('light-mode');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        if (localStorage.getItem('theme') === 'light') {
+            setTheme(true);
+        } else {
+            setTheme(false);
+        }
+
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                setTheme(!body.classList.contains('light-mode'));
+            });
+        }
+
+        // ---------- TYPING ANIMATION ----------
+        const words = ['Stroke', 'Brush', 'Canvas', 'Dream'];
+        let wordIndex = 0, charIndex = 0, isDeleting = false;
+        const typedElement = document.querySelector('.typed-text');
+
+        function typeEffect() {
+            if (!typedElement) return;
+            const currentWord = words[wordIndex];
+            if (isDeleting) {
+                typedElement.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typedElement.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+            if (!isDeleting && charIndex === currentWord.length) {
+                isDeleting = true;
+                setTimeout(typeEffect, 2000);
+                return;
+            }
+            if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+            }
+            setTimeout(typeEffect, isDeleting ? 100 : 150);
+        }
+        typeEffect();
+
+        // ---------- NAVBAR SCROLL ----------
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            const scrollTop = document.getElementById('scrollTop');
+            if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 50);
+            if (scrollTop) scrollTop.classList.toggle('show', window.scrollY > 200);
+        });
+
+        // ---------- SCROLL TOP ----------
+        const scrollTopBtn = document.getElementById('scrollTop');
+        if (scrollTopBtn) {
+            scrollTopBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ---------- MODAL FUNCTIONS ----------
+        let currentSelectedRole = 'Student';
+
+        function openLoginModal(preSelectedRole) {
+            const loginModal = document.getElementById('loginModal');
+            const registerModal = document.getElementById('registerModal');
+
+            if (registerModal) registerModal.classList.remove('active');
+            if (loginModal) {
+                loginModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            const selectedRoleInput = document.getElementById('SelectedRole');
+            if (selectedRoleInput) {
+                selectedRoleInput.value = preSelectedRole || 'Student';
+            }
+
+            document.querySelectorAll("#roleSelector .role-btn").forEach(btn => {
+                btn.classList.remove("active");
+                if (btn.innerText.includes(preSelectedRole || 'Student')) {
+                    btn.classList.add("active");
+                }
+            });
+        }
+
+        function closeLoginModal() {
+            const modal = document.getElementById('loginModal');
+            if (modal) modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function openRegisterModal() {
+            const loginModal = document.getElementById('loginModal');
+            const registerModal = document.getElementById('registerModal');
+            if (loginModal) loginModal.classList.remove('active');
+            if (registerModal) {
+                registerModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeRegisterModal() {
+            const modal = document.getElementById('registerModal');
+            if (modal) modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function switchToLogin() {
+            closeRegisterModal();
+            openLoginModal('Student');
+        }
+
+        function switchToRegister() {
+            closeLoginModal();
+            openRegisterModal();
+        }
+
+        function selectLoginRole(button, role) {
+            const selectedRoleInput = document.getElementById("SelectedRole");
+            if (selectedRoleInput) selectedRoleInput.value = role;
+            document.querySelectorAll("#roleSelector .role-btn").forEach(btn => btn.classList.remove("active"));
+            button.classList.add("active");
+        }
+
+        function openCompetitionModal() {
+            const modal = document.getElementById('competitionModal');
+            if (modal) modal.classList.add('active');
+        }
+
+        function closeCompetitionModal() {
+            const modal = document.getElementById('competitionModal');
+            if (modal) modal.classList.remove('active');
+        }
+
+        function openArtworkModal(title, artist, award, desc, imgSrc, value, likes, rating, badge) {
+            document.getElementById('artworkTitle').innerText = title;
+            document.getElementById('artworkArtist').innerText = "By " + artist;
+            document.getElementById('artworkBadge').innerHTML = badge + " " + award;
+            document.getElementById('artworkDesc').innerHTML = desc;
+            document.getElementById('artworkValue').innerHTML = value;
+            document.getElementById('artworkLikes').innerHTML = likes;
+            document.getElementById('artworkRating').innerHTML = rating;
+            const modal = document.getElementById('artworkModal');
+            if (modal) modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeArtworkModal() {
+            const modal = document.getElementById('artworkModal');
+            if (modal) modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function applyCompetition() {
+            Swal.fire({
+                title: 'Application Started!',
+                text: 'Please login to complete submission',
+                icon: 'success',
+                confirmButtonColor: '#C5A059',
+                background: body.classList.contains('light-mode') ? '#FFFFFF' : '#1A1A2E',
+                color: body.classList.contains('light-mode') ? '#1A1A1A' : '#FFFFFF'
+            }).then(() => {
+                closeCompetitionModal();
+                openLoginModal('Student');
+            });
+        }
+
+        function showWinnerDetails() {
+            Swal.fire({
+                title: '🏆 Award Winner',
+                text: 'Congratulations! This student won a medal in the competition! Check the gallery to see their artwork.',
+                icon: 'success',
+                confirmButtonColor: '#C5A059',
+                background: body.classList.contains('light-mode') ? '#FFFFFF' : '#1A1A2E',
+                color: body.classList.contains('light-mode') ? '#1A1A1A' : '#FFFFFF'
+            });
+        }
+
+        // ---------- CHATBOT ----------
+        const chatbotBtn = document.getElementById('chatbotBtn');
+        const chatbotWindow = document.getElementById('chatbotWindow');
+        const closeChatbot = document.getElementById('closeChatbot');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendChat = document.getElementById('sendChat');
+
+        if (chatbotBtn) {
+            chatbotBtn.onclick = () => { if (chatbotWindow) chatbotWindow.style.display = 'flex'; };
+        }
+        if (closeChatbot) {
+            closeChatbot.onclick = () => { if (chatbotWindow) chatbotWindow.style.display = 'none'; };
+        }
+
+        function addMessage(text, isUser) {
+            const msg = document.createElement('div');
+            msg.className = isUser ? 'message user-message' : 'message bot-message';
+            msg.innerHTML = text;
+            if (chatMessages) {
+                chatMessages.appendChild(msg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+
+        window.quickQuestion = function(type) {
+            if (type === 'programs') {
+                addMessage('What programs does ARTISTIC offer?', true);
+                setTimeout(() => addMessage('🎨 <strong>ARTISTIC Institute of Fine Arts offers:</strong><br><br>📚 <strong>Programs:</strong><br>• Bachelor of Fine Arts (BFA)<br>• Diploma in Digital Art<br>• Certificate in Animation<br>• Short Courses in Painting<br>• Photography Workshop<br>• Sculpture Classes', false), 500);
+            }
+            else if (type === 'competition') {
+                addMessage('How to join competition?', true);
+                setTimeout(() => addMessage('🏆 <strong>How to Participate:</strong><br><br>1️⃣ Login to Student Account<br>2️⃣ Go to "Competitions" section<br>3️⃣ Select competition<br>4️⃣ Upload artwork<br>5️⃣ Submit before deadline', false), 500);
+            }
+            else if (type === 'exhibition') {
+                addMessage('How to submit to exhibition?', true);
+                setTimeout(() => addMessage('🖼️ <strong>How to Submit to Exhibition:</strong><br><br>1️⃣ Login to Student Dashboard<br>2️⃣ Go to "Exhibitions" section<br>3️⃣ Select exhibition<br>4️⃣ Submit your artwork', false), 500);
+            }
+            else if (type === 'register') {
+                addMessage('How to register?', true);
+                setTimeout(() => addMessage('📝 Click Register button, fill your details, choose program, and submit. Registration is FREE!', false), 500);
+            }
+            else if (type === 'award') {
+                addMessage('What are the prize details?', true);
+                setTimeout(() => addMessage('🏅 Gold: PKR 100,000<br>🥈 Silver: PKR 70,000<br>🥉 Bronze: PKR 50,000', false), 500);
+            }
+            else if (type === 'gallery') {
+                addMessage('Tell me about the gallery', true);
+                setTimeout(() => addMessage('🎨 Browse award-winning artworks from talented students. Participate in competitions to get featured!', false), 500);
+            }
+        }
+
+        function botReply(message) {
+            const lowerMsg = message.toLowerCase();
+            if (lowerMsg.includes('program') || lowerMsg.includes('course')) {
+                addMessage('🎨 <strong>Programs:</strong><br>• BFA<br>• Diploma in Digital Art<br>• Certificate in Animation<br>• Short Courses', false);
+            }
+            else if (lowerMsg.includes('competition')) {
+                addMessage('🏆 Login to Student Account → Competitions → Select → Submit Artwork', false);
+            }
+            else if (lowerMsg.includes('exhibition')) {
+                addMessage('🖼️ Login → Exhibitions → Submit Painting → Set Price → Wait for Selection', false);
+            }
+            else if (lowerMsg.includes('register')) {
+                addMessage('📝 Click Register button on top right. Free registration!', false);
+            }
+            else if (lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
+                addMessage('🎨 Hello! Welcome to ARTISTIC! Ask me about programs, competitions, exhibitions, or registration.', false);
+                addMessage('<div class="quick-buttons"><button class="quick-btn" onclick="quickQuestion(\'programs\')">📚 Programs</button><button class="quick-btn" onclick="quickQuestion(\'competition\')">🏆 Competitions</button><button class="quick-btn" onclick="quickQuestion(\'exhibition\')">🖼️ Exhibitions</button></div>', false);
+            }
+            else {
+                addMessage('🎨 Ask me about programs, competitions, exhibitions, or registration!', false);
+            }
+        }
+
+        if (sendChat) {
+            sendChat.onclick = () => {
+                const msg = chatInput ? chatInput.value.trim() : '';
+                if (!msg) return;
+                addMessage(msg, true);
+                if (chatInput) chatInput.value = '';
+                setTimeout(() => botReply(msg), 500);
+            };
+        }
+        if (chatInput) {
+            chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter' && sendChat) sendChat.click(); });
+        }
+
+        // ---------- ESCAPE KEY ----------
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                if (chatbotWindow && chatbotWindow.style.display === 'flex') chatbotWindow.style.display = 'none';
+                closeLoginModal();
+                closeRegisterModal();
+                closeCompetitionModal();
+                closeArtworkModal();
+            }
+        });
+
+        // ---------- BUTTON EVENT LISTENERS ----------
+        document.addEventListener("DOMContentLoaded", function () {
+            const loginBtn = document.getElementById("loginBtn");
+            const registerBtn = document.getElementById("registerBtn");
+
+            if (loginBtn) {
+                loginBtn.addEventListener("click", function () {
+                    openLoginModal("Student");
+                });
+            }
+            if (registerBtn) {
+                registerBtn.addEventListener("click", function () {
+                    openRegisterModal();
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>

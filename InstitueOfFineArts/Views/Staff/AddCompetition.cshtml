@@ -1,0 +1,899 @@
+﻿@{
+    ViewData["Title"] = "Add Competition";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Add Competition | Staff Panel | ARTISTIC Institute</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body.dark-mode {
+            background: #0A0A0A;
+            color: #FFFFFF;
+        }
+
+        body.light-mode {
+            background: #F0F2F5;
+            color: #1A1A1A;
+        }
+
+        .app-wrapper {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 70px;
+            border-radius: 40px;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            z-index: 1000;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+        }
+
+            .sidebar:hover {
+                width: 260px;
+                border-radius: 28px;
+            }
+
+        body.dark-mode .sidebar {
+            background: rgba(20, 20, 30, 0.9);
+            border: 1px solid rgba(197, 160, 89, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        body.light-mode .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        @@media (max-width: 992px) {
+            .sidebar {
+                left: -70px;
+            }
+
+                .sidebar.active {
+                    left: 20px;
+                }
+
+            .menu-toggle {
+                display: block !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                width: 100%;
+                padding: 16px !important;
+            }
+        }
+
+        .sidebar-inner {
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .sidebar-profile {
+            width: 100%;
+            text-align: center;
+            padding: 0 0 20px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .sidebar-profile {
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        body.light-mode .sidebar-profile {
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+
+        .profile-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #000;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar:hover .profile-avatar {
+            width: 50px;
+            height: 50px;
+            font-size: 1.4rem;
+        }
+
+        .profile-name {
+            margin-top: 10px;
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar:hover .profile-name {
+            font-size: 0.85rem;
+            opacity: 1;
+            margin-top: 12px;
+        }
+
+        .profile-role {
+            margin-top: 4px;
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar:hover .profile-role {
+            font-size: 0.65rem;
+            opacity: 0.6;
+        }
+
+        .nav-menu {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            width: 100%;
+            border-radius: 30px;
+            transition: all 0.25s ease;
+        }
+
+            .nav-item a {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 12px;
+                text-decoration: none;
+                border-radius: 30px;
+                transition: all 0.25s ease;
+                font-weight: 500;
+                white-space: nowrap;
+            }
+
+                .nav-item a i {
+                    width: 28px;
+                    height: 28px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.1rem;
+                    color: #C5A059;
+                    flex-shrink: 0;
+                }
+
+        .nav-text {
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .sidebar:hover .nav-text {
+            font-size: 0.85rem;
+            opacity: 1;
+        }
+
+        body.dark-mode .nav-item a {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        body.light-mode .nav-item a {
+            color: #4A5568;
+        }
+
+        .nav-item:hover a {
+            transform: translateX(4px);
+        }
+
+        body.dark-mode .nav-item:hover a {
+            background: rgba(197, 160, 89, 0.12);
+            color: #C5A059;
+        }
+
+        body.light-mode .nav-item:hover a {
+            background: rgba(197, 160, 89, 0.08);
+            color: #C5A059;
+        }
+
+        body.dark-mode .nav-item.active a {
+            background: rgba(197, 160, 89, 0.15);
+            color: #C5A059;
+        }
+
+        body.light-mode .nav-item.active a {
+            background: rgba(197, 160, 89, 0.1);
+            color: #C5A059;
+        }
+
+        .nav-footer {
+            width: 100%;
+            margin-top: 30px;
+            padding: 20px 12px 0;
+            border-top: 1px solid;
+        }
+
+        body.dark-mode .nav-footer {
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        body.light-mode .nav-footer {
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+
+        .logout-item {
+            width: 100%;
+            border-radius: 30px;
+        }
+
+            .logout-item a {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 12px;
+                text-decoration: none;
+                border-radius: 30px;
+                transition: all 0.25s ease;
+                white-space: nowrap;
+            }
+
+                .logout-item a i {
+                    width: 28px;
+                    font-size: 1.1rem;
+                    flex-shrink: 0;
+                }
+
+        body.dark-mode .logout-item a {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        body.light-mode .logout-item a {
+            color: #E53E3E;
+        }
+
+        .logout-text {
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar:hover .logout-text {
+            font-size: 0.85rem;
+            opacity: 1;
+        }
+
+        .logout-item:hover a {
+            transform: translateX(4px);
+        }
+
+        body.dark-mode .logout-item:hover a {
+            background: rgba(229, 62, 62, 0.15);
+            color: #E53E3E;
+        }
+
+        body.light-mode .logout-item:hover a {
+            background: #FEE2E2;
+            color: #E53E3E;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            flex: 1;
+            margin-left: 100px;
+            padding: 24px 32px;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        @@media (max-width: 992px) {
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 12px 24px;
+            border-radius: 24px;
+            margin-bottom: 28px;
+        }
+
+        body.dark-mode .top-header {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        body.light-mode .top-header {
+            background: #FFFFFF;
+            border: 1px solid #E8ECEF;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 12px;
+        }
+
+        body.dark-mode .menu-toggle {
+            color: white;
+        }
+
+        body.light-mode .menu-toggle {
+            color: #333;
+        }
+
+        .page-title h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .page-title p {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .theme-toggle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .theme-toggle {
+            background: rgba(255, 255, 255, 0.08);
+            color: #FFD700;
+        }
+
+        body.light-mode .theme-toggle {
+            background: #F0F2F5;
+            color: #C5A059;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg);
+        }
+
+        .user-dropdown {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .dropdown-menu-custom {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            min-width: 160px;
+            border-radius: 16px;
+            padding: 8px;
+            display: none;
+            z-index: 100;
+        }
+
+        body.dark-mode .dropdown-menu-custom {
+            background: #1A1A2E;
+            border: 1px solid rgba(197, 160, 89, 0.2);
+        }
+
+        body.light-mode .dropdown-menu-custom {
+            background: white;
+            border: 1px solid #E8ECEF;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-dropdown:hover .dropdown-menu-custom {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: 0.2s;
+        }
+
+        body.dark-mode .dropdown-item {
+            color: white;
+        }
+
+        body.light-mode .dropdown-item {
+            color: #333;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(197, 160, 89, 0.15);
+        }
+
+        /* Form Container */
+        .form-container {
+            border-radius: 24px;
+            padding: 2rem;
+        }
+
+        body.dark-mode .form-container {
+            background: rgba(20, 20, 20, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        body.light-mode .form-container {
+            background: #FFFFFF;
+            border: 1px solid #E8ECEF;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .form-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #C5A059;
+            border-left: 3px solid #C5A059;
+            padding-left: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 0.5rem;
+                font-weight: 500;
+                font-size: 0.85rem;
+            }
+
+                .form-group label i {
+                    color: #C5A059;
+                    margin-right: 0.5rem;
+                }
+
+        .form-control,
+        .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        body.dark-mode .form-control,
+        body.dark-mode .form-select {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            color: white;
+        }
+
+            body.dark-mode .form-control:focus,
+            body.dark-mode .form-select:focus {
+                border-color: #C5A059;
+                outline: none;
+                box-shadow: 0 0 0 2px rgba(197, 160, 89, 0.2);
+            }
+
+        body.light-mode .form-control,
+        body.light-mode .form-select {
+            background: #F0F2F5;
+            border: 1px solid #E8ECEF;
+            color: #333;
+        }
+
+            body.light-mode .form-control:focus,
+            body.light-mode .form-select:focus {
+                border-color: #C5A059;
+                outline: none;
+                box-shadow: 0 0 0 2px rgba(197, 160, 89, 0.2);
+            }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        @@media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            color: #000;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+            .btn-submit:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(197, 160, 89, 0.3);
+            }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid #C5A059;
+            color: #C5A059;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+            .btn-cancel:hover {
+                background: rgba(197, 160, 89, 0.1);
+                transform: translateY(-2px);
+            }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+            .button-group .btn-cancel {
+                flex: 1;
+            }
+
+            .button-group .btn-submit {
+                flex: 2;
+            }
+
+        /* SweetAlert2 Dark Mode Fix */
+        body.dark-mode .swal2-popup {
+            background: #1A1A2E !important;
+            color: #FFFFFF !important;
+            border: 1px solid rgba(197, 160, 89, 0.2) !important;
+            border-radius: 24px !important;
+        }
+
+        body.light-mode .swal2-popup {
+            background: #FFFFFF !important;
+            color: #1A1A1A !important;
+            border: 1px solid #E8ECEF !important;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 1rem;
+            margin-top: 2rem;
+            text-align: center;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+
+        body.dark-mode .footer {
+            background: rgba(20, 20, 20, 0.5);
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        body.light-mode .footer {
+            background: #FFFFFF;
+            color: #8A8A8A;
+            border: 1px solid #E8ECEF;
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            border: none;
+            z-index: 999;
+        }
+
+            .scroll-top.show {
+                opacity: 1;
+                visibility: visible;
+            }
+    </style>
+</head>
+
+<body class="dark-mode">
+
+    <div class="app-wrapper">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-inner">
+                <div class="sidebar-profile" onclick="goToHome()">
+                    <div class="profile-avatar"><i class="fas fa-palette"></i></div>
+                    <div class="profile-name">ARTISTIC</div>
+                    <div class="profile-role">Staff Panel</div>
+                </div>
+
+                <div class="nav-menu">
+                    <div class="nav-item"><a href="@Url.Action("Dashboard", "Staff")"><i class="fas fa-home"></i><span class="nav-text">Dashboard</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ViewStudents", "Staff")"><i class="fas fa-users"></i><span class="nav-text">View Students</span></a></div>
+                    <div class="nav-item active"><a href="@Url.Action("ManageCompetitions", "Staff")"><i class="fas fa-trophy"></i><span class="nav-text">Competitions</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ManageExhibitions", "Staff")"><i class="fas fa-building"></i><span class="nav-text">Exhibitions</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ViewPostings", "Staff")"><i class="fas fa-clipboard-list"></i><span class="nav-text">View Postings</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ExhibitionStatus", "Staff")"><i class="fas fa-chart-line"></i><span class="nav-text">Exhibition Status</span></a></div>
+                </div>
+
+                <div class="nav-footer">
+                    <div class="logout-item"><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span class="logout-text">Logout</span></a></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="top-header">
+                <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <div class="page-title">
+                    <h2><i class="fas fa-plus-circle me-2" style="color: #C5A059;"></i>Add New Competition</h2>
+                    <p>Create a new art competition for students to participate</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="theme-toggle" id="themeToggle"><i class="fas fa-sun" id="themeIcon"></i></div>
+                    <div class="user-dropdown">
+                        <div class="user-avatar"><i class="fas fa-user-tie"></i></div>
+                        <div class="dropdown-menu-custom">
+                            <a href="#" class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid mt-4">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <div class="form-container" data-aos="fade-up">
+                            <h3 class="form-title"><i class="fas fa-trophy"></i> Competition Information</h3>
+
+                            @if (TempData["Success"] != null)
+                            {
+                                <div class="alert alert-success">@TempData["Success"]</div>
+                            }
+                            @if (TempData["Error"] != null)
+                            {
+                                <div class="alert alert-danger">@TempData["Error"]</div>
+                            }
+
+                            <form asp-action="CreateCompetition" asp-controller="Staff" method="post" enctype="multipart/form-data">
+                                @Html.AntiForgeryToken()
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-heading"></i> Competition Title *</label>
+                                    <input type="text" class="form-control" name="Title" placeholder="e.g., Summer Art Festival 2026" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-align-left"></i> Description</label>
+                                    <textarea class="form-control" name="Description" rows="4"
+                                              placeholder="Describe the competition, theme, eligibility and submission guidelines..."></textarea>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label><i class="fas fa-calendar-alt"></i> Start Date *</label>
+                                        <input type="datetime-local" class="form-control" name="StartDate" id="compStartDate" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label><i class="fas fa-calendar-check"></i> End Date *</label>
+                                        <input type="datetime-local" class="form-control" name="EndDate" id="compEndDate" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-list-check"></i> Conditions / Rules</label>
+                                    <textarea class="form-control" name="Conditions" rows="4"
+                                              placeholder="Example: Only JPG/JPEG painting files allowed. Student must submit before deadline. Poem/quotation/story should be included."></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-tag"></i> Competition Status *</label>
+                                    <select class="form-select" name="Status" required>
+                                        <option value="1">Upcoming</option>
+                                        <option value="2" selected>Ongoing</option>
+                                        <option value="3">Concluded</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-image"></i> Competition Image (Optional)</label>
+                                    <input type="file" class="form-control" name="ImageFile" accept="image/*" />
+                                    <small class="text-muted">Upload JPG, JPEG or PNG image</small>
+                                </div>
+
+                                <div class="button-group">
+                                    <a href="@Url.Action("ManageCompetitions", "Staff")" class="btn-cancel"><i class="fas fa-times"></i> Cancel</a>
+                                    <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Create Competition</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>© 2025 ARTISTIC - Institute of Fine Arts. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <button class="scroll-top" id="scrollTop"><i class="fas fa-arrow-up"></i></button>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // Dark/Light Mode
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        if (localStorage.getItem('staffTheme') === 'light') {
+        body.classList.remove('dark-mode');
+        body.classList.add('light-mode');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+        } else {
+        body.classList.add('dark-mode');
+        body.classList.remove('light-mode');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+        if (body.classList.contains('dark-mode')) {
+        body.classList.remove('dark-mode');
+        body.classList.add('light-mode');
+        localStorage.setItem('staffTheme', 'light');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+        } else {
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+        localStorage.setItem('staffTheme', 'dark');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        }
+        });
+
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        if (menuToggle) menuToggle.addEventListener('click', () => sidebar.classList.toggle('active'));
+
+        const scrollBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) scrollBtn.classList.add('show');
+        else scrollBtn.classList.remove('show');
+        });
+        scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        function goToHome() {
+        window.location.href = '@Url.Action("Index", "Home")';
+        }
+
+        function showSuccess(msg) {
+        Swal.fire({
+        title: 'Success!',
+        text: msg,
+        icon: 'success',
+        confirmButtonColor: '#C5A059',
+        background: body.classList.contains('dark-mode') ? '#1A1A2E' : '#FFFFFF',
+        color: body.classList.contains('dark-mode') ? 'white' : '#333',
+        timer: 2000,
+        showConfirmButton: false
+        });
+        }
+
+        function logout() {
+        Swal.fire({
+        title: 'Logout?', icon: 'question', showCancelButton: true, confirmButtonColor: '#C5A059', confirmButtonText: 'Yes',
+        background: body.classList.contains('dark-mode') ? '#1A1A2E' : '#FFFFFF',
+        color: body.classList.contains('dark-mode') ? 'white' : '#333'
+        }).then((r) => {
+        if (r.isConfirmed) window.location.href = '@Url.Action("Index", "Home")';
+        });
+        }
+
+        // Set default dates (today and 3 months from now)
+        const now = new Date();
+        const threeMonthsLater = new Date();
+        threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
+
+        function toDateTimeLocal(date) {
+            const pad = n => n.toString().padStart(2, '0');
+            return date.getFullYear() + '-' +
+                pad(date.getMonth() + 1) + '-' +
+                pad(date.getDate()) + 'T' +
+                pad(date.getHours()) + ':' +
+                pad(date.getMinutes());
+        }
+
+        document.getElementById('compStartDate').value = toDateTimeLocal(now);
+        document.getElementById('compEndDate').value = toDateTimeLocal(threeMonthsLater);
+    </script>
+</body>
+
+</html>

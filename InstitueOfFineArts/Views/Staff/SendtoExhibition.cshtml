@@ -1,0 +1,765 @@
+﻿@model IEnumerable<InstituteOfFineArts.Models.Submission>
+@using InstituteOfFineArts.Models
+@{
+    ViewData["Title"] = "Send to Exhibition";
+    var exhibitions = ViewBag.Exhibitions as List<InstituteOfFineArts.Models.Exhibition> ?? new List<InstituteOfFineArts.Models.Exhibition>();
+    var totalAvailable = ViewBag.TotalAvailable ?? 0;
+    var totalExhibitions = ViewBag.TotalExhibitions ?? 0;
+    var sentCount = ViewBag.SentCount ?? 0;
+    var pendingCount = ViewBag.PendingCount ?? 0;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Send to Exhibition | Staff Panel | ARTISTIC Institute</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body.dark-mode {
+            background: #0A0A0A;
+            color: #FFFFFF;
+        }
+
+        body.light-mode {
+            background: #F0F2F5;
+            color: #1A1A1A;
+        }
+
+        .app-wrapper {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 70px;
+            border-radius: 40px;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            z-index: 1000;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+        }
+
+            .sidebar:hover {
+                width: 260px;
+                border-radius: 28px;
+            }
+
+        body.dark-mode .sidebar {
+            background: rgba(20, 20, 30, 0.9);
+            border: 1px solid rgba(197, 160, 89, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        body.light-mode .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        @@media (max-width: 992px) {
+            .sidebar {
+                left: -70px;
+            }
+
+                .sidebar.active {
+                    left: 20px;
+                }
+
+            .menu-toggle {
+                display: block !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                width: 100%;
+                padding: 16px !important;
+            }
+        }
+
+        .sidebar-inner {
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .sidebar-profile {
+            width: 100%;
+            text-align: center;
+            padding: 0 0 20px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .sidebar-profile {
+            border-color: rgba(255,255,255,0.08);
+        }
+
+        body.light-mode .sidebar-profile {
+            border-color: rgba(0,0,0,0.06);
+        }
+
+        .profile-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #000;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar:hover .profile-avatar {
+            width: 50px;
+            height: 50px;
+            font-size: 1.4rem;
+        }
+
+        .profile-name {
+            margin-top: 10px;
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar:hover .profile-name {
+            font-size: 0.85rem;
+            opacity: 1;
+            margin-top: 12px;
+        }
+
+        .profile-role {
+            margin-top: 4px;
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar:hover .profile-role {
+            font-size: 0.65rem;
+            opacity: 0.6;
+        }
+
+        .nav-menu {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            width: 100%;
+            border-radius: 30px;
+            transition: all 0.25s ease;
+        }
+
+            .nav-item a {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 12px;
+                text-decoration: none;
+                border-radius: 30px;
+                transition: all 0.25s ease;
+                font-weight: 500;
+                white-space: nowrap;
+            }
+
+                .nav-item a i {
+                    width: 28px;
+                    height: 28px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.1rem;
+                    color: #C5A059;
+                    flex-shrink: 0;
+                }
+
+        .nav-text {
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .sidebar:hover .nav-text {
+            font-size: 0.85rem;
+            opacity: 1;
+        }
+
+        body.dark-mode .nav-item a {
+            color: rgba(255,255,255,0.7);
+        }
+
+        body.light-mode .nav-item a {
+            color: #4A5568;
+        }
+
+        .nav-item:hover a {
+            transform: translateX(4px);
+        }
+
+        body.dark-mode .nav-item:hover a {
+            background: rgba(197,160,89,0.12);
+            color: #C5A059;
+        }
+
+        body.light-mode .nav-item:hover a {
+            background: rgba(197,160,89,0.08);
+            color: #C5A059;
+        }
+
+        body.dark-mode .nav-item.active a {
+            background: rgba(197,160,89,0.15);
+            color: #C5A059;
+        }
+
+        body.light-mode .nav-item.active a {
+            background: rgba(197,160,89,0.1);
+            color: #C5A059;
+        }
+
+        .nav-footer {
+            width: 100%;
+            margin-top: 30px;
+            padding: 20px 12px 0;
+            border-top: 1px solid;
+        }
+
+        body.dark-mode .nav-footer {
+            border-color: rgba(255,255,255,0.08);
+        }
+
+        body.light-mode .nav-footer {
+            border-color: rgba(0,0,0,0.06);
+        }
+
+        .logout-item {
+            width: 100%;
+            border-radius: 30px;
+        }
+
+            .logout-item a {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 12px;
+                text-decoration: none;
+                border-radius: 30px;
+                transition: all 0.25s ease;
+                white-space: nowrap;
+            }
+
+                .logout-item a i {
+                    width: 28px;
+                    font-size: 1.1rem;
+                    flex-shrink: 0;
+                    color: #E53E3E;
+                }
+
+        body.dark-mode .logout-item a {
+            color: rgba(255,255,255,0.7);
+        }
+
+        body.light-mode .logout-item a {
+            color: #E53E3E;
+        }
+
+        .logout-text {
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar:hover .logout-text {
+            font-size: 0.85rem;
+            opacity: 1;
+        }
+
+        .logout-item:hover a {
+            transform: translateX(4px);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 100px;
+            padding: 24px 32px;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        @@media (max-width: 992px) {
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 12px 24px;
+            border-radius: 24px;
+            margin-bottom: 28px;
+        }
+
+        body.dark-mode .top-header, body.dark-mode .stat-card, body.dark-mode .chart-card, body.dark-mode .submissions-table {
+            background: rgba(20, 20, 20, 0.7);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        body.light-mode .top-header, body.light-mode .stat-card, body.light-mode .chart-card, body.light-mode .submissions-table {
+            background: #FFFFFF;
+            border: 1px solid #E8ECEF;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 12px;
+            color: inherit;
+        }
+
+        .page-title h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .page-title p {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .theme-toggle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .theme-toggle {
+            background: rgba(255,255,255,0.08);
+            color: #FFD700;
+        }
+
+        body.light-mode .theme-toggle {
+            background: #F0F2F5;
+            color: #C5A059;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .stat-card, .chart-card, .submissions-table {
+            border-radius: 24px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            color: #C5A059;
+            margin-bottom: 0.8rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .chart-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #C5A059;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .table-custom th, .table-custom td {
+                padding: 1rem 0.8rem;
+                text-align: left;
+                border-bottom: 1px solid;
+                vertical-align: middle;
+            }
+
+        body.dark-mode .table-custom th, body.dark-mode .table-custom td {
+            border-color: rgba(255,255,255,0.06);
+        }
+
+        body.light-mode .table-custom th, body.light-mode .table-custom td {
+            border-color: #E8ECEF;
+        }
+
+        .table-custom th {
+            color: #C5A059;
+            font-weight: 600;
+        }
+
+        .art-img {
+            width: 70px;
+            height: 55px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid rgba(197,160,89,0.25);
+        }
+
+        .badge-status {
+            display: inline-block;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .badge-selected {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-pending {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .btn-sm, .btn-gold {
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border: none;
+            color: #000;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .btn-gold {
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+        }
+
+            .btn-sm:hover, .btn-gold:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(197,160,89,0.3);
+            }
+
+        .form-control, .form-select {
+            border-radius: 14px;
+            padding: 0.65rem 1rem;
+        }
+
+        body.dark-mode .form-control, body.dark-mode .form-select {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(197,160,89,0.3);
+            color: #FFFFFF !important;
+        }
+
+            body.dark-mode .form-select option {
+                background: #1A1A2E;
+                color: #FFFFFF;
+            }
+
+        .footer {
+            padding: 1rem;
+            margin-top: 2rem;
+            text-align: center;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            background: rgba(20,20,20,0.5);
+            color: rgba(255,255,255,0.4);
+        }
+
+        .modal-content {
+            background: #1A1A2E;
+            color: white;
+            border: 1px solid rgba(197,160,89,0.25);
+            border-radius: 20px;
+        }
+
+        .modal-header, .modal-footer {
+            border-color: rgba(255,255,255,0.08);
+        }
+
+        .btn-close {
+            filter: invert(1);
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="app-wrapper">
+        <div class="sidebar">
+            <div class="sidebar-inner">
+                <div class="sidebar-profile" onclick="goToHome()">
+                    <div class="profile-avatar"><i class="fas fa-palette"></i></div>
+                    <div class="profile-name">ARTISTIC</div>
+                    <div class="profile-role">Staff Panel</div>
+                </div>
+                <div class="nav-menu">
+                    <div class="nav-item"><a href="@Url.Action("Dashboard", "Staff")"><i class="fas fa-home"></i><span class="nav-text">Dashboard</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ViewStudents", "Staff")"><i class="fas fa-users"></i><span class="nav-text">View Students</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ManageCompetitions", "Staff")"><i class="fas fa-trophy"></i><span class="nav-text">Competitions</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ManageExhibitions", "Staff")"><i class="fas fa-building"></i><span class="nav-text">Exhibitions</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ViewPostings", "Staff")"><i class="fas fa-clipboard-list"></i><span class="nav-text">View Postings</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("MarkPostings", "Staff")"><i class="fas fa-check-double"></i><span class="nav-text">Mark Postings</span></a></div>
+                    <div class="nav-item active"><a href="@Url.Action("SendtoExhibition", "Staff")"><i class="fas fa-paper-plane"></i><span class="nav-text">Send to Exhibition</span></a></div>
+                    <div class="nav-item"><a href="@Url.Action("ExhibitionStatus", "Staff")"><i class="fas fa-chart-line"></i><span class="nav-text">Exhibition Status</span></a></div>
+                </div>
+                <div class="nav-footer">
+                    <div class="logout-item"><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span class="logout-text">Logout</span></a></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="top-header">
+                <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <div class="page-title">
+                    <h2><i class="fas fa-paper-plane me-2" style="color: #C5A059;"></i>Send to Exhibition</h2>
+                    <p>Best artworks ko exhibition mein forward karo</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="theme-toggle" id="themeToggle"><i class="fas fa-sun" id="themeIcon"></i></div>
+                    <div class="user-avatar"><i class="fas fa-user-tie"></i></div>
+                </div>
+            </div>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">@TempData["Success"]</div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">@TempData["Error"]</div>
+            }
+
+            <div class="container-fluid mt-4">
+                <div class="row g-4 mb-4">
+                    <div class="col-xl-3 col-md-6"><div class="stat-card"><div class="stat-icon"><i class="fas fa-palette"></i></div><div class="stat-value">@totalAvailable</div><div class="stat-label">Available Best Artworks</div></div></div>
+                    <div class="col-xl-3 col-md-6"><div class="stat-card"><div class="stat-icon"><i class="fas fa-building"></i></div><div class="stat-value">@totalExhibitions</div><div class="stat-label">Exhibitions</div></div></div>
+                    <div class="col-xl-3 col-md-6"><div class="stat-card"><div class="stat-icon"><i class="fas fa-check-circle"></i></div><div class="stat-value">@sentCount</div><div class="stat-label">Sent to Exhibition</div></div></div>
+                    <div class="col-xl-3 col-md-6"><div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-value">@pendingCount</div><div class="stat-label">Pending Selection</div></div></div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="submissions-table">
+                            <div class="chart-title"><i class="fas fa-list"></i> Best Student Artworks</div>
+                            <div class="table-responsive">
+                                <table class="table-custom">
+                                    <thead>
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Student</th>
+                                            <th>Artwork Title</th>
+                                            <th>Competition</th>
+                                            <th>Grade</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model != null && Model.Any())
+                                        {
+                                            foreach (var item in Model)
+                                            {
+                                                var alreadySent = item.ExhibitionListings != null && item.ExhibitionListings.Any();
+                                                <tr>
+                                                    <td>
+                                                        @if (!string.IsNullOrWhiteSpace(item.ImageFilePath))
+                                                        {
+                                                            <img src="@item.ImageFilePath" class="art-img" alt="Artwork" onerror="this.src='https://placehold.co/120x90/1A1A2E/C5A059?text=Art'" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>N/A</span>
+                                                        }
+                                                    </td>
+                                                    <td>@(item.Student == null ? "Student" : item.Student.FirstName + " " + item.Student.LastName)</td>
+                                                    <td>@item.PaintingTitle</td>
+                                                    <td>@(item.Competition?.Title ?? "Competition")</td>
+                                                    <td><span class="badge-status badge-selected">@item.Grade</span></td>
+                                                    <td>
+                                                        @if (alreadySent)
+                                                        {
+                                                            <span class="badge-status badge-selected">Sent</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge-status badge-pending">Pending</span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (alreadySent)
+                                                        {
+                                                            <span style="color:#28a745;"><i class="fas fa-check"></i> Already Sent</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button type="button" class="btn-sm" data-bs-toggle="modal" data-bs-target="#sendModal_@item.SubmissionId">
+                                                                <i class="fas fa-paper-plane"></i> Send
+                                                            </button>
+
+                                                            <div class="modal fade" id="sendModal_@item.SubmissionId" tabindex="-1">
+                                                                <div class="modal-dialog modal-dialog-centered">
+                                                                    <div class="modal-content">
+                                                                        <form asp-controller="Staff" asp-action="SendArtworkToExhibition" method="post">
+                                                                            @Html.AntiForgeryToken()
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title">Send to Exhibition</h5>
+                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <input type="hidden" name="SubmissionId" value="@item.SubmissionId" />
+                                                                                <div class="mb-3">
+                                                                                    <label class="form-label">Artwork</label>
+                                                                                    <input class="form-control" value="@item.PaintingTitle" readonly />
+                                                                                </div>
+                                                                                <div class="mb-3">
+                                                                                    <label class="form-label">Select Exhibition</label>
+                                                                                    <select name="ExhibitionId" class="form-select" required>
+                                                                                        <option value="">-- Select Exhibition --</option>
+                                                                                        @foreach (var ex in exhibitions)
+                                                                                        {
+                                                                                            <option value="@ex.ExhibitionId">@ex.ExhibitionName - @ex.City</option>
+                                                                                        }
+                                                                                    </select>
+                                                                                    @if (!exhibitions.Any())
+                                                                                    {
+                                                                                        <small class="text-warning">No exhibition found. Please create an exhibition first.</small>
+                                                                                    }
+                                                                                </div>
+                                                                                <div class="mb-3">
+                                                                                    <label class="form-label">Student Quoted Price</label>
+                                                                                    <input type="number" name="StudentQuotedPrice" step="0.01" min="0" class="form-control" placeholder="Example: 5000" required />
+                                                                                </div>
+                                                                                <div class="mb-3">
+                                                                                    <label class="form-label">Notes</label>
+                                                                                    <textarea name="Notes" class="form-control" rows="3" placeholder="Optional notes"></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                                <button type="submit" class="btn-gold">Send</button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="7" class="text-center py-4">No Best artwork available. Pehle MarkPostings mein kisi submission ko Best grade do.</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer"><p>© 2025 ARTISTIC - Institute of Fine Arts. All rights reserved.</p></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+        if (localStorage.getItem('staffTheme') === 'light') {
+            body.classList.remove('dark-mode'); body.classList.add('light-mode');
+            themeIcon.classList.remove('fa-sun'); themeIcon.classList.add('fa-moon');
+        }
+        themeToggle?.addEventListener('click', () => {
+            if (body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode'); body.classList.add('light-mode'); localStorage.setItem('staffTheme', 'light');
+                themeIcon.classList.remove('fa-sun'); themeIcon.classList.add('fa-moon');
+            } else {
+                body.classList.remove('light-mode'); body.classList.add('dark-mode'); localStorage.setItem('staffTheme', 'dark');
+                themeIcon.classList.remove('fa-moon'); themeIcon.classList.add('fa-sun');
+            }
+        });
+        document.getElementById('menuToggle')?.addEventListener('click', () => document.querySelector('.sidebar')?.classList.toggle('active'));
+        function goToHome() { window.location.href = '@Url.Action("Index", "Home")'; }
+        function logout() {
+            Swal.fire({ title: 'Logout?', icon: 'question', showCancelButton: true, confirmButtonColor: '#C5A059', confirmButtonText: 'Yes' })
+                .then((r) => { if (r.isConfirmed) window.location.href = '@Url.Action("Index", "Home")'; });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,974 @@
+﻿@model IEnumerable<InstituteOfFineArts.Models.Competition>
+@using InstituteOfFineArts.Models
+
+@{
+    ViewData["Title"] = "Upload Posting";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Upload Posting | ARTISTIC Institute</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* ============ 100% SAME CSS AS DASHBOARD ============ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body.dark-mode {
+            background: #0A0A0A;
+            color: #FFFFFF;
+        }
+
+        body.light-mode {
+            background: #F0F2F5;
+            color: #1A1A1A;
+        }
+
+        .app-wrapper {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 70px;
+            border-radius: 40px;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            z-index: 1000;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+        }
+
+            .sidebar:hover {
+                width: 260px;
+                border-radius: 28px;
+            }
+
+        body.dark-mode .sidebar {
+            background: rgba(20, 20, 30, 0.9);
+            border: 1px solid rgba(197, 160, 89, 0.15);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        body.light-mode .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0,0,0,0.08);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        @@media (max-width: 992px) {
+            .sidebar {
+                left: -70px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+                .sidebar.active {
+                    left: 20px;
+                }
+
+            .menu-toggle {
+                display: block !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                width: 100%;
+                padding: 16px !important;
+            }
+        }
+
+        .sidebar-inner {
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .sidebar-profile {
+            width: 100%;
+            text-align: center;
+            padding: 0 0 20px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .sidebar-profile:hover {
+                opacity: 0.8;
+            }
+
+        body.dark-mode .sidebar-profile {
+            border-color: rgba(255,255,255,0.08);
+        }
+
+        body.light-mode .sidebar-profile {
+            border-color: rgba(0,0,0,0.06);
+        }
+
+        .profile-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #000;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar:hover .profile-avatar {
+            width: 50px;
+            height: 50px;
+            font-size: 1.4rem;
+        }
+
+        .profile-name {
+            margin-top: 10px;
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar:hover .profile-name {
+            font-size: 0.85rem;
+            opacity: 1;
+            margin-top: 12px;
+        }
+
+        .profile-role {
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar:hover .profile-role {
+            font-size: 0.65rem;
+            opacity: 0.6;
+            margin-top: 4px;
+        }
+
+        .nav-menu {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            width: 100%;
+            border-radius: 30px;
+            transition: all 0.25s ease;
+        }
+
+            .nav-item a {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 12px;
+                text-decoration: none;
+                border-radius: 30px;
+                transition: all 0.25s ease;
+                font-weight: 500;
+                white-space: nowrap;
+            }
+
+                .nav-item a i {
+                    width: 28px;
+                    height: 28px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.1rem;
+                    color: #C5A059;
+                    flex-shrink: 0;
+                }
+
+        .nav-text {
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .sidebar:hover .nav-text {
+            font-size: 0.85rem;
+            opacity: 1;
+        }
+
+        body.dark-mode .nav-item a {
+            color: rgba(255,255,255,0.7);
+        }
+
+        body.light-mode .nav-item a {
+            color: #4A5568;
+        }
+
+        .nav-item:hover a {
+            transform: translateX(4px);
+        }
+
+        body.dark-mode .nav-item:hover a {
+            background: rgba(197, 160, 89, 0.12);
+            color: #C5A059;
+        }
+
+        body.light-mode .nav-item:hover a {
+            background: rgba(197, 160, 89, 0.08);
+            color: #C5A059;
+        }
+
+        body.dark-mode .nav-item.active a {
+            background: rgba(197,160,89,0.18);
+            color: #C5A059;
+        }
+
+        body.light-mode .nav-item.active a {
+            background: rgba(197,160,89,0.12);
+            color: #C5A059;
+        }
+
+        .nav-footer {
+            width: 100%;
+            margin-top: 30px;
+            padding: 20px 12px 0;
+            border-top: 1px solid;
+        }
+
+        body.dark-mode .nav-footer {
+            border-color: rgba(255,255,255,0.08);
+        }
+
+        body.light-mode .nav-footer {
+            border-color: rgba(0,0,0,0.06);
+        }
+
+        .logout-item {
+            width: 100%;
+            border-radius: 30px;
+        }
+
+            .logout-item a {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 12px;
+                text-decoration: none;
+                border-radius: 30px;
+                transition: all 0.25s ease;
+                white-space: nowrap;
+            }
+
+                .logout-item a i {
+                    width: 28px;
+                    font-size: 1.1rem;
+                    flex-shrink: 0;
+                    color: #E53E3E;
+                }
+
+        body.dark-mode .logout-item a {
+            color: rgba(255,255,255,0.7);
+        }
+
+        body.light-mode .logout-item a {
+            color: #E53E3E;
+        }
+
+        .logout-text {
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar:hover .logout-text {
+            font-size: 0.85rem;
+            opacity: 1;
+        }
+
+        .logout-item:hover a {
+            transform: translateX(4px);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 100px;
+            padding: 24px 32px;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        @@media (max-width: 992px) {
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 12px 24px;
+            border-radius: 24px;
+            margin-bottom: 28px;
+        }
+
+        body.dark-mode .top-header {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        body.light-mode .top-header {
+            background: #FFFFFF;
+            border: 1px solid #E8ECEF;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 12px;
+        }
+
+        body.dark-mode .menu-toggle {
+            color: white;
+        }
+
+        body.light-mode .menu-toggle {
+            color: #333;
+        }
+
+        .page-title h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .page-title p {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .theme-toggle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .theme-toggle {
+            background: rgba(255,255,255,0.08);
+            color: #FFD700;
+        }
+
+        body.light-mode .theme-toggle {
+            background: #F0F2F5;
+            color: #C5A059;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg);
+        }
+
+        .user-dropdown {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .dropdown-menu-custom {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            min-width: 160px;
+            border-radius: 16px;
+            padding: 8px;
+            display: none;
+            z-index: 100;
+        }
+
+        body.dark-mode .dropdown-menu-custom {
+            background: #1A1A2E;
+            border: 1px solid rgba(197,160,89,0.2);
+        }
+
+        body.light-mode .dropdown-menu-custom {
+            background: white;
+            border: 1px solid #E8ECEF;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .user-dropdown:hover .dropdown-menu-custom {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: 0.2s;
+        }
+
+        body.dark-mode .dropdown-item {
+            color: white;
+        }
+
+        body.light-mode .dropdown-item {
+            color: #333;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(197, 160, 89, 0.15);
+        }
+
+        .chart-card {
+            border-radius: 24px;
+            padding: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            height: 100%;
+        }
+
+        body.dark-mode .chart-card {
+            background: rgba(20, 20, 20, 0.7);
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+
+        body.light-mode .chart-card {
+            background: #FFFFFF;
+            border: 1px solid #E8ECEF;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+
+        .chart-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(197,160,89,0.12), 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .chart-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #C5A059;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer {
+            padding: 1rem;
+            margin-top: 2rem;
+            text-align: center;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+
+        body.dark-mode .footer {
+            background: rgba(20, 20, 20, 0.5);
+            color: rgba(255,255,255,0.4);
+        }
+
+        body.light-mode .footer {
+            background: #FFFFFF;
+            color: #8A8A8A;
+            border: 1px solid #E8ECEF;
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            border: none;
+            z-index: 999;
+        }
+
+            .scroll-top.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .scroll-top:hover {
+                transform: scale(1.1) translateY(-3px);
+                box-shadow: 0 8px 20px rgba(197,160,89,0.4);
+            }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 0.4rem;
+                font-size: 0.8rem;
+                font-weight: 500;
+            }
+
+        .form-control, .form-select {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-select {
+            cursor: pointer;
+            appearance: auto;
+        }
+
+        body.dark-mode .form-control,
+        body.dark-mode .form-select,
+        body.dark-mode textarea.form-control {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            color: #FFFFFF !important;
+        }
+
+            /* DARK MODE PLACEHOLDER FIX */
+            body.dark-mode .form-control::placeholder,
+            body.dark-mode textarea.form-control::placeholder,
+            body.dark-mode input::placeholder {
+                color: rgba(255, 255, 255, 0.6) !important;
+                opacity: 1;
+            }
+
+            body.dark-mode .form-select option {
+                background: #1A1A2E;
+                color: #FFFFFF;
+            }
+
+        body.light-mode .form-control,
+        body.light-mode .form-select,
+        body.light-mode textarea.form-control {
+            background: #F0F2F5;
+            border: 1px solid #E8ECEF;
+            color: #333;
+        }
+
+            body.light-mode .form-control::placeholder,
+            body.light-mode textarea.form-control::placeholder {
+                color: rgba(0, 0, 0, 0.5) !important;
+            }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #C5A059, #E8C87A);
+            color: #000;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .btn-gold:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(197,160,89,0.3);
+            }
+
+        /* UPLOAD SPECIFIC STYLES */
+        .upload-area {
+            border: 2px dashed rgba(197, 160, 89, 0.4);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+            .upload-area:hover {
+                border-color: #C5A059;
+                background: rgba(197, 160, 89, 0.05);
+            }
+
+            .upload-area i {
+                font-size: 3.5rem;
+                color: #C5A059;
+            }
+
+            .upload-area h4 {
+                margin-top: 1rem;
+                font-family: 'Playfair Display', serif;
+            }
+
+            .upload-area p {
+                font-size: 0.8rem;
+                opacity: 0.6;
+            }
+
+        #artworkPreview {
+            max-width: 100%;
+            max-height: 250px;
+            border-radius: 16px;
+            display: none;
+            margin-top: 1rem;
+            border: 1px solid rgba(197, 160, 89, 0.2);
+        }
+
+        .upload-form-card {
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body class="dark-mode">
+
+    <div class="app-wrapper">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-inner">
+                <div class="sidebar-profile" onclick="goToHome()">
+                    <div class="profile-avatar">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <div class="profile-name">ARTISTIC</div>
+                    <div class="profile-role">Student Panel</div>
+                </div>
+
+                <!-- STUDENT MENU -->
+                <div class="nav-menu">
+                    <div class="nav-item">
+                        <a href="@Url.Action("Dashboard", "Student")">
+                            <i class="fas fa-home"></i>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </div>
+                    <div class="nav-item active">
+                        <a href="@Url.Action("UploadPosting", "Student")">
+                            <i class="fas fa-upload"></i>
+                            <span class="nav-text">Upload Posting</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="@Url.Action("MyPostings", "Student")">
+                            <i class="fas fa-list-ul"></i>
+                            <span class="nav-text">My Postings</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="@Url.Action("EditPosting", "Student")">
+                            <i class="fas fa-edit"></i>
+                            <span class="nav-text">Edit Posting</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="@Url.Action("MyAwards", "Student")">
+                            <i class="fas fa-trophy"></i>
+                            <span class="nav-text">My Awards</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="@Url.Action("BestPostings", "Student")">
+                            <i class="fas fa-star"></i>
+                            <span class="nav-text">Best Postings</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="@Url.Action("ExhibitionStatus", "Student")">
+                            <i class="fas fa-building"></i>
+                            <span class="nav-text">Exhibition Status</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nav-footer">
+                    <div class="logout-item">
+                        <a href="#" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span class="logout-text">Logout</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- TOP HEADER -->
+            <div class="top-header">
+                <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <div class="page-title">
+                    <h2>Upload Posting</h2>
+                    <p>Submit your new artwork for upcoming competitions & exhibitions.</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="theme-toggle" id="themeToggle"><i class="fas fa-sun" id="themeIcon"></i></div>
+                    <div class="user-dropdown">
+                        <div class="user-avatar"><i class="fas fa-user-graduate"></i></div>
+                        <div class="dropdown-menu-custom">
+                            <a href="#" class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UPLOAD CONTENT -->
+            <div class="container-fluid mt-4">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success">@TempData["Success"]</div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger">@TempData["Error"]</div>
+                }
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-9">
+                        <div class="chart-card upload-form-card" data-aos="fade-up">
+
+                            <!-- Upload Form -->
+                            <form id="uploadArtworkForm" action="/Student/UploadSubmission" method="post" enctype="multipart/form-data">
+                                @Html.AntiForgeryToken()
+                                <div class="row">
+                                    <!-- Left: File Upload Area -->
+                                    <div class="col-md-6 mb-3">
+                                        <div class="upload-area" onclick="document.getElementById('artworkFile').click()">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <h4>Click to Upload Artwork</h4>
+                                            <p>or drag and drop files here</p>
+                                            <p style="font-size: 0.7rem; opacity: 0.5;">Supports: JPG, PNG, GIF, WEBP (Max 5MB)</p>
+                                            <input type="file" id="artworkFile" name="ImageFile" accept=".jpg,.jpeg,image/jpeg" style="display: none;" onchange="previewImage(event)" required>
+                                            <img id="artworkPreview" alt="Artwork Preview">
+                                        </div>
+                                    </div>
+
+                                    <!-- Right: Details Form -->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="artworkTitle">Artwork Title *</label>
+                                            <input type="text" class="form-control" id="artworkTitle" name="PaintingTitle" placeholder="e.g., 'Mystic Mountains'" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="TextType">Text Type *</label>
+                                            <select class="form-select" id="TextType" name="TextType" required>
+                                                <option value="Description">Description</option>
+                                                <option value="Poem">Poem</option>
+                                                <option value="Quotation">Quotation</option>
+                                                <option value="Story">Story</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="competitionSelect">Select Competition *</label>
+                                            <select class="form-select" id="competitionSelect" name="CompetitionId" required>
+                                                <option value="">Select Competition</option>
+                                                @if (Model != null && Model.Any())
+                                                {
+                                                    foreach (var competition in Model)
+                                                    {
+                                                        <option value="@competition.CompetitionId">
+                                                            @competition.Title (@competition.Status) - Deadline: @competition.EndDate.ToString("yyyy-MM-dd")
+                                                        </option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="artworkDescription">Poem / Quotation / Story / Description *</label>
+                                            <textarea class="form-control" id="artworkDescription" name="AccompanyingText" rows="3" placeholder="Write poem, quotation, story, or description..." required></textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="CreativeDescription">Creative Description</label>
+                                            <textarea class="form-control" id="CreativeDescription" name="CreativeDescription" rows="3" placeholder="Why did you create this painting? Why should it be best?"></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn-gold w-100" id="uploadBtn">
+                                            <i class="fas fa-upload me-2"></i> Submit Artwork
+                                        </button>
+                                        <!-- View My Postings button -->
+                                        <button type="button" class="btn-gold w-100 mt-2" style="background: #4a5568;" onclick="window.location.href='@Url.Action("MyPostings", "Student")'">
+                                            <i class="fas fa-eye me-2"></i> View My Postings
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <hr class="my-4" style="border-color: rgba(197,160,89,0.2);">
+
+                            <!-- Upload Guidelines -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="chart-title"><i class="fas fa-info-circle"></i> Upload Guidelines</div>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; font-size: 0.85rem;">
+                                        <span><i class="fas fa-check-circle" style="color: #28a745;"></i> Resolution: Minimum 1920x1080</span>
+                                        <span><i class="fas fa-check-circle" style="color: #28a745;"></i> File Type: JPG or JPEG only</span>
+                                        <span><i class="fas fa-check-circle" style="color: #28a745;"></i> Max Size: 5 MB</span>
+                                        <span><i class="fas fa-check-circle" style="color: #28a745;"></i> No watermark allowed</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>© 2025 ARTISTIC - Institute of Fine Arts. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // Dark/Light Mode
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        if (localStorage.getItem('studentTheme') === 'light') {
+        body.classList.remove('dark-mode');
+        body.classList.add('light-mode');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+        } else {
+        body.classList.add('dark-mode');
+        body.classList.remove('light-mode');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+        if (body.classList.contains('dark-mode')) {
+        body.classList.remove('dark-mode');
+        body.classList.add('light-mode');
+        localStorage.setItem('studentTheme', 'light');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+        } else {
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+        localStorage.setItem('studentTheme', 'dark');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        }
+        });
+
+        // Menu Toggle for Mobile
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        if(menuToggle) {
+        menuToggle.addEventListener('click', () => sidebar.classList.toggle('active'));
+        }
+
+        // Scroll Top
+        const scrollBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) scrollBtn.classList.add('show');
+        else scrollBtn.classList.remove('show');
+        });
+        if(scrollBtn) {
+        scrollBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        }
+
+        // Functions
+        function goToHome() { window.location.href = '@Url.Action("Index", "Home")'; }
+
+        function showSuccess(msg) {
+        Swal.fire({
+        title: 'Success!',
+        text: msg,
+        icon: 'success',
+        confirmButtonColor: '#C5A059',
+        background: body.classList.contains('dark-mode') ? '#1A1A2E' : '#FFFFFF',
+        color: body.classList.contains('dark-mode') ? 'white' : '#333',
+        timer: 2000,
+        showConfirmButton: false
+        });
+        }
+
+        function logout() {
+        Swal.fire({
+        title: 'Logout?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#C5A059',
+        confirmButtonText: 'Yes',
+        background: body.classList.contains('dark-mode') ? '#1A1A2E' : '#FFFFFF',
+        color: body.classList.contains('dark-mode') ? 'white' : '#333'
+        }).then((r) => { if (r.isConfirmed) window.location.href = '@Url.Action("Index", "Home")'; });
+        }
+
+        // Preview Image on Upload
+        function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+        const output = document.getElementById('artworkPreview');
+        output.src = reader.result;
+        output.style.display = 'block';
+        };
+        if (event.target.files[0]) {
+        reader.readAsDataURL(event.target.files[0]);
+        }
+        }
+        // Form direct /Student/UploadSubmission par submit hoga.
+        // e.preventDefault() nahi lagaya, isliye data controller mein jayega aur DB mein save hoga.
+
+
+    </script>
+</body>
+</html>

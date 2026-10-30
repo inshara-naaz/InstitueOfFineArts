@@ -1,0 +1,1954 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Contact Us | ARTISTIC Institute of Fine Arts</title>
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@@400;500;600;700;800;900&family=Poppins:wght@@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Dark Mode Colors (Default) */
+        :root {
+            --primary: #C5A059;
+            --primary-dark: #A8883A;
+            --primary-light: #D4B87A;
+            --secondary: #1A1A2E;
+            --dark: #0A0A0A;
+            --darker: #050505;
+            --gray: #8A8A8A;
+            --bg-body: var(--dark);
+            --text-color: #FFFFFF;
+            --card-bg: rgba(26, 26, 46, 0.9);
+            --footer-bg: var(--darker);
+            --navbar-bg: rgba(5, 5, 5, 0.95);
+            --border-color: rgba(197, 160, 89, 0.15);
+            --stats-bg: rgba(26, 26, 46, 0.9);
+            --modal-bg: linear-gradient(135deg, #1A1A2E, #0A0A0A);
+            --modal-text: #FFFFFF;
+            --gradient-gold: linear-gradient(135deg, #C5A059 0%, #E8C87A 50%, #C5A059 100%);
+            --gradient-dark: linear-gradient(135deg, #0A0A0A 0%, #1A1A2E 100%);
+            --shadow-gold: 0 10px 30px rgba(197, 160, 89, 0.3);
+            --transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* Light Mode - White & Gold only */
+        body.light-mode {
+            --bg-body: #FFFFFF;
+            --text-color: #1A1A1A;
+            --card-bg: #FFFFFF;
+            --footer-bg: #F5F5F5;
+            --navbar-bg: #FFFFFF;
+            --border-color: rgba(197, 160, 89, 0.25);
+            --stats-bg: #FFFFFF;
+            --modal-bg: #FFFFFF;
+            --modal-text: #1A1A1A;
+            --secondary: #F8F8F8;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-color);
+            overflow-x: hidden;
+            transition: var(--transition);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        /* Dark/Light Mode Toggle Button */
+        .theme-toggle {
+            background: rgba(197, 160, 89, 0.15);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-left: 0.5rem;
+        }
+
+            .theme-toggle:hover {
+                background: var(--primary);
+                color: #000;
+                transform: rotate(15deg);
+            }
+
+            .theme-toggle i {
+                font-size: 1.2rem;
+            }
+
+        /* Particle Background */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container,
+        .page-header,
+        .contact-card,
+        .map-form-section,
+        .faq-section,
+        .social-section,
+        footer,
+        nav {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Navbar - Responsive */
+        .navbar {
+            background: var(--navbar-bg);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        @@media (max-width: 1200px) {
+            .navbar {
+                padding: 0.9rem 1.5rem;
+            }
+        }
+
+        @@media (max-width: 991px) {
+            .navbar {
+                padding: 0.8rem 1rem;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .navbar.scrolled {
+                padding: 0.5rem 1rem;
+            }
+        }
+
+        .navbar.scrolled {
+            padding: 0.7rem 2rem;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        @@media (max-width: 992px) {
+            .logo {
+                font-size: 1.4rem;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .logo {
+                font-size: 1.3rem;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .logo {
+                font-size: 1.2rem;
+            }
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            letter-spacing: 2px;
+        }
+
+        .navbar-toggler {
+            border-color: var(--primary);
+        }
+
+        .nav-link {
+            color: var(--text-color) !important;
+            opacity: 0.8;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 1rem;
+        }
+
+        @@media (max-width: 991px) {
+            .nav-link {
+                padding: 0.5rem 0;
+                text-align: center;
+            }
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-gold);
+            transition: var(--transition);
+        }
+
+        @@media (max-width: 991px) {
+            .nav-link::after {
+                display: none;
+            }
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link:hover {
+            color: var(--primary) !important;
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        .btn-nav {
+            background: transparent;
+            border: 1.5px solid var(--primary);
+            color: var(--primary);
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        @@media (max-width: 991px) {
+            .btn-nav {
+                padding: 0.3rem 1rem;
+                font-size: 0.75rem;
+                margin: 0.2rem 0;
+                text-align: center;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .btn-nav {
+                padding: 0.25rem 0.8rem;
+                font-size: 0.7rem;
+            }
+        }
+
+        .btn-nav:hover {
+            background: var(--primary);
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .btn-register {
+            background: var(--gradient-gold);
+            color: #000;
+            border: none;
+        }
+
+        /* Page Header - Responsive */
+        .page-header {
+            padding: 140px 0 80px;
+            background: var(--gradient-dark);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            z-index: 2;
+        }
+
+        @@media (max-width: 1200px) {
+            .page-header {
+                padding: 130px 0 70px;
+            }
+        }
+
+        @@media (max-width: 992px) {
+            .page-header {
+                padding: 120px 0 60px;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .page-header {
+                padding: 110px 0 50px;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .page-header {
+                padding: 100px 0 40px;
+            }
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(197, 160, 89, 0.08), transparent);
+            animation: rotateBg 20s linear infinite;
+            z-index: -1;
+        }
+
+        @@keyframes rotateBg {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .page-header h1 {
+            font-size: clamp(1.8rem, 5vw, 4rem);
+            font-weight: 800;
+            animation: fadeInDown 0.8s ease;
+            color: #FFFFFF;
+        }
+
+        @@keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header p {
+            color: rgba(255, 255, 255, 0.85);
+            animation: fadeInUp 0.8s ease 0.2s both;
+            font-size: clamp(0.85rem, 3vw, 1.1rem);
+        }
+
+        /* Contact Cards - Responsive */
+        .contact-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+            height: 100%;
+        }
+
+        @@media (max-width: 992px) {
+            .contact-card {
+                padding: 1.5rem;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .contact-card {
+                padding: 1.2rem;
+            }
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .contact-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(197, 160, 89, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            transition: var(--transition);
+        }
+
+        @@media (max-width: 576px) {
+            .contact-icon {
+                width: 55px;
+                height: 55px;
+            }
+        }
+
+        .contact-card:hover .contact-icon {
+            background: var(--primary);
+            transform: scale(1.1) rotate(360deg);
+        }
+
+        .contact-icon i {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        @@media (max-width: 576px) {
+            .contact-icon i {
+                font-size: 1.4rem;
+            }
+        }
+
+        .contact-card:hover .contact-icon i {
+            color: #000;
+        }
+
+        .contact-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1rem, 3.5vw, 1.2rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .contact-text {
+            color: var(--gray);
+            font-size: clamp(0.75rem, 3vw, 0.85rem);
+            margin-bottom: 0.3rem;
+        }
+
+        /* Map & Form Section - Responsive */
+        .map-form-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .map-container {
+            height: 100%;
+            min-height: 450px;
+        }
+
+        @@media (max-width: 992px) {
+            .map-container {
+                min-height: 350px;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .map-container {
+                min-height: 300px;
+            }
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 450px;
+            border: none;
+        }
+
+        @@media (max-width: 992px) {
+            .map-container iframe {
+                min-height: 350px;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .map-container iframe {
+                min-height: 300px;
+            }
+        }
+
+        .form-container {
+            padding: 2.5rem;
+        }
+
+        @@media (max-width: 992px) {
+            .form-container {
+                padding: 1.5rem;
+            }
+        }
+
+        .form-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+            color: var(--text-color);
+        }
+
+            .form-title::after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 0;
+                width: 60px;
+                height: 3px;
+                background: var(--gradient-gold);
+                border-radius: 3px;
+            }
+
+        .form-control,
+        .form-select {
+            background: rgba(197, 160, 89, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            color: var(--text-color) !important;
+            transition: var(--transition);
+        }
+
+        @@media (max-width: 576px) {
+
+            .form-control,
+            .form-select {
+                padding: 0.6rem 0.8rem;
+            }
+        }
+
+        body.light-mode .form-control,
+        body.light-mode .form-select {
+            background: #F5F5F5;
+            color: #1A1A1A !important;
+        }
+
+        .form-control option,
+        .form-select option {
+            background: var(--secondary);
+            color: white;
+        }
+
+        body.light-mode .form-control option,
+        body.light-mode .form-select option {
+            background: #FFFFFF;
+            color: #1A1A1A;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background: rgba(197, 160, 89, 0.1);
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.2);
+            color: var(--text-color);
+        }
+
+        .form-control::placeholder {
+            color: var(--gray);
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        .btn-send {
+            background: var(--gradient-gold);
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            padding: 0.8rem 1.5rem;
+            font-weight: 600;
+            transition: var(--transition);
+            width: 100%;
+        }
+
+        @@media (max-width: 576px) {
+            .btn-send {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        .btn-send:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-gold);
+        }
+
+        /* Error Styling */
+        .is-invalid {
+            border-color: #dc3545 !important;
+            box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.2);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.75rem;
+            margin-top: 0.3rem;
+            display: block;
+        }
+
+        /* FAQ Section - Responsive */
+        .faq-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 2.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        @@media (max-width: 992px) {
+            .faq-section {
+                padding: 1.5rem;
+            }
+        }
+
+        .faq-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            color: var(--text-color);
+        }
+
+            .faq-title::after {
+                content: '';
+                position: absolute;
+                bottom: -12px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 80px;
+                height: 3px;
+                background: var(--gradient-gold);
+                border-radius: 3px;
+            }
+
+        .accordion-item {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+            border-radius: 15px !important;
+            overflow: hidden;
+        }
+
+        body.light-mode .accordion-item {
+            background: #F0F0F0;
+        }
+
+        .accordion-button {
+            background: rgba(26, 26, 46, 0.9);
+            color: white;
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+            font-size: clamp(0.85rem, 3vw, 1rem);
+        }
+
+        @@media (max-width: 576px) {
+            .accordion-button {
+                padding: 0.8rem 1rem;
+            }
+        }
+
+        body.light-mode .accordion-button {
+            background: #E8E8E8;
+            color: #1A1A1A;
+        }
+
+        .accordion-button:not(.collapsed) {
+            background: rgba(197, 160, 89, 0.15);
+            color: var(--primary);
+        }
+
+        .accordion-button:focus {
+            box-shadow: none;
+            border-color: transparent;
+        }
+
+        .accordion-button::after {
+            filter: invert(1);
+        }
+
+        body.light-mode .accordion-button::after {
+            filter: invert(0);
+        }
+
+        .accordion-body {
+            background: rgba(26, 26, 46, 0.6);
+            color: var(--gray);
+            line-height: 1.6;
+            font-size: clamp(0.8rem, 3vw, 0.9rem);
+        }
+
+        body.light-mode .accordion-body {
+            background: #FAFAFA;
+        }
+
+        /* Social Section - Responsive */
+        .social-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 2.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        @@media (max-width: 992px) {
+            .social-section {
+                padding: 1.5rem;
+            }
+        }
+
+        .social-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+            color: var(--text-color);
+        }
+
+            .social-title::after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 60px;
+                height: 3px;
+                background: var(--gradient-gold);
+                border-radius: 3px;
+            }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(197, 160, 89, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            transition: var(--transition);
+            font-size: 1.3rem;
+            text-decoration: none;
+        }
+
+        @@media (max-width: 576px) {
+            .social-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+
+        .social-icon:hover {
+            background: var(--primary);
+            color: #000;
+            transform: translateY(-5px) rotate(360deg);
+        }
+
+        .social-section p {
+            color: var(--gray) !important;
+            font-size: clamp(0.8rem, 3vw, 0.9rem);
+        }
+
+        /* Login/Register Modal Styles */
+        .login-modal,
+        .register-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.96);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .login-modal.active,
+            .register-modal.active {
+                display: flex;
+                animation: fadeInModal 0.3s ease;
+            }
+
+        @@keyframes fadeInModal {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-login-glass,
+        .modal-register-glass {
+            background: var(--modal-bg);
+            border-radius: 28px;
+            max-width: 450px;
+            width: 90%;
+            padding: 2rem 1.5rem 1.5rem 1.5rem;
+            border: 1px solid rgba(197, 160, 89, 0.25);
+            animation: modalPop 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        @@media (max-width: 576px) {
+
+            .modal-login-glass,
+            .modal-register-glass {
+                padding: 1.8rem 1rem 1rem 1rem;
+                max-width: 95%;
+                border-radius: 20px;
+            }
+        }
+
+        @@keyframes modalPop {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: var(--transition);
+            background: none;
+            border: none;
+        }
+
+            .close-modal:hover {
+                color: var(--primary);
+                transform: rotate(90deg);
+            }
+
+        .modal-header-custom {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+            .modal-header-custom h3 {
+                font-size: clamp(1.2rem, 4vw, 1.5rem);
+                font-weight: 700;
+                color: var(--modal-text);
+            }
+
+            .modal-header-custom p {
+                color: var(--gray);
+                font-size: 0.8rem;
+            }
+
+        .role-selector {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-btn {
+            background: rgba(197, 160, 89, 0.1);
+            border: 1px solid var(--border-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: var(--modal-text);
+            transition: var(--transition);
+        }
+
+            .role-btn.active {
+                background: var(--primary);
+                color: #000;
+            }
+
+            .role-btn:hover {
+                background: var(--primary);
+                color: #000;
+            }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+            .input-group label {
+                font-size: 0.75rem;
+                margin-bottom: 0.3rem;
+                display: block;
+                color: var(--gray);
+            }
+
+            .input-group input,
+            .input-group select {
+                width: 100%;
+                padding: 0.7rem;
+                background: rgba(197, 160, 89, 0.05);
+                border: 1px solid var(--border-color);
+                border-radius: 10px;
+                color: var(--modal-text);
+                font-size: 0.85rem;
+            }
+
+            .input-group select {
+                appearance: auto;
+                -webkit-appearance: menulist;
+                -moz-appearance: menulist;
+                cursor: pointer;
+            }
+
+                .input-group select option {
+                    background: var(--card-bg);
+                    color: var(--modal-text);
+                }
+
+        body.light-mode .input-group select option {
+            background: #ffffff;
+            color: #1a1a1a;
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+            .switch-form span {
+                color: var(--primary);
+            }
+
+        .demo-creds p {
+            font-size: 0.7rem;
+            margin-bottom: 0.3rem;
+            cursor: pointer;
+            color: var(--primary);
+        }
+
+            .demo-creds p:hover {
+                text-decoration: underline;
+            }
+
+        /* Footer - Responsive */
+        .footer {
+            background: var(--footer-bg);
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-color);
+            position: relative;
+            z-index: 2;
+        }
+
+        @@media (max-width: 992px) {
+            .footer {
+                padding: 3rem 0 1.5rem;
+                margin-top: 3rem;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .footer {
+                padding: 2rem 0 1.2rem;
+                margin-top: 2rem;
+                text-align: center;
+            }
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            font-weight: 800;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+            .footer-links li {
+                margin-bottom: 0.8rem;
+            }
+
+        @@media (max-width: 768px) {
+            .footer-links li {
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: clamp(0.8rem, 3vw, 0.85rem);
+        }
+
+        .social-icons-footer {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        @@media (max-width: 768px) {
+            .social-icons-footer {
+                justify-content: center;
+            }
+        }
+
+        .social-icon-footer {
+            width: 40px;
+            height: 40px;
+            background: rgba(197, 160, 89, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        @@media (max-width: 768px) {
+            .social-icon-footer {
+                width: 35px;
+                height: 35px;
+            }
+        }
+
+        .social-icon-footer:hover {
+            background: var(--primary);
+            color: #000;
+            transform: translateY(-5px) rotate(360deg);
+        }
+
+        /* Scroll Top - Responsive */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            border: none;
+            z-index: 999;
+        }
+
+        @@media (max-width: 768px) {
+            .scroll-top {
+                width: 40px;
+                height: 40px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .scroll-top {
+                width: 35px;
+                height: 35px;
+            }
+        }
+
+        .scroll-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Responsive Grid Gaps */
+        @@media (max-width: 992px) {
+            .row.g-4 {
+                --bs-gutter-y: 1.2rem;
+                --bs-gutter-x: 1.2rem;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .row.g-4 {
+                --bs-gutter-y: 1rem;
+                --bs-gutter-x: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="particles-js"></div
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg" id="navbar">
+        <div class="container">
+            <a class="logo" asp-controller="Home" asp-action="Index">✨ ARTISTIC</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Competitions">Competitions</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Exhibitions">Exhibitions</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Gallery">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                </ul>
+                <div class="ms-lg-3 d-flex gap-2 align-items-center flex-wrap">
+                    <div class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-sun" id="themeIcon"></i>
+                    </div>
+                    <a class="btn-nav" onclick="openLoginModal()">Login</a>
+                    <a class="btn-nav btn-register" onclick="openRegisterModal()">Register</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>
+                <i class="fas fa-envelope-open-text me-3"></i>Contact <span style="color: var(--primary);">Us</span>
+            </h1>
+            <p>Get in touch with us - We'd love to hear from you!</p>
+        </div>
+    </section>
+    @if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+    <div class="container py-5">
+
+        <!-- Contact Info Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="50">
+                <div class="contact-card">
+                    <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <h4 class="contact-title">Visit Us</h4>
+                    <p class="contact-text">123 Art District, Mall Road</p>
+                    <p class="contact-text">Lahore, Pakistan</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="contact-card">
+                    <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                    <h4 class="contact-title">Call Us</h4>
+                    <p class="contact-text">+92 300 1234567</p>
+                    <p class="contact-text">+92 42 1234567</p>
+                    <p class="contact-text">Mon-Fri, 9AM-6PM</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="150">
+                <div class="contact-card">
+                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                    <h4 class="contact-title">Email Us</h4>
+                    <p class="contact-text">info@@artistic.edu.pk</p>
+                    <p class="contact-text">admissions@@artistic.edu.pk</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="contact-card">
+                    <div class="contact-icon"><i class="fas fa-clock"></i></div>
+                    <h4 class="contact-title">Working Hours</h4>
+                    <p class="contact-text">Monday - Friday: 9AM - 6PM</p>
+                    <p class="contact-text">Saturday: 10AM - 2PM</p>
+                    <p class="contact-text">Sunday: Closed</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map + Contact Form -->
+        <div class="row mb-5" data-aos="fade-up">
+            <div class="col-12">
+                <div class="map-form-section">
+                    <div class="row g-0">
+                        <div class="col-lg-6">
+                            <div class="map-container">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d217961.0385713601!2d74.1729158768718!3d31.483124690375483!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39190483e58107d9%3A0xc23abe6ccc7e2462!2sLahore%2C%20Pakistan!5e0!3m2!1sen!2s!4v1700000000000!5m2!1sen!2s"
+                                        allowfullscreen="" loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-container">
+                                <h3 class="form-title">
+                                    <i class="fas fa-paper-plane me-2"
+                                       style="color: var(--primary);"></i>Send Us a Message
+                                </h3>
+
+                               <form asp-controller="Contact" asp-action="Submit" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <input type="text" class="form-control" id="fullName" name="FullName" placeholder="Your Full Name *" required>
+        <div class="error-message" id="fullNameError"></div>
+    </div>
+    
+    <div class="mb-3">
+        <input type="email" class="form-control" id="email" name="Email" placeholder="Your Email Address *" required>
+        <div class="error-message" id="emailError"></div>
+    </div>
+    
+    <div class="mb-3">
+        <select class="form-select" id="subject" name="Subject" required>
+            <option value="" selected disabled>Select Subject *</option>
+            <option value="General Inquiry">General Inquiry</option>
+            <option value="Competition Related">Competition Related</option>
+            <option value="Exhibition Participation">Exhibition Participation</option>
+            <option value="Admission Information">Admission Information</option>
+            <option value="Feedback/Suggestion">Feedback/Suggestion</option>
+            <option value="Complaint">Complaint</option>
+        </select>
+        <div class="error-message" id="subjectError"></div>
+    </div>
+    
+    <div class="mb-3">
+        <textarea class="form-control" id="message" name="Message" rows="5" placeholder="Your Message *" required></textarea>
+        <div class="error-message" id="messageError"></div>
+    </div>
+    
+    <button type="submit" class="btn-send">
+        <i class="fas fa-paper-plane me-2"></i> Send Message
+    </button>
+</form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="row mb-5" data-aos="fade-up">
+            <div class="col-12">
+                <div class="faq-section">
+                    <h3 class="faq-title">
+                        <i class="fas fa-question-circle me-2"
+                           style="color: var(--primary);"></i>Frequently Asked Questions
+                    </h3>
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#faq1">
+                                    <i class="fas fa-trophy me-2"
+                                       style="color: var(--primary);"></i> How can I participate in
+                                    competitions?
+                                </button>
+                            </h2>
+                            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Register on our website, browse active competitions, click
+                                    on "Submit Artwork" button, upload your artwork with title and description. Make
+                                    sure to submit before the deadline!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#faq2">
+                                    <i class="fas fa-star me-2"
+                                       style="color: var(--primary);"></i> How are winners selected?
+                                </button>
+                            </h2>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Our expert jury panel evaluates each submission based on
+                                    creativity, technical skills, originality, and adherence to the theme. Winners are
+                                    announced within 15 days after competition ends.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#faq3">
+                                    <i class="fas fa-palette me-2"
+                                       style="color: var(--primary);"></i> Can I submit multiple artworks?
+                                </button>
+                            </h2>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Yes! You can submit up to 3 different artworks per
+                                    competition. However, each submission must be unique and follow the competition
+                                    guidelines.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#faq4">
+                                    <i class="fas fa-gift me-2"
+                                       style="color: var(--primary);"></i> Is there any registration fee?
+                                </button>
+                            </h2>
+                            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    No! All our competitions are completely free for students.
+                                    There are no registration or submission fees. We believe in nurturing talent without
+                                    any barriers.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#faq5">
+                                    <i class="fas fa-edit me-2"
+                                       style="color: var(--primary);"></i> Can I edit my submission after
+                                    uploading?
+                                </button>
+                            </h2>
+                            <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Yes, you can edit your submission as many times as you want
+                                    before the competition deadline. After the deadline, submissions are locked for
+                                    evaluation.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Social Media Section -->
+        <div class="row" data-aos="fade-up">
+            <div class="col-12">
+                <div class="social-section">
+                    <h3 class="social-title">
+                        <i class="fas fa-share-alt me-2" style="color: var(--primary);"></i>Connect
+                        With Us
+                    </h3>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                    <p class="mt-4">
+                        Follow us on social media for latest updates, competition announcements, and
+                        featured artworks!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="footer-logo">✨ ARTISTIC</div>
+                    <p class="mt-3" style="color: var(--gray);">
+                        Institute of Fine Arts - Where creativity meets
+                        excellence. Established by industry professionals with years of experience in animation and fine
+                        arts.
+                    </p>
+                    <div class="social-icons-footer">
+                        <a href="#" class="social-icon-footer"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon-footer"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon-footer"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon-footer"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h5 style="color: var(--primary); margin-bottom: 1.2rem;">Quick Links</h5>
+                    <ul class="footer-links">
+                           <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                           <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Competitions">Competitions</a></li>
+                           <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Exhibitions">Exhibitions</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Gallery">Gallery</a></li>
+
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h5 style="color: var(--primary); margin-bottom: 1.2rem;">Resources</h5>
+                    <ul class="footer-links">
+                         <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
+                         <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                        <li><a href="#" onclick="openLoginModal()">Login</a></li>
+                        <li><a href="#" onclick="openRegisterModal()">Register</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 style="color: var(--primary); margin-bottom: 1.2rem;">Contact Info</h5>
+                    <ul class="footer-links">
+                        <li>
+                            <i class="fas fa-map-marker-alt me-2" style="color: var(--primary);"></i> 123 Art District,
+                            Mall Road, Lahore, Pakistan
+                        </li>
+                        <li><i class="fas fa-phone me-2" style="color: var(--primary);"></i> +92 300 1234567</li>
+                        <li>
+                            <i class="fas fa-envelope me-2" style="color: var(--primary);"></i> info@@artistic.edu.pk
+                        </li>
+                        <li>
+                            <i class="fas fa-clock me-2" style="color: var(--primary);"></i> Mon-Fri: 9:00 AM - 6:00 PM
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4" style="border-color: var(--border-color);">
+            <div class="text-center">
+                <p style="color: var(--gray); margin: 0;">
+                    © 2025 ARTISTIC - Institute of Fine Arts. All rights reserved.
+                    Designed with <i class="fas fa-heart" style="color: var(--primary);"></i> in Lahore
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <button class="scroll-top" id="scrollTop"><i class="fas fa-arrow-up"></i></button>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-4">
+                <i class="fas fa-check-circle fa-4x" style="color: var(--primary);"></i>
+                <h3 class="mt-3" style="color: var(--text-color);">Message Sent!</h3>
+                <p style="color: var(--gray);">Thank you for contacting us. We'll get back to you within 24 hours.</p>
+                <button class="btn-send mt-2" style="width: auto; padding: 0.6rem 1.5rem;"
+                        data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="register-modal" id="registerModal">
+        <div class="modal-register-glass">
+            <button class="close-modal" onclick="closeRegisterModal()">&times;</button>
+            <div class="modal-header-custom">
+                <h3>Create Account</h3>
+                <p>Join ARTISTIC Institute</p>
+            </div>
+
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="regName" placeholder="Enter your full name">
+            </div>
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" id="regEmail" placeholder="you@@example.com">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="regPassword" placeholder="Create a password (min 6 characters)">
+            </div>
+            <div class="input-group">
+                <label>Confirm Password</label>
+                <input type="password" id="regConfirmPassword" placeholder="Confirm your password">
+            </div>
+            <div class="input-group">
+                <label>Select Program (For Students)</label>
+                <select id="regProgram">
+                    <option value="Bachelor of Fine Arts (BFA)">Bachelor of Fine Arts (BFA)</option>
+                    <option value="Diploma in Digital Art">Diploma in Digital Art</option>
+                    <option value="Certificate in Animation">Certificate in Animation</option>
+                    <option value="Short Course in Painting">Short Course in Painting</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Register as</label>
+                <select id="regRole">
+                    <option value="Student">🎓 Student</option>
+                    <option value="Staff">👨‍🏫 Staff</option>
+                    <option value="Manager">📊 Manager</option>
+                </select>
+                <small style="color: var(--gray); font-size: 0.65rem; display: block; margin-top: 5px;">
+                    Note: Admin
+                    accounts can only be created by existing admins
+                </small>
+            </div>
+
+            <button class="btn-primary-gold mt-2" onclick="handleRegister()"
+                    style="background: var(--gradient-gold); color: #000; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: 600; border: none; cursor: pointer; width: 100%;">
+                Register
+                Now
+            </button>
+
+            <div class="switch-form" onclick="switchToLogin()">
+                Already have an account? <span>Login here</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="login-modal" id="loginModal">
+        <div class="modal-login-glass">
+            <button class="close-modal" onclick="closeLoginModal()">&times;</button>
+            <div class="modal-header-custom">
+                <h3>Welcome Back!</h3>
+            </div>
+            <div class="role-selector" id="roleSelector">
+                <div class="role-btn" data-role="Admin">👑 Admin</div>
+                <div class="role-btn" data-role="Manager">📊 Manager</div>
+                <div class="role-btn" data-role="Staff">👨‍🏫 Staff</div>
+                <div class="role-btn active" data-role="Student">🎓 Student</div>
+            </div>
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" placeholder="student@@artistic.edu.pk">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="••••••••">
+            </div>
+            <button class="btn-primary-gold mt-3" onclick="handleLogin()"
+                    style="background: var(--gradient-gold); color: #000; padding: 0.6rem 1.2rem; border-radius: 50px; font-weight: 600; border: none; cursor: pointer; width: 100%;">
+                Login
+            </button>
+
+            <div class="switch-form" onclick="switchToRegister()">
+                Don't have an account? <span>Register here</span>
+            </div>
+
+            <div class="demo-creds mt-3 p-2" style="background: rgba(197,160,89,0.05); border-radius: 12px;">
+                <small style="color: var(--gray);">Demo Credentials:</small>
+                <p onclick="fillDemo('student@@artistic.edu.pk','student123')">
+                    🎓 student@@artistic.edu.pk / student123
+                </p>
+                <p onclick="fillDemo('staff@@artistic.edu.pk','staff123')">👨‍🏫 staff@@artistic.edu.pk / staff123</p>
+                <p onclick="fillDemo('manager@@artistic.edu.pk','manager123')">
+                    📊 manager@@artistic.edu.pk / manager123
+                </p>
+                <p onclick="fillDemo('admin@@artistic.edu.pk','admin123')">👑 admin@@artistic.edu.pk / admin123</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@@11"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+        AOS.init({ duration: 1000, once: true });
+
+        // Initialize localStorage with default users
+        if (!localStorage.getItem('registeredUsers')) {
+            function hashPassword(password) {
+                let hash = 0;
+                for (let i = 0; i < password.length; i++) {
+                    hash = ((hash << 5) - hash) + password.charCodeAt(i);
+                    hash |= 0;
+                }
+                return hash.toString();
+            }
+
+            const defaultUsers = {
+                students: [
+                    { name: "Demo Student", email: "student@@artistic.edu.pk", password: "student123", program: "Bachelor of Fine Arts (BFA)" }
+                ],
+                staff: [
+                    { name: "Demo Staff", email: "staff@@artistic.edu.pk", password: "staff123", department: "Fine Arts" }
+                ],
+                managers: [
+                    { name: "Demo Manager", email: "manager@@artistic.edu.pk", password: "manager123", department: "Operations" }
+                ],
+                admins: [
+                    { name: "Super Admin", email: "admin@@artistic.edu.pk", password: hashPassword("admin123"), role: "Super Admin" }
+                ]
+            };
+            localStorage.setItem('registeredUsers', JSON.stringify(defaultUsers));
+        }
+
+        function hashPassword(password) {
+            let hash = 0;
+            for (let i = 0; i < password.length; i++) {
+                hash = ((hash << 5) - hash) + password.charCodeAt(i);
+                hash |= 0;
+            }
+            return hash.toString();
+        }
+
+        // Dark/Light Mode Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        if (localStorage.getItem('theme') === 'light') {
+            body.classList.add('light-mode');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        } else {
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            if (body.classList.contains('light-mode')) {
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            } else {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+        });
+
+        // Particles Background
+        particlesJS('particles-js', {
+            particles: { number: { value: 80 }, color: { value: '#C5A059' }, opacity: { value: 0.3 }, size: { value: 3, random: true }, move: { enable: true, speed: 2 } }
+        });
+
+        // Navbar Scroll
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+            document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 200);
+        });
+        document.getElementById('scrollTop').onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Validation Functions
+        function validateFullName() {
+            const fullName = document.getElementById('fullName').value.trim();
+            const errorDiv = document.getElementById('fullNameError');
+            if (fullName === '') {
+                errorDiv.textContent = 'Please enter your full name';
+                document.getElementById('fullName').classList.add('is-invalid');
+                return false;
+            } else if (fullName.length < 3) {
+                errorDiv.textContent = 'Name must be at least 3 characters';
+                document.getElementById('fullName').classList.add('is-invalid');
+                return false;
+            } else {
+                errorDiv.textContent = '';
+                document.getElementById('fullName').classList.remove('is-invalid');
+                return true;
+            }
+        }
+
+        function validateEmail() {
+            const email = document.getElementById('email').value.trim();
+            const errorDiv = document.getElementById('emailError');
+            const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+            if (email === '') {
+                errorDiv.textContent = 'Please enter your email address';
+                document.getElementById('email').classList.add('is-invalid');
+                return false;
+            } else if (!emailRegex.test(email)) {
+                errorDiv.textContent = 'Please enter a valid email address (e.g., name@@example.com)';
+                document.getElementById('email').classList.add('is-invalid');
+                return false;
+            } else {
+                errorDiv.textContent = '';
+                document.getElementById('email').classList.remove('is-invalid');
+                return true;
+            }
+        }
+
+        function validateSubject() {
+            const subject = document.getElementById('subject').value;
+            const errorDiv = document.getElementById('subjectError');
+            if (!subject || subject === '' || subject === 'Select Subject *') {
+                errorDiv.textContent = 'Please select a subject';
+                document.getElementById('subject').classList.add('is-invalid');
+                return false;
+            } else {
+                errorDiv.textContent = '';
+                document.getElementById('subject').classList.remove('is-invalid');
+                return true;
+            }
+        }
+
+        function validateMessage() {
+            const message = document.getElementById('message').value.trim();
+            const errorDiv = document.getElementById('messageError');
+            if (message === '') {
+                errorDiv.textContent = 'Please enter your message';
+                document.getElementById('message').classList.add('is-invalid');
+                return false;
+            } else if (message.length < 10) {
+                errorDiv.textContent = 'Message must be at least 10 characters';
+                document.getElementById('message').classList.add('is-invalid');
+                return false;
+            } else if (message.length > 1000) {
+                errorDiv.textContent = 'Message must be less than 1000 characters';
+                document.getElementById('message').classList.add('is-invalid');
+                return false;
+            } else {
+                errorDiv.textContent = '';
+                document.getElementById('message').classList.remove('is-invalid');
+                return true;
+            }
+        }
+
+        // Real-time validation
+        document.getElementById('fullName').addEventListener('input', validateFullName);
+        document.getElementById('email').addEventListener('input', validateEmail);
+        document.getElementById('subject').addEventListener('change', validateSubject);
+        document.getElementById('message').addEventListener('input', validateMessage);
+
+
+        // Modal Functions
+        let currentSelectedRole = 'Student';
+
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function openRegisterModal() {
+            document.getElementById('registerModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeRegisterModal() {
+            document.getElementById('registerModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            resetRegisterForm();
+        }
+
+        function resetRegisterForm() {
+            document.getElementById('regName').value = '';
+            document.getElementById('regEmail').value = '';
+            document.getElementById('regPassword').value = '';
+            document.getElementById('regConfirmPassword').value = '';
+            document.getElementById('regProgram').value = 'Bachelor of Fine Arts (BFA)';
+            document.getElementById('regRole').value = 'Student';
+        }
+
+        function switchToLogin() {
+            closeRegisterModal();
+            openLoginModal();
+        }
+
+        function switchToRegister() {
+            closeLoginModal();
+            openRegisterModal();
+        }
+
+        function fillDemo(email, pass) {
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').value = pass;
+        }
+
+        // Role selection in login modal
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentSelectedRole = this.dataset.role;
+                document.getElementById('loginEmail').placeholder = currentSelectedRole.toLowerCase() + '@@artistic.edu.pk';
+            });
+        });
+
+        // Registration Handler
+        function handleRegister() {
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const program = document.getElementById('regProgram').value;
+            const role = document.getElementById('regRole').value;
+
+            if (!name || !email || !password || !confirmPassword) {
+                Swal.fire({ title: 'Error!', text: 'Please fill all fields', icon: 'error', confirmButtonColor: '#C5A059' });
+                return;
+            }
+
+            if (password.length < 6) {
+                Swal.fire({ title: 'Error!', text: 'Password must be at least 6 characters', icon: 'error', confirmButtonColor: '#C5A059' });
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                Swal.fire({ title: 'Error!', text: 'Passwords do not match', icon: 'error', confirmButtonColor: '#C5A059' });
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('registeredUsers'));
+
+            const allUsers = [...users.students, ...users.staff, ...users.managers, ...users.admins];
+            if (allUsers.some(user => user.email === email)) {
+                Swal.fire({ title: 'Error!', text: 'Email already registered', icon: 'error', confirmButtonColor: '#C5A059' });
+                return;
+            }
+
+            if (role === 'Student') {
+                users.students.push({ name, email, password, program });
+            } else if (role === 'Staff') {
+                users.staff.push({ name, email, password, department: "Fine Arts" });
+            } else if (role === 'Manager') {
+                users.managers.push({ name, email, password, department: "Management" });
+            }
+
+            localStorage.setItem('registeredUsers', JSON.stringify(users));
+
+            Swal.fire({
+                title: 'Registration Successful!',
+                text: `You are now registered as a ${role}. Please login.`,
+                icon: 'success',
+                confirmButtonColor: '#C5A059'
+            }).then(() => {
+                closeRegisterModal();
+                openLoginModal();
+                document.getElementById('loginEmail').value = email;
+                document.getElementById('loginPassword').value = '';
+                document.querySelectorAll('.role-btn').forEach(btn => {
+                    if (btn.dataset.role === role) {
+                        btn.click();
+                    }
+                });
+            });
+        }
+
+        // Login Handler - Admin redirects to backend/admin/dashboard.html
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                Swal.fire({ title: 'Error!', text: 'Please enter email and password', icon: 'error', confirmButtonColor: '#C5A059' });
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('registeredUsers'));
+            let userFound = null;
+            let role = null;
+
+            if (currentSelectedRole === 'Student') {
+                const student = users.students.find(u => u.email === email && u.password === password);
+                if (student) {
+                    userFound = student;
+                    role = 'Student';
+                }
+            } else if (currentSelectedRole === 'Staff') {
+                const staff = users.staff.find(u => u.email === email && u.password === password);
+                if (staff) {
+                    userFound = staff;
+                    role = 'Staff';
+                }
+            } else if (currentSelectedRole === 'Manager') {
+                const manager = users.managers.find(u => u.email === email && u.password === password);
+                if (manager) {
+                    userFound = manager;
+                    role = 'Manager';
+                }
+            } else if (currentSelectedRole === 'Admin') {
+                const admin = users.admins.find(u => u.email === email && u.password === hashPassword(password));
+                if (admin) {
+                    userFound = admin;
+                    role = 'Admin';
+                }
+            }
+
+            if (userFound) {
+                localStorage.setItem('currentUser', JSON.stringify({ name: userFound.name, email, role }));
+
+                let redirect = '';
+                if (role === 'Student') redirect = 'student-dashboard.html';
+                else if (role === 'Staff') redirect = 'staff-dashboard.html';
+                else if (role === 'Manager') redirect = 'manager-dashboard.html';
+                else if (role === 'Admin') redirect = 'backend/admin/dashboard.html';
+
+                Swal.fire({
+                    title: 'Login Successful!',
+                    text: `Welcome ${userFound.name} to ${role} Dashboard`,
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(() => {
+                    window.location.href = redirect;
+                });
+            } else {
+                Swal.fire({ title: 'Error!', text: 'Invalid email or password', icon: 'error', confirmButtonColor: '#C5A059' });
+            }
+        }
+
+        // Close modals on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLoginModal();
+                closeRegisterModal();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
