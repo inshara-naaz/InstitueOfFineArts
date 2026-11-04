@@ -23,5 +23,5 @@ A full-stack web application built with **C# and ASP.NET Core MVC**. This system
 4. Press `F5` to run the application.
 
 ## 🎬 Project Demo Video
-*(Coming soon)*
+[Watch the Demo Video](https://youtu.be/MP2v3Z8_7bg)
 
